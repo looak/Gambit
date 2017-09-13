@@ -1,6 +1,11 @@
 # Prerequisites
 *.d
 
+# Compiled Paths
+intermediate/
+output/
+.vs/
+
 # Compiled Object files
 *.slo
 *.lo

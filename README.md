@@ -27,4 +27,5 @@ TODO:
 	chess engine. I think it would be good approach for developing a chess engine and also
 	to learn more indepth writing TDD.
 
-	Started writing tests for setting up the board.
+	Started writing tests for setting up the board. Didnt get very var because I went and 
+	looked at two cats I might adopt. Preston & Aaton, might keep the names. We'll see.

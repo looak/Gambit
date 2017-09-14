@@ -11,4 +11,9 @@ namespace GambitEngine
 	{
 		return true;
 	}
+
+	bool FEN::InputFen(char * fen, uint8_t length)
+	{
+		return false;
+	}
 }

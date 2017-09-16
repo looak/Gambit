@@ -17,7 +17,7 @@ Dev Blog
 	2. Nf3 Nc6
 	3. Bb5 a6
 
-![Chess Opening](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Chess_pdt45.svg/26px-Chess_pdt45.svg.png "1. e4 e5 2. Nf3 Nc6 3. Bb5 a6")
+![Chess Opening](https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/SCD_algebraic_notation.svg/242px-SCD_algebraic_notation.svg.png)
 	
 #### Presenting this work already?
 	So at work we have this paper-reading-group, every now and then someone presents an interesting publication or paper that they've read.

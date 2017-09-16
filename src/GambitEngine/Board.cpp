@@ -27,31 +27,6 @@ Board::~Board()
 {
 }
 
-//	FF FF FF FF FF FF FF FF FF FF
-//	FF FF FF FF FF FF FF FF FF FF
-//	FF 04 02 03 05 06 03 02 04 FF
-//	FF 01 01 01 01 01 01 01 01 FF
-//	FF 00 00 00 00 00 00 00 00 FF
-//	FF 00 00 00 00 00 00 00 00 FF
-//	FF 00 00 00 00 00 00 00 00 FF
-//	FF 00 00 00 00 00 00 00 00 FF
-//	FF 81 81 81 81 81 81 81 81 FF
-//	FF 84 82 83 85 86 83 82 84 FF
-//	FF FF FF FF FF FF FF FF FF FF
-//	FF FF FF FF FF FF FF FF FF FF
-
-//	FF FF FF FF FF FF FF FF FF FF
-//	FF FF FF FF FF FF FF FF FF FF
-//	FF 00 00 00 00 00 00 00 00 FF
-//	FF 00 00 00 00 00 00 00 00 FF
-//	FF 00 00 00 00 00 00 00 00 FF
-//	FF 00 00 00 00 00 00 00 00 FF
-//	FF 00 00 00 00 00 00 00 00 FF
-//	FF 00 00 00 00 00 00 00 00 FF
-//	FF 00 00 00 00 00 00 00 00 FF
-//	FF 00 00 00 00 00 00 00 00 FF
-//	FF FF FF FF FF FF FF FF FF FF
-//	FF FF FF FF FF FF FF FF FF FF
 void
 Board::ResetBoard()
 {
@@ -77,19 +52,23 @@ Board::ResetBoard()
 	memset(&m_board[99], 0xff, 21);
 }
 
-bool 
-Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
+byte GambitEngine::Board::GetBoardIndex(byte file, byte rank)
 {
-	// correct file so that we can keep it as actual letter input.
 	byte corrFile = tolower(file) - 'a';
 	byte corrRank = rank - 1;
 
 	// validate placement is inside the board.
 	if (corrFile < 0 || corrFile > 7 || corrRank < 0 || corrRank > 7)
-		return false;
+		return -1;
 
 	byte index = corrFile + (corrRank << 3);
-	byte bIndx = m_boardLookup[index];
+	return m_boardLookup[index];
+}
+
+bool 
+Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
+{
+	byte bIndx = GetBoardIndex(file, rank);
 
 	byte comp = 0x07;
 	if ((m_board[bIndx] & comp) != 0x00)
@@ -102,4 +81,10 @@ Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 	m_board[bIndx] = pieceVal;
 
 	return true;
+}
+
+bool 
+Board::MovePiece(byte sFile, byte sRank, byte tFile, byte tRank)
+{
+	byte sInd = GetBoardIndex(sFile, sRank);
 }

@@ -10,6 +10,15 @@ TODO
 Dev Blog
 =====
 ### (2017-9-16)
+#### Move them pieces!
+	Well at least started and thinking about how the input should look, going with the standard algebraic notation (SAN) recognized by FIDE.
+	
+	1. e4 e5
+	2. Nf3 Nc6
+	3. Bb5 a6
+
+	https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Chess_pdt45.svg/26px-Chess_pdt45.svg.png
+	
 #### Presenting this work already?
 	So at work we have this paper-reading-group, every now and then someone presents an interesting publication or paper that they've read.
 	To share and exchange knowledge. I haven't presented anything yet and mentioned that this project and that I'm reading a bunch of publications 

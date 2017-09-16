@@ -36,6 +36,8 @@ class Board
 {
 public:
 	Board();
+	Board(const Board& _src);
+
 	~Board();
 
 	// attempts to place said piece of said set in the given file & rank.

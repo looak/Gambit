@@ -33,6 +33,9 @@
     <ClInclude Include="Pieces.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FENParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -42,6 +45,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FENParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

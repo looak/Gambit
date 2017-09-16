@@ -22,6 +22,12 @@ Board::Board()
 	ResetBoard();
 }
 
+Board::Board(const Board & _src)
+{
+	memcpy(m_board, _src.m_board, sizeof(_src.m_board));
+	memcpy(m_boardLookup, _src.m_boardLookup, sizeof(_src.m_boardLookup));
+}
+
 
 Board::~Board()
 {
@@ -87,4 +93,6 @@ bool
 Board::MovePiece(byte sFile, byte sRank, byte tFile, byte tRank)
 {
 	byte sInd = GetBoardIndex(sFile, sRank);
+
+	return false;
 }

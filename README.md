@@ -1,26 +1,39 @@
-# Gambite Chess Engine
+# Gambit Chess Engine
 
 TODO								
 =====
-TODO:
+[x] fix markup in readme...
+[ ] move blog?
 [ ] get last error error handling
+
 
 Dev Blog
 =====
+### (2017-9-16)
+#### Presenting this work already?
+	So at work we have this paper-reading-group, every now and then someone presents an interesting publication or paper that they've read.
+	To share and exchange knowledge. I haven't presented anything yet and mentioned that this project and that I'm reading a bunch of publications 
+	about Chess Programming. So now I've basically promised that I'm going to present a paper on this subject, it went so fast and I actually
+	have a date for	when I'm going to do my presentation. 26th of October :o
+
+#### Busy times...
+	Not been able to work as much on my project as I might have wished. But I got to sit down an hour or two today, been working on piece placement 
+	and have a function that I'm quite happy with now. Wondering if I should remove the validation and move the actual method to the public API.
+	Or move the validation to some layer inbetween which could be ignored.
+
+	Got my tea and ready for another hour at least before I hit the hey, going trad climbing tomorrow.
+
 
 ### (2017-9-14)
-### So, here goes nothing. 
-	Been the past few days on my spare time and between compiles at work reading up on writing 
-	a chess engine in c++11. Found this amazing	community online with a ton of information 
-	about chess engines. Which made me really excited and wanted to start working on one of my
-	own.
+#### So, here goes nothing. 
+	Been the past few days on my spare time and between compiles at work reading up on writing 	a chess engine in c++11. Found this amazing	community 
+	online with a ton of information about chess engines. Which made me really excited and wanted to start working on one of my	own.
 
-### The important task of giving the project a Name.
-	Yesterday I actually setup the Project on GitHub etc. Started out with calling it Gambit.
-	We'll see if the name sticks. Did a quick check	online if any other engine was called
-	Gambit without finding anything so.
+#### The important task of giving the project a Name.
+	Yesterday I actually setup the Project on GitHub etc. Started out with calling it Gambit. We'll see if the name sticks. Did a quick check online 
+	if any other engine was called Gambit without finding anything so.
 
-### Insomnia
+#### Insomnia
 	Last night I had real issues falling a sleep, my head was spinning with ideas and of all
 	the information I've been reading. I decided to go with test driven development of my 
 	chess engine. I think it would be good approach for developing a chess engine and also

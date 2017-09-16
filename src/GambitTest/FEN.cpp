@@ -35,6 +35,5 @@ namespace GambitTest
 			
 			Assert::AreEqual(expectedValue, result, L"Failed to input FEN", LINE_INFO());
 		}
-
 	};
 }

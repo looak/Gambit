@@ -17,7 +17,7 @@ Dev Blog
 	2. Nf3 Nc6
 	3. Bb5 a6
 
-	!(https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Chess_pdt45.svg/26px-Chess_pdt45.svg.png)
+	![alt](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Chess_pdt45.svg/26px-Chess_pdt45.svg.png)
 	
 #### Presenting this work already?
 	So at work we have this paper-reading-group, every now and then someone presents an interesting publication or paper that they've read.

@@ -2,7 +2,7 @@
 
 TODO								
 =====
-[x] fix markup in readme...
+[ ] fix markup in readme...
 [ ] move blog?
 [ ] get last error error handling
 

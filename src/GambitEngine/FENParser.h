@@ -35,7 +35,7 @@ private:
 	byte m_curRank;
 };
 
-class FENParser
+class GAMBIT_API FENParser
 {
 public:
 	FENParser();

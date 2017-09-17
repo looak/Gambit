@@ -14,12 +14,12 @@ TEST_CLASS(BoardTest)
 public:
 	TEST_METHOD(BoardTest_PlaceKing)
 	{
-/*		GambitEngine::Board board;
+		GambitEngine::Board board;
 
 		Assert::AreEqual(true, board.PlacePiece(WHITE, KING, 'e', 1), L"Failed to input FEN", LINE_INFO());
 		Assert::AreEqual(true, board.PlacePiece(BLACK, KING, 'e', 2), L"Failed to input FEN", LINE_INFO());
 		Assert::AreEqual(false, board.PlacePiece(WHITE, KING, 'e', 2), L"Failed to input FEN", LINE_INFO());
-		Assert::AreEqual(false, board.PlacePiece(WHITE, KING, 'i', 9), L"Failed to input FEN", LINE_INFO());*/
+		Assert::AreEqual(false, board.PlacePiece(WHITE, KING, 'i', 9), L"Failed to input FEN", LINE_INFO());
 	}
 };
 

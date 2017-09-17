@@ -96,3 +96,9 @@ Board::MovePiece(byte sFile, byte sRank, byte tFile, byte tRank)
 
 	return false;
 }
+
+byte GambitEngine::Board::GetValue(byte file, byte rank)
+{
+	byte bIndx = GetBoardIndex(file, rank);
+	return  m_board[bIndx];	
+}

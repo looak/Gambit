@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef GAMBIT_ENGINE_EXPORTS  
+#define GAMBIT_API __declspec(dllexport)   
+#else  
+#define GAMBIT_API __declspec(dllimport)   
+#endif  
+
 #include "typedef.h"
 #include "Pieces.h"
 
@@ -32,7 +38,7 @@
 namespace GambitEngine
 {
 
-class Board
+class GAMBIT_API Board
 {
 public:
 	Board();
@@ -45,6 +51,8 @@ public:
 	// or square is occupied
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);
 	bool MovePiece(byte sFile, byte sRank, byte tFile, byte tRank);
+
+	byte GetValue(byte file, byte rank);
 
 private:
 	// resets board to be empty;

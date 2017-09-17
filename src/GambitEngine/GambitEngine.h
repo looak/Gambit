@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "Board.h"
 
 #ifdef GAMBIT_ENGINE_EXPORTS  
 #define GAMBIT_API __declspec(dllexport)   
@@ -22,6 +23,7 @@ namespace GambitEngine
 	class FEN
 	{
 	public:
-		static GAMBIT_API bool InputFen(char* fen, uint8_t length);
+		static GAMBIT_API bool InputFen(char* fen, uint8_t length, Board& outputBoard);
+
 	};
 }

@@ -28,10 +28,9 @@ namespace GambitTest
 			// white king on white king starting position.
 			char inputFen[] = "8/8/8/8/8/8/8/4K3 w - - 0 1";
 			uint8_t length = sizeof(inputFen);
+			GambitEngine::Board board;
 
-			bool result = GambitEngine::FEN::InputFen(inputFen, length);
-
-
+			bool result = GambitEngine::FEN::InputFen(inputFen, length, board);
 			
 			Assert::AreEqual(expectedValue, result, L"Failed to input FEN", LINE_INFO());
 		}

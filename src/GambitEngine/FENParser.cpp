@@ -109,6 +109,8 @@ Board FENParser::Deserialize(char* fen, byte length)
 			auto piece = FENPieceConverter::Convert(curr);
 			boardWriter.Write(piece.m_set, piece.m_piece, returnBoard);
 			counter++;
+
+			boardWriter.NextFile();
 		}
 	}
 

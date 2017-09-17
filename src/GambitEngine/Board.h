@@ -52,13 +52,13 @@ public:
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);
 	bool MovePiece(byte sFile, byte sRank, byte tFile, byte tRank);
 
-	byte GetValue(byte file, byte rank);
+	byte GetValue(byte file, byte rank) const;
 
 private:
 	// resets board to be empty;
 	void ResetBoard();
 
-	byte GetBoardIndex(byte file, byte rank);
+	byte GetBoardIndex(byte file, byte rank) const;
 
 	byte m_board[120];
 	byte m_boardLookup[64];

@@ -10,6 +10,10 @@ TODO
 Dev Blog
 =====
 ### (2017-9-17)
+#### En Passant
+	not really, but I can now move around my king. :) Also within the limits of what a king can do. The feedback is
+	poor in my console application but that is OK for now.
+
 #### Sister visiting
 	...so maybe I'll work a bit later. Got the console visualization going, next step will be to make the king move around.
 

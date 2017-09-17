@@ -58,7 +58,7 @@ Board::ResetBoard()
 	memset(&m_board[99], 0xff, 21);
 }
 
-byte GambitEngine::Board::GetBoardIndex(byte file, byte rank)
+byte GambitEngine::Board::GetBoardIndex(byte file, byte rank) const
 {
 	byte corrFile = tolower(file) - 'a';
 	byte corrRank = rank - 1;
@@ -113,11 +113,18 @@ Board::MovePiece(byte sFile, byte sRank, byte tFile, byte tRank)
 	// do move.
 	if (validMove)
 	{
-		m_board[tInd]
+		m_board[tInd] = m_board[sInd];
+		m_board[sInd] = 0x00;
+
+		// has moved flag set.
+		m_board[tInd] |= 0x20;
+		return true;
 	}
+
+	return false;
 }
 
-byte GambitEngine::Board::GetValue(byte file, byte rank)
+byte GambitEngine::Board::GetValue(byte file, byte rank) const
 {
 	byte bIndx = GetBoardIndex(file, rank);
 	return  m_board[bIndx];	

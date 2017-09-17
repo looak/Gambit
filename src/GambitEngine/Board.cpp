@@ -93,8 +93,28 @@ bool
 Board::MovePiece(byte sFile, byte sRank, byte tFile, byte tRank)
 {
 	byte sInd = GetBoardIndex(sFile, sRank);
+	byte mvsCount = 0;
+	short* mvs = Pieces::GetMoves(KING, mvsCount);
 
-	return false;
+	byte tInd = GetBoardIndex(tFile, tRank);
+
+	short diff = tInd - sInd;
+
+	bool validMove = false;
+	// validation
+	while (mvsCount > 0)
+	{
+		if (mvs[mvsCount] == diff)
+			validMove = true;
+
+		mvsCount--;
+	}
+
+	// do move.
+	if (validMove)
+	{
+		m_board[tInd]
+	}
 }
 
 byte GambitEngine::Board::GetValue(byte file, byte rank)

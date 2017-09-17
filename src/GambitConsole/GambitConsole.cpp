@@ -43,8 +43,8 @@ byte too(byte toConvert)
 
 int main()
 {
-	char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-	//char inputFen[] = "8/8/8/8/8/8/8/3kK3 w - - 0 1";
+	//char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+	char inputFen[] = "8/8/8/8/8/8/8/3kK3 w - - 0 1";
 	uint8_t length = sizeof(inputFen);
 	
 	GambitEngine::Board board = GambitEngine::FENParser::Deserialize(inputFen, length);
@@ -58,6 +58,8 @@ int main()
 		}
 		std::cout << std::endl;
 	}
+
+	board.MovePiece('e', 1, 'e', 2);
 
 	byte tmp[4];
 	std::cin >> tmp;

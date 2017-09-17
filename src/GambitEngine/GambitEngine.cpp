@@ -3,7 +3,9 @@
 
 #include "stdafx.h"
 #include "GambitEngine.h"
+#include "FENParser.h"
 #include "Board.h"
+
 
 namespace GambitEngine
 {
@@ -14,12 +16,14 @@ namespace GambitEngine
 
 	bool FEN::InputFen(char* fen, uint8_t length)
 	{
-		Board board;
+		auto board = FENParser::Deserialize(fen, length);
+
+		/*Board board;
 
 		board.PlacePiece(WHITE, KING, 'e', 1);
 		board.PlacePiece(BLACK, KING, 'e', 2);
 		board.PlacePiece(WHITE, KING, 'e', 2);
-		board.PlacePiece(WHITE, KING, 'i', 9);
+		board.PlacePiece(WHITE, KING, 'i', 9);*/
 
 
 		return false;

@@ -2,13 +2,30 @@
 
 TODO								
 =====
-[x] fix markup in readme...
-[ ] move blog?
-[ ] get last error error handling
-[ ] FEN Unit Tests
+	[x] fix markup in readme...
+	[ ] move blog?
+	[ ] get last error error handling
+	[ ] FEN Unit Tests
+		[ ] Give error on too short FEN
 
 Dev Blog
 =====
+### (2017-9-18)
+#### Overwatch
+	Why am I wasting time on this game? It just makes me uppset, I feel like I've wasted time which could have
+	been better spent on for example coding chess.
+
+	Feeling low... 23:15, descent time to go to bed.
+
+	Was pretty easy to add the Knight once the king was working. Cleaned up the MovePiece and renamed it to
+	MakeMove. Was reading about searching today. Will get my fingers dirty with that as soon as I can move 
+	all the major and minor pieces and actually just read that pawns and the king don't count as pieces.
+
+	Major Piecs being Queen & Rook
+	Minor Pieces being Knight & Bishop
+	Then King is a level of it's own.
+	And Pawns are Pawns.
+
 ### (2017-9-17)
 #### En Passant
 	not really, but I can now move around my king. :) Also within the limits of what a king can do. The feedback is

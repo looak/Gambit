@@ -21,6 +21,21 @@ namespace GambitTest
 
 		}
 
+		TEST_METHOD(FenInput_WrongFen_TooFewPieces)
+		{
+			bool expectedValue = false;
+
+			// white king on white king starting position.
+			char inputFen[] = "8/8/8/8/8/8/8/4K2 w - - 0 1";
+			uint8_t length = sizeof(inputFen);
+			GambitEngine::Board board;
+
+			bool result = GambitEngine::FEN::InputFen(inputFen, length, board);
+
+			// handle too short FEN
+			Assert::AreEqual(expectedValue, true, L"Failed to input FEN", LINE_INFO());
+		}
+
 		TEST_METHOD(FenInput_WhiteKingOnly)
 		{
 			bool expectedValue = true;

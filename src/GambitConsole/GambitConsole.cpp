@@ -17,10 +17,10 @@ byte too(byte toConvert)
 		piece = 'p';
 		break;
 	case 2:
-		piece = 'b';
+		piece = 'n';
 		break;
 	case 3:
-		piece = 'n';
+		piece = 'b';
 		break;
 	case 4:
 		piece = 'r';
@@ -58,24 +58,14 @@ void writeBoard(const GambitEngine::Board& board)
 int main()
 {
 	//char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-	char inputFen[] = "8/8/8/8/8/8/8/3kK3 w - - 0 1";
+	char inputFen[] = "8/8/8/8/8/8/8/3kKn2 w - - 0 1";
 	uint8_t length = sizeof(inputFen);
 	
 	GambitEngine::Board board = GambitEngine::FENParser::Deserialize(inputFen, length);
-	/*
-	for (byte rank = 8; rank >= 1; rank--)	
-	{
-		for (byte file = 'a'; file <= 'h'; file++)
-		{
-			auto val = too(board.GetValue(file, rank));
-			std::cout << '[' << val << ']';
-		}
-		std::cout << std::endl;
-	}*/
 
 	while (true)
 	{		
-		writeBoard(board);		
+		writeBoard(board);
 	
 		byte tmp[4];
 		std::cin >> tmp;

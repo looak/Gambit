@@ -14,6 +14,12 @@ namespace GambitEngine
 {
 	// Universal Chess Interface
 	// http://wbec-ridderkerk.nl/html/UCIProtocol.html
+	class Chess
+	{
+	public:
+		static GAMBIT_API void Initialize();
+	};
+
 	class UCI
 	{
 	public:

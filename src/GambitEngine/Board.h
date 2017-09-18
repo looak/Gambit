@@ -50,7 +50,7 @@ public:
 	// returns false if this failed either because of being outside of board 
 	// or square is occupied
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);
-	bool MovePiece(byte sFile, byte sRank, byte tFile, byte tRank);
+	bool MakeMove(byte sFile, byte sRank, byte tFile, byte tRank);
 
 	byte GetValue(byte file, byte rank) const;
 

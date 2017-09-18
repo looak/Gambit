@@ -18,4 +18,9 @@ namespace GambitEngine
 		outputBoard = FENParser::Deserialize(fen, length);		
 		return false;
 	}
+
+	void Chess::Initialize()
+	{
+
+	}
 }

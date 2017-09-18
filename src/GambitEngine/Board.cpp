@@ -90,22 +90,24 @@ Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 }
 
 bool 
-Board::MovePiece(byte sFile, byte sRank, byte tFile, byte tRank)
+Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 {
 	byte sInd = GetBoardIndex(sFile, sRank);
-	byte mvsCount = 0;
-	short* mvs = Pieces::GetMoves(KING, mvsCount);
-
 	byte tInd = GetBoardIndex(tFile, tRank);
-
 	short diff = tInd - sInd;
 
-	bool validMove = false;
+	byte pieceByte = m_board[sInd] & 0x7;
+	short mvsCount = Pieces::MoveCount[pieceByte];
+	
 	// validation
+	bool validMove = false;	
 	while (mvsCount > 0)
 	{
-		if (mvs[mvsCount] == diff)
+		if (Pieces::Moves[pieceByte][mvsCount] == diff)
+		{
 			validMove = true;
+			break;
+		}
 
 		mvsCount--;
 	}

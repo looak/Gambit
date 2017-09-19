@@ -10,6 +10,10 @@ TODO
 
 Dev Blog
 =====
+### (2017-9-19)
+#### Cleaning
+	Feels better now.
+
 ### (2017-9-18)
 #### Overwatch
 	Why am I wasting time on this game? It just makes me uppset, I feel like I've wasted time which could have

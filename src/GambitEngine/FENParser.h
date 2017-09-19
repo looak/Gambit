@@ -41,8 +41,7 @@ public:
 	FENParser();
 	~FENParser();
 
-	static Board Deserialize(char* fen, byte length);
-
+	static bool Deserialize(char* fen, byte length, Board& outputBoard);
 };
 
 }

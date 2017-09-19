@@ -61,7 +61,9 @@ int main()
 	char inputFen[] = "8/8/8/8/8/8/8/3kKn2 w - - 0 1";
 	uint8_t length = sizeof(inputFen);
 	
-	GambitEngine::Board board = GambitEngine::FENParser::Deserialize(inputFen, length);
+	GambitEngine::Board board;
+
+	GambitEngine::FENParser::Deserialize(inputFen, length, board);
 
 	while (true)
 	{		
@@ -70,7 +72,7 @@ int main()
 		byte tmp[4];
 		std::cin >> tmp;
 
-		board.MovePiece(tmp[0], tmp[1]-'0', tmp[2], tmp[3]-'0');
+		board.MakeMove(tmp[0], tmp[1]-'0', tmp[2], tmp[3]-'0');
 	}
 
     return 0;

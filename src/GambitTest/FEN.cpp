@@ -33,7 +33,7 @@ namespace GambitTest
 			bool result = GambitEngine::FEN::InputFen(inputFen, length, board);
 
 			// handle too short FEN
-			Assert::AreEqual(expectedValue, true, L"Failed to input FEN", LINE_INFO());
+			Assert::AreEqual(expectedValue, result, L"Failed to input FEN", LINE_INFO());
 		}
 
 		TEST_METHOD(FenInput_WhiteKingOnly)

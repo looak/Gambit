@@ -62,6 +62,11 @@ private:
 
 	byte m_board[120];
 	byte m_boardLookup[64];
+
+	byte m_enPassant;
+	
+	// 0x01 == K, 0x02 == Q, 0x04 == k, 0x08 == q
+	byte m_castleState;
 };
 
 }

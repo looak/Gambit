@@ -147,12 +147,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="DevBlog.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="FENParser.h" />
     <ClInclude Include="GambitEngine.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="Pieces.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -162,6 +160,7 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="FENParser.cpp" />
     <ClCompile Include="GambitEngine.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

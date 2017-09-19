@@ -1,17 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="FENParser">
+      <UniqueIdentifier>{aaea95a8-fce7-43c2-b329-3df00ca814d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Chess">
+      <UniqueIdentifier>{364c3e25-4090-4c5e-8973-8bd162f70987}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -21,42 +19,39 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GambitEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Board.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="typedef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Pieces.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FENParser.h">
-      <Filter>Header Files</Filter>
+      <Filter>FENParser</Filter>
+    </ClInclude>
+    <ClInclude Include="Pieces.h">
+      <Filter>Chess</Filter>
+    </ClInclude>
+    <ClInclude Include="Board.h">
+      <Filter>Chess</Filter>
+    </ClInclude>
+    <ClInclude Include="GambitEngine.h" />
+    <ClInclude Include="GameState.h">
+      <Filter>Chess</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GambitEngine.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="FENParser.cpp">
+      <Filter>FENParser</Filter>
     </ClCompile>
     <ClCompile Include="Board.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Chess</Filter>
     </ClCompile>
-    <ClCompile Include="FENParser.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="GambitEngine.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Chess</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="DevBlog.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\README.md">
-      <Filter>Resource Files</Filter>
-    </None>
+    <None Include="..\..\README.md" />
   </ItemGroup>
 </Project>

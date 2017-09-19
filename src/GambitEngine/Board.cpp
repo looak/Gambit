@@ -119,7 +119,7 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 		m_board[sInd] = 0x00;
 
 		// has moved flag set.
-		m_board[tInd] |= 0x20;
+		//m_board[tInd] |= 0x20;
 		return true;
 	}
 

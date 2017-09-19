@@ -14,9 +14,8 @@ namespace GambitEngine
 	}
 
 	bool FEN::InputFen(char* fen, uint8_t length, Board& outputBoard)
-	{
-		outputBoard = FENParser::Deserialize(fen, length);		
-		return false;
+	{		
+		return FENParser::Deserialize(fen, length, outputBoard);
 	}
 
 	void Chess::Initialize()

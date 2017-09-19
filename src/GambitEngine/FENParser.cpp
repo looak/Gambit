@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "FENParser.h"
+#include <stdio.h>
 
 using namespace GambitEngine;
+
 
 PieceStruct
 FENPieceConverter::Convert(byte aNotation)
@@ -83,36 +85,45 @@ FENParser::~FENParser()
 {
 }
 
-Board FENParser::Deserialize(char* fen, byte length)
+bool FENParser::Deserialize(char* fen, byte length, Board& outputBoard)
 {
-	auto returnBoard = Board();
 	FENBoardWriter boardWriter;
 	byte counter = 0;
 
 	for (byte i = 0; i < length; i++)
 	{
-		auto curr = fen[i];
-		if (curr == '/')
-			boardWriter.DownRank();
-		else if (isdigit(curr))
+		if (counter < 64)
 		{
-			byte steps = curr - '0';
-			counter += steps;
-			while (steps > 0)
+			auto curr = fen[i];
+			if (curr == '/')
 			{
-				boardWriter.NextFile();
-				steps--;
+				boardWriter.DownRank();
 			}
-		}
-		else if (counter < 64)
-		{
-			auto piece = FENPieceConverter::Convert(curr);
-			boardWriter.Write(piece.m_set, piece.m_piece, returnBoard);
-			counter++;
+			else if (isdigit(curr))
+			{
+				byte steps = curr - '0';
+				counter += steps;
+				while (steps > 0)
+				{
+					boardWriter.NextFile();
+					steps--;
+				}
+			}
+			else if (curr == ' ')
+			{
+				printf("Syntax error in FEN string");
+				return false;
+			}
+			else
+			{
+				auto piece = FENPieceConverter::Convert(curr);
+				boardWriter.Write(piece.m_set, piece.m_piece, outputBoard);
+				counter++;
 
-			boardWriter.NextFile();
+				boardWriter.NextFile();
+			}
 		}
 	}
 
-	return returnBoard;
+	return true;
 }

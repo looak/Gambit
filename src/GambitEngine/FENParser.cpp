@@ -101,9 +101,12 @@ FENBoardWriter::WriteCastlingState(char* states, int length, Board & board)
 			board.m_castleState |= 0x02;
 			break;
 
+		case'-':
+			board.m_castleState = 0x00;
+			break;
+
 		default:
 			return false;
-			break;
 		}
 
 		ind++;
@@ -225,11 +228,11 @@ bool FENParser::Deserialize(const char* fen, byte length, Board& outputBoard, Ga
 	if (state != nullptr)
 	{		
 		const char* a = &fen[index];
-		state->m_plyCounter = atoi(a);
+		state->m_plyCounter = int(a - 'a');
 		index += 2;
 		
 		a = &fen[index];
-		state->m_moveCounter = atoi(a);
+		state->m_moveCounter = int(a - 'a');
 	}
 
 	return true;

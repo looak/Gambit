@@ -1,13 +1,9 @@
 #pragma once
 
-#ifdef GAMBIT_ENGINE_EXPORTS  
-#define GAMBIT_API __declspec(dllexport)   
-#else  
-#define GAMBIT_API __declspec(dllimport)   
-#endif  
-
 #include "typedef.h"
 #include "Pieces.h"
+
+#include "Bitboard.h"
 
 //	FF FF FF FF FF FF FF FF FF FF
 //	FF FF FF FF FF FF FF FF FF FF
@@ -54,6 +50,8 @@ public:
 	bool MakeMove(byte sFile, byte sRank, byte tFile, byte tRank);
 
 	byte GetValue(byte file, byte rank) const;
+
+	Bitboard bitboard;
 
 private:
 	// resets board to be empty;

@@ -35,6 +35,12 @@
     <ClInclude Include="GameState.h">
       <Filter>Chess</Filter>
     </ClInclude>
+    <ClInclude Include="MoveGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bitboard.h">
+      <Filter>Chess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FENParser.cpp">
@@ -48,6 +54,10 @@
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="GameState.cpp">
+      <Filter>Chess</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveGenerator.cpp" />
+    <ClCompile Include="Bitboard.cpp">
       <Filter>Chess</Filter>
     </ClCompile>
   </ItemGroup>

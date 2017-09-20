@@ -29,8 +29,8 @@ public:
 		Assert::AreEqual(true, board.PlacePiece(WHITE, KING, 'e', 1), L"Failed to input FEN", LINE_INFO());
 		Assert::AreEqual(true, board.MakeMove('e', 1, 'e', 2), L"Failed to move King", LINE_INFO());
 		Assert::AreEqual(false, board.MakeMove('e', 1, 'e', 2), L"There shouldnt be a piece on e1 which can do this move.", LINE_INFO());
-
-		Assert::AreEqual((byte)0x06, board.GetValue('e', 2), L"There should be a king on e2.", LINE_INFO());
+		byte var = 0x00 | KING;
+		Assert::AreEqual(var, board.GetValue('e', 2), L"There should be a king on e2.", LINE_INFO());
 	}
 };
 

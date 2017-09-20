@@ -90,6 +90,7 @@ Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 
 	m_board[bIndx] = pieceVal;
 
+	bitboard.PlacePiece(set, piece, file, rank);
 	return true;
 }
 

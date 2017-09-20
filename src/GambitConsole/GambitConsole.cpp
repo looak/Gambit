@@ -63,7 +63,7 @@ int main()
 	
 	GambitEngine::Board board;
 
-	GambitEngine::FENParser::Deserialize(inputFen, length, board);
+	//GambitEngine::FENParser::Deserialize(inputFen, length, board);
 
 	while (true)
 	{		

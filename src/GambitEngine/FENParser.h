@@ -1,5 +1,6 @@
 #pragma once
 #include "Board.h"
+#include "GameState.h"
 
 namespace GambitEngine
 {
@@ -24,6 +25,8 @@ public:
 	~FENBoardWriter();
 
 	bool Write(SET set, PIECE piece, Board& board);
+	bool WriteCastlingState(char* states, int count, Board& board);
+	bool WriteEnPassant(byte square, Board& board);
 
 	void NextFile();
 	void DownRank();
@@ -37,11 +40,12 @@ private:
 
 class GAMBIT_API FENParser
 {
+
 public:
 	FENParser();
 	~FENParser();
 
-	static bool Deserialize(char* fen, byte length, Board& outputBoard);
+	static bool Deserialize(const char* fen, byte length, Board& outputBoard, GameState* state);
 };
 
 }

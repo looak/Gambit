@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameState.h"
+#include "FENParser.h"
 
 using namespace GambitEngine;
 
@@ -13,7 +14,7 @@ GameState::~GameState()
 }
 
 void 
-GameState::Setup()
+GameState::Setup(char* fen, int length)
 {
-
+	FENParser::Deserialize(fen, length, m_currentBoard, this);
 }

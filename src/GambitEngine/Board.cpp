@@ -4,7 +4,9 @@
 
 using namespace GambitEngine;
 
-Board::Board()
+Board::Board() :
+	m_castleState(0),
+	m_enPassant(0)
 {
 	// initialize lookup
 	byte lookup[64] = {
@@ -26,6 +28,8 @@ Board::Board(const Board & _src)
 {
 	memcpy(m_board, _src.m_board, sizeof(_src.m_board));
 	memcpy(m_boardLookup, _src.m_boardLookup, sizeof(_src.m_boardLookup));
+	m_castleState = _src.m_castleState;
+	m_enPassant = _src.m_enPassant;
 }
 
 

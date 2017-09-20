@@ -40,6 +40,7 @@ namespace GambitEngine
 
 class GAMBIT_API Board
 {
+friend class FENBoardWriter;
 public:
 	Board();
 	Board(const Board& _src);

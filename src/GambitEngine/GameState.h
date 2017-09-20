@@ -7,11 +7,13 @@ namespace GambitEngine
 
 class GameState
 {
+friend class FENParser;
+
 public:
 	GameState();
 	~GameState();
 
-	void Setup();
+	void Setup(char* fen, int length);
 
 private: 
 	Board m_currentBoard;
@@ -21,7 +23,7 @@ private:
 	// or capture been made
 	int m_plyCounter;	
 	int m_moveCounter;
-	byte m_activeSet;
+	SET m_activeSet;
 };
 
 }

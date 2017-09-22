@@ -6,10 +6,29 @@ TODO
 	[ ] move blog?
 	[ ] get last error error handling
 	[ ] FEN Unit Tests
-		[ ] Give error on too short FEN
+		[x] Give error on too short FEN
 
 Dev Blog
 =====
+### (2017-9-22)
+#### Overtime and weeknds
+	Work is taking up most of my motivation to code. Or rather after work I feel exhausted and tierd of sitting
+	in front of a computer and working. So progress the past few days have been slow. And it doesn't look like
+	the workload is going down any time soon.
+
+	Also I feel abit stuck about what I should do now, or what I should do next. I have the basics up. And I
+	started writing some bitboards but not entierly sure what or where I should use them yet.
+
+	Move Generation maybe?
+
+	Mustered up some motivation to get started and once I'm going it's so much fun. Wrote some bitboard 
+	operations. Started getting the hang of it, but I have a bug now where my Knight is attacking on the other
+	end of the board. Hmm...
+
+	Also my bitboard is mirrored, most likely due to how I print it out.
+
+	But work tomorrow, working weekends now, that stage of the project, so better get some sleep.
+
 ### (2017-9-19)
 #### Cleaning
 	Feels better now.

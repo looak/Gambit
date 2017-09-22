@@ -57,24 +57,24 @@ void writeBoard(const GambitEngine::Board& board)
 
 void writeBitboard(const uint64 board)
 {
-	for (byte rank = 1; rank <= 8; rank++)
+	for (byte i = 64; i > 0; --i)
 	{
-		for (byte file = 1; file <= 8; file++)
-		{
-			uint64 compBit = 1i64 << (file + (rank * 8));
-			if (board & compBit)
-				std::cout << " 1";
-			else
-				std::cout << " .";
-		}
-		std::cout << std::endl;
+		if (i % 8 == 0)
+			std::cout << std::endl;
+
+		uint64 compBit = 1i64 << i;
+		if (board & compBit)
+			std::cout << " 1";
+		else
+			std::cout << " .";
+
 	}
 }
 
 int main()
 {
 	//char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-	char inputFen[] = "8/8/8/8/8/8/8/3kKn2 w - - 0 1";
+	char inputFen[] = "8/8/8/8/4N3/8/8/3kKN2 w - - 0 1";
 	uint8_t length = sizeof(inputFen);
 	
 	GambitEngine::Board board;
@@ -87,9 +87,9 @@ int main()
 
 		std::cout << std::endl;
 		writeBitboard(board.bitboard.MaterialCombined(WHITE));
-
+		
 		std::cout << std::endl;
-		writeBitboard(board.bitboard.MaterialCombined(BLACK));
+		writeBitboard(board.bitboard.Attacked(WHITE));
 	
 		byte tmp[4];
 		std::cin >> tmp;

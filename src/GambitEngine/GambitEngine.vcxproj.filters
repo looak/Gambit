@@ -11,6 +11,9 @@
     <Filter Include="Chess">
       <UniqueIdentifier>{364c3e25-4090-4c5e-8973-8bd162f70987}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Brain">
+      <UniqueIdentifier>{3ee42c6f-e619-4629-8029-e3d7d50a7837}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -35,11 +38,11 @@
     <ClInclude Include="GameState.h">
       <Filter>Chess</Filter>
     </ClInclude>
-    <ClInclude Include="MoveGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Bitboard.h">
       <Filter>Chess</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveGenerator.h">
+      <Filter>Brain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -56,9 +59,11 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Chess</Filter>
     </ClCompile>
-    <ClCompile Include="MoveGenerator.cpp" />
     <ClCompile Include="Bitboard.cpp">
       <Filter>Chess</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveGenerator.cpp">
+      <Filter>Brain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

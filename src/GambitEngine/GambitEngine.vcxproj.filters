@@ -14,6 +14,9 @@
     <Filter Include="Brain">
       <UniqueIdentifier>{3ee42c6f-e619-4629-8029-e3d7d50a7837}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{e172cf4b-7491-45c5-a356-855a7ebe3ee7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -43,6 +46,9 @@
     </ClInclude>
     <ClInclude Include="MoveGenerator.h">
       <Filter>Brain</Filter>
+    </ClInclude>
+    <ClInclude Include="BitMath.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

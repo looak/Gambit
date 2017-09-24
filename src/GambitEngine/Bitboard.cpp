@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Bitboard.h"
+#include "BitMath.h"
 
 using namespace GambitEngine;
 
@@ -32,10 +33,11 @@ Bitboard::~Bitboard()
 bool 
 Bitboard::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 {
-	byte corrFile = file - 96;
+	byte corrFile = file - 'a';
 	byte corrRank = rank - 1;
-	byte shift = corrFile + (corrRank * 8);
-	m_material[set][piece] = 1i64 << shift;
+	byte shift = corrRank * 8 + corrFile;
+
+	m_material[set][piece] |= 1i64 << shift;
 
 	m_dirty[set] = true;
 
@@ -97,19 +99,31 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
 {
 	uint64 m_matComb = MaterialCombined(set);
 
-	//if (piece == KING)
+	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
 	{
-		for (int a = 0; a < Pieces::MoveCount[piece]; a++)
+		bool sliding = Pieces::Slides[piece];
+
+		byte curSqr = square;
+
+		do 
 		{
-			int toCheck = square + Pieces::Attacks[piece][a];
-			byte sq0x88 = toCheck + (toCheck & ~7);
-			uint64 sq8x8 = 1i64 << toCheck;
+			byte sq0x88 = 0x00;
+			byte sq8x8 = 0x00;
+			sq0x88 = curSqr + (curSqr & ~7);
+			
+			auto atk = Pieces::Attacks0x88[piece][a];
+			sq0x88 += atk;
 
-			if(sq0x88 & 0x88 || m_matComb & sq8x8)
-				continue;
+			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
+			uint64 sqbb = 1i64 << sq8x8;
+			
+			if (sq0x88 & 0x88 || m_matComb & sqbb)
+				sliding = false;
+			else
+				m_attacked[set] |= sqbb;
 
-			m_attacked[set] |= sq8x8;			
-		}
+			curSqr = sq8x8;
+
+		} while (sliding);			
 	}
-
 }

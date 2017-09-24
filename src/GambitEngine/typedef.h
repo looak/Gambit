@@ -7,5 +7,6 @@
 
 typedef unsigned char byte;
 typedef unsigned __int64 uint64;
+typedef unsigned __int32 uint32;
 
 const uint64 universe = 0xffffffffffffffffULL;

@@ -57,24 +57,30 @@ void writeBoard(const GambitEngine::Board& board)
 
 void writeBitboard(const uint64 board)
 {
-	for (byte i = 64; i > 0; --i)
+	for (int r = 7; r >= 0; r--)
 	{
-		if (i % 8 == 0)
-			std::cout << std::endl;
+		for (int f = 0; f < 8; f++)
+		{
+			int i = r * 8 + f;
 
-		uint64 compBit = 1i64 << i;
-		if (board & compBit)
-			std::cout << " 1";
-		else
-			std::cout << " .";
-
+			uint64 compBit = 1i64 << i;
+			if (board & compBit)
+				std::cout << " 1";
+			else
+				std::cout << " .";
+		}
+		std::cout << std::endl;
 	}
 }
 
 int main()
 {
-	//char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-	char inputFen[] = "8/8/8/8/4N3/8/8/3kKN2 w - - 0 1";
+	//char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	//char inputFen[] = "8/8/8/8/4N3/8/8/3kKN2 w - - 0 1";
+	//char inputFen[] = "Q7/3R4/4B3/8/6N1/8/2K5/8 w - - 0 1";
+	//char inputFen[] = "8/8/8/8/1K6/8/8/8 w - - 0 1";
+	char inputFen[] = "8/8/8/8/1R6/8/8/8 w - - 0 1";
+	//char inputFen[] = "8/8/8/8/1Q6/8/8/8 w - - 0 1";
 	uint8_t length = sizeof(inputFen);
 	
 	GambitEngine::Board board;

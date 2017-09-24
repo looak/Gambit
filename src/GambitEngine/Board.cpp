@@ -103,6 +103,7 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 
 	byte pieceByte = m_board[sInd] & 0x7;
 	short mvsCount = Pieces::MoveCount[pieceByte];
+	bool sliding = Pieces::Slides[pieceByte];
 	
 	// validation
 	bool validMove = false;	
@@ -131,8 +132,15 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 	return false;
 }
 
-byte GambitEngine::Board::GetValue(byte file, byte rank) const
+byte 
+Board::GetValue(byte file, byte rank) const
 {
 	byte bIndx = GetBoardIndex(file, rank);
 	return  m_board[bIndx];	
+}
+
+uint64 
+Board::GetAttacked(SET set)
+{
+	return 1;
 }

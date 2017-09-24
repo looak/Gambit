@@ -27,6 +27,10 @@ static signed short MoveCount[NR_OF_PIECES] = {
 	0, 0, 8, 4, 4, 8, 8
 };
 
+static bool Slides[NR_OF_PIECES] = {
+	false, false, false, true, true, true, false,
+};
+
 static signed short Moves[NR_OF_PIECES][8] = {
 	{ 0, 0, 0, 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -37,14 +41,14 @@ static signed short Moves[NR_OF_PIECES][8] = {
 	{ -11, -10, -9, -1, 1, 9, 10, 11 }
 };
 
-static signed short Attacks[NR_OF_PIECES][8] = {
+static signed short Attacks0x88[NR_OF_PIECES][8] = {
 	{ 0, 0, 0, 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ -17, -15, -10, -6, 6, 10, 15, 17 },
-	{ -11, -9, 9, 11, 0, 0, 0, 0 },
-	{ -10, -1, 1, 10, 0, 0, 0, 0 },
-	{ -11, -10, -9, -1, 1, 9, 10, 11 },
-	{ -9, -8, -7, -1, 1, 7, 8, 9 }
+	{ -33, -31, -18, -14, 14, 18, 31, 33 },
+	{ -17, -15, 15, 17, 0, 0, 0, 0 },
+	{ -16, -1, 1, 16, 0, 0, 0, 0 },
+	{ -17, -16, -15, -1, 1, 15, 16, 17 },
+	{ -17, -16, -15, -1, 1, 15, 16, 17 }
 };
 
 

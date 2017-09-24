@@ -51,6 +51,8 @@ public:
 
 	byte GetValue(byte file, byte rank) const;
 
+	uint64 GetAttacked(SET set);
+
 	Bitboard bitboard;
 
 private:

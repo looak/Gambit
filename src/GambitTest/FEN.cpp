@@ -19,6 +19,7 @@ namespace GambitTest
 
 			char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
+			Assert::AreEqual(true, false, L"Failed to setup board.", LINE_INFO());
 		}
 
 		TEST_METHOD(FenInput_WrongFen_TooFewPieces)

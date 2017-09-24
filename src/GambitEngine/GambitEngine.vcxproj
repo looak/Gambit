@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Bitboard.h" />
+    <ClInclude Include="BitMath.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="FENParser.h" />
     <ClInclude Include="GambitEngine.h" />

@@ -7,9 +7,28 @@ TODO
 	[ ] get last error error handling
 	[ ] FEN Unit Tests
 		[x] Give error on too short FEN
+	[ ] Google tests?
+	[ ] gcc & make instead of visual studio?
 
 Dev Blog
 =====
+### (2017-9-24)
+#### Productive weekend.
+	Well not for my chess-coding project, but I did get some done with it to tonight. Wrapping my head around
+	these bit boards was harder than I thought. But today I finally got it all working, fixed the bitboard
+	console drawing too which was actually one of the reasons I got so confused. Odd thing, you think your
+	debug data is trustworthy just to realize there is a bug in the debug-drawing. >.<
+	
+	Anyways been cleaning the apartment with Melanie to start renovating the living room some time next week.
+	We'll see how much time I'll have for this project then too. Also visited Preston & Aaton for the "last"
+	time this weekend. So they'll be moving in sometime next Week I believe. Crosing fingers. That was also
+	one of the reasons I cleaned out my living room.
+
+	Was quite interesting how quick it was to add the rook, bishop and queen once I had knight and king 
+	figured	out. Basically wrapping the whole method with a do-while and it worked. :p The power of writing
+	generic code I guess. :)
+	
+
 ### (2017-9-22)
 #### Overtime and weeknds
 	Work is taking up most of my motivation to code. Or rather after work I feel exhausted and tierd of sitting

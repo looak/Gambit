@@ -12,7 +12,7 @@ namespace GambitTest
 	TEST_CLASS(BitBoardTest)
 	{
 	public:
-		TEST_METHOD(BitBoardTest_KnightAttack)
+		TEST_METHOD(BitBoardTest_Knight_Attack)
 		{
 			GambitEngine::Board board;
 			Assert::AreEqual(true, board.PlacePiece(WHITE, KNIGHT, 'a', 3), L"Failed to place Knight", LINE_INFO());
@@ -43,10 +43,10 @@ namespace GambitTest
 
 		}
 
-		TEST_METHOD(BitBoardTest_KingAttack)
+		TEST_METHOD(BitBoardTest_King_Attack)
 		{
 			GambitEngine::Board board;
-			Assert::AreEqual(true, board.PlacePiece(WHITE, KING, 'e', 1), L"Failed to place Knight", LINE_INFO());
+			Assert::AreEqual(true, board.PlacePiece(WHITE, KING, 'e', 1), L"Failed to place King", LINE_INFO());
 			uint64 attked = ~universe;
 			// d1 should be attacked
 			attked |= 1i64 << 3i64;
@@ -63,10 +63,10 @@ namespace GambitTest
 			Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of attacked squares", LINE_INFO());
 		}
 
-		TEST_METHOD(BitBoardTest_Rook)
+		TEST_METHOD(BitBoardTest_Rook_Attack)
 		{
 			GambitEngine::Board board;
-			Assert::AreEqual(true, board.PlacePiece(WHITE, ROOK, 'h', 8), L"Failed to place Knight", LINE_INFO());
+			Assert::AreEqual(true, board.PlacePiece(WHITE, ROOK, 'h', 8), L"Failed to place Rook", LINE_INFO());
 			uint64 attked = ~universe;
 			
 			// h file
@@ -84,6 +84,34 @@ namespace GambitTest
 
 			auto result = board.bitboard.Attacked(WHITE);
 			Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of attacked squares", LINE_INFO());
+		}
+
+		TEST_METHOD(BitBoardTest_Pawn_Attack)
+		{
+			GambitEngine::Board board;
+			Assert::AreEqual(true, board.PlacePiece(WHITE, PAWN, 'e', 2), L"Failed to place Pawn", LINE_INFO());
+			Assert::AreEqual(true, board.PlacePiece(WHITE, PAWN, 'f', 3), L"Failed to place Pawn", LINE_INFO());
+			Assert::AreEqual(true, board.PlacePiece(BLACK, PAWN, 'd', 3), L"Failed to place Pawn", LINE_INFO());
+			
+			uint64 attked = ~universe;
+			// d3 should be attacked
+			attked |= 1i64 << 19i64;
+			// e4 should be attacked
+			attked |= 1i64 << 28i64;
+			// g4 should be attacked
+			attked |= 1i64 << 30i64;
+		
+			auto result = board.bitboard.Attacked(WHITE);
+			Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of white attacked squares", LINE_INFO());
+
+			attked = ~universe;
+			// e4 should be attacked
+			attked |= 1i64 << 10i64;
+			// g4 should be attacked
+			attked |= 1i64 << 12i64;
+
+			result = board.bitboard.Attacked(BLACK);
+			Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of black attacked squares", LINE_INFO());
 		}
 	};
 };

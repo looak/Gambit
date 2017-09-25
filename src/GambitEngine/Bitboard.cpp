@@ -101,8 +101,11 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
 
 	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
 	{
-		bool sliding = Pieces::Slides[piece];
+		signed short atk = 1;
+		if (piece == PAWN && set == WHITE)
+			atk = -1; // inverse attack if we're black.
 
+		bool sliding = Pieces::Slides[piece];
 		byte curSqr = square;
 
 		do 
@@ -111,7 +114,7 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
 			byte sq8x8 = 0x00;
 			sq0x88 = curSqr + (curSqr & ~7);
 			
-			auto atk = Pieces::Attacks0x88[piece][a];
+			atk *= Pieces::Attacks0x88[piece][a];
 			sq0x88 += atk;
 
 			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;

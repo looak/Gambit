@@ -25,7 +25,7 @@ public:
 	Bitboard();
 	~Bitboard();
 		
-	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);
+	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);	
 	bool MakeMove(SET set, PIECE piece, byte file, byte rank);
 
 	uint64 MaterialCombined(SET set);

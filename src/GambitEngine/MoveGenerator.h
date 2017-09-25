@@ -8,6 +8,9 @@ class MoveGenerator
 public:
 	MoveGenerator();
 	~MoveGenerator();
+
+	
+	
 };
 
 }

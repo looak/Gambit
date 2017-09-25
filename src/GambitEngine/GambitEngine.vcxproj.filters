@@ -14,7 +14,7 @@
     <Filter Include="Brain">
       <UniqueIdentifier>{3ee42c6f-e619-4629-8029-e3d7d50a7837}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Math">
+    <Filter Include="Helpers">
       <UniqueIdentifier>{e172cf4b-7491-45c5-a356-855a7ebe3ee7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -48,7 +48,7 @@
       <Filter>Brain</Filter>
     </ClInclude>
     <ClInclude Include="BitMath.h">
-      <Filter>Header Files</Filter>
+      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

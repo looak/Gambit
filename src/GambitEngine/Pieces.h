@@ -24,7 +24,7 @@ namespace Pieces
 {
 
 static signed short MoveCount[NR_OF_PIECES] = {
-	0, 0, 8, 4, 4, 8, 8
+	0, 2, 8, 4, 4, 8, 8
 };
 
 static bool Slides[NR_OF_PIECES] = {
@@ -43,7 +43,7 @@ static signed short Moves[NR_OF_PIECES][8] = {
 
 static signed short Attacks0x88[NR_OF_PIECES][8] = {
 	{ 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0 },
+	{ -15, -17, 0, 0, 0, 0, 0, 0 },
 	{ -33, -31, -18, -14, 14, 18, 31, 33 },
 	{ -17, -15, 15, 17, 0, 0, 0, 0 },
 	{ -16, -1, 1, 16, 0, 0, 0, 0 },
@@ -51,5 +51,10 @@ static signed short Attacks0x88[NR_OF_PIECES][8] = {
 	{ -17, -16, -15, -1, 1, 15, 16, 17 }
 };
 
+struct Piece
+{
+	byte	Type;
+	byte	Square;
+};
 
 }

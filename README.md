@@ -2,6 +2,7 @@
 
 TODO								
 =====
+ ^^ [ ] FIX Pawn Move Issue!
 	[x] fix markup in readme...
 	[ ] move blog?
 	[ ] get last error error handling
@@ -12,6 +13,18 @@ TODO
 
 Dev Blog
 =====
+### (2017-9-28)
+#### A few days have passed
+	Aaton & Preston are moving in tomrrow, thinking of renaming them Tau & Myon (Elementary Particles). Who
+	knows, time will tell. Been super busy at work and haven't hade enough motiviation to sit down and code
+	at home after it. So been spending my time reading, trying to read some chess papers and chess books.
+	Also watching break downs of "legendary" games between masters.
+
+	Today I've been looking at adding a available moves method to my bitboard. Which the MoveGenerator can
+	use later to push out moves from each piece. Though currently submitting it with a known issue where
+	pawns will show up to have available attacks even though there doesn't sit a opponent piece in the 
+	tested square, will fix this next time.
+
 ### (2017-9-24)
 #### Productive weekend.
 	Well not for my chess-coding project, but I did get some done with it to tonight. Wrapping my head around

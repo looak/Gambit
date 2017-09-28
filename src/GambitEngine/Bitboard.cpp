@@ -45,6 +45,72 @@ Bitboard::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 }
 
 u64 
+Bitboard::AvailableMoves(SET set, PIECE piece, u32 square)
+{
+	u64 m_matComb = MaterialCombined(set);
+	u64 retVal = ~universe;
+
+	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
+	{
+		byte curSqr = square;
+
+		byte startingRank = 6;
+		signed short mvMod = 1;
+		if (set == WHITE)
+		{
+			startingRank = 1;
+			mvMod = -1; // inverse move if we're White.
+		}
+
+		if (piece == PAWN)
+		{
+			short mvs = Pieces::MoveCount[piece];
+			byte sq0x88 = curSqr + (curSqr & ~7);
+			byte rank = sq0x88 >> 4;
+			if (startingRank != rank)
+				mvs = 1;
+
+			for (int i = 0; i < mvs; i ++)
+			{
+				sq0x88 += (mvMod * Pieces::Moves0x88[piece][i]);
+				byte sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
+				u64 sqbb = 1i64 << sq8x8;
+
+				if (m_matComb & sqbb)
+					continue;
+
+				retVal |= sqbb;
+			}
+		}
+
+		bool sliding = Pieces::Slides[piece];
+		
+		byte dir = (mvMod * Pieces::Attacks0x88[piece][a]);
+		do
+		{
+			byte sq0x88 = 0x00;
+			byte sq8x8 = 0x00;
+			sq0x88 = curSqr + (curSqr & ~7);
+
+			sq0x88 += dir;
+
+			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
+			u64 sqbb = 1i64 << sq8x8;
+
+			if (sq0x88 & 0x88 || m_matComb & sqbb)
+				sliding = false;
+			else
+				retVal |= sqbb;
+
+			curSqr = sq8x8;
+
+		} while (sliding);
+	}
+
+	return retVal;
+}
+
+u64
 Bitboard::MaterialCombined(SET set)
 {
 	if (m_dirty[set])
@@ -105,8 +171,9 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
 		if (piece == PAWN && set == WHITE)
 			atk = -1; // inverse attack if we're black.
 
+		atk *= Pieces::Attacks0x88[piece][a];
 		bool sliding = Pieces::Slides[piece];
-		byte curSqr = square;
+		byte curSqr = square;		
 
 		do 
 		{
@@ -114,7 +181,6 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
 			byte sq8x8 = 0x00;
 			sq0x88 = curSqr + (curSqr & ~7);
 			
-			atk *= Pieces::Attacks0x88[piece][a];
 			sq0x88 += atk;
 
 			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;

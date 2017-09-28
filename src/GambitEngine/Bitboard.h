@@ -28,6 +28,8 @@ public:
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);	
 	bool MakeMove(SET set, PIECE piece, byte file, byte rank);
 
+	u64 AvailableMoves(SET set, PIECE piece, u32 square);
+
 	u64 MaterialCombined(SET set);
 
 	u64 Attacked(SET set);

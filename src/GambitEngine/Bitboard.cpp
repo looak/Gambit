@@ -44,12 +44,12 @@ Bitboard::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 	return true;
 }
 
-uint64 
+u64 
 Bitboard::MaterialCombined(SET set)
 {
 	if (m_dirty[set])
 	{
-		uint64 combined = ~universe;
+		u64 combined = ~universe;
 		for (int i = NR_OF_PIECES - 1; i > 0; i--)
 		{
 			combined |= m_material[set][i];
@@ -61,7 +61,7 @@ Bitboard::MaterialCombined(SET set)
 	return m_materialCombined[set];
 }
 
-uint64 
+u64 
 Bitboard::Attacked(SET set)
 {
 	CalculateAttacked(set);
@@ -84,7 +84,7 @@ Bitboard::CalculateAttacked(SET set)
 PIECE 
 Bitboard::getPieceOnSquare(SET set, int square)
 {
-	uint64 sqr = 1i64 << square;
+	u64 sqr = 1i64 << square;
 	for (int i = 1; i < NR_OF_PIECES; i++)
 	{
 		if (m_material[set][i] & sqr)
@@ -97,7 +97,7 @@ Bitboard::getPieceOnSquare(SET set, int square)
 void 
 Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
 {
-	uint64 m_matComb = MaterialCombined(set);
+	u64 m_matComb = MaterialCombined(set);
 
 	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
 	{
@@ -118,7 +118,7 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
 			sq0x88 += atk;
 
 			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-			uint64 sqbb = 1i64 << sq8x8;
+			u64 sqbb = 1i64 << sq8x8;
 			
 			if (sq0x88 & 0x88 || m_matComb & sqbb)
 				sliding = false;

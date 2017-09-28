@@ -55,7 +55,7 @@ void writeBoard(const GambitEngine::Board& board)
 	}
 }
 
-void writeBitboard(const uint64 board)
+void writeBitboard(const u64 board)
 {
 	for (int r = 7; r >= 0; r--)
 	{
@@ -63,7 +63,7 @@ void writeBitboard(const uint64 board)
 		{
 			int i = r * 8 + f;
 
-			uint64 compBit = 1i64 << i;
+			u64 compBit = 1i64 << i;
 			if (board & compBit)
 				std::cout << " 1";
 			else

@@ -6,7 +6,7 @@
 #endif  
 
 typedef unsigned char byte;
-typedef unsigned __int64 uint64;
-typedef unsigned __int32 uint32;
+typedef unsigned __int64 u64;
+typedef unsigned __int32 u32;
 
-const uint64 universe = 0xffffffffffffffffULL;
+const u64 universe = 0xffffffffffffffffULL;

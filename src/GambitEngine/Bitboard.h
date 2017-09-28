@@ -14,10 +14,10 @@ private:
 
 	bool m_dirty[NR_OF_SETS];
 
-	uint64 m_material[NR_OF_SETS][NR_OF_PIECES];
+	u64 m_material[NR_OF_SETS][NR_OF_PIECES];
 
-	uint64 m_materialCombined[NR_OF_SETS];
-	uint64 m_attacked[NR_OF_SETS];
+	u64 m_materialCombined[NR_OF_SETS];
+	u64 m_attacked[NR_OF_SETS];
 
 	byte m_board0x88[128];
 
@@ -28,9 +28,9 @@ public:
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);	
 	bool MakeMove(SET set, PIECE piece, byte file, byte rank);
 
-	uint64 MaterialCombined(SET set);
+	u64 MaterialCombined(SET set);
 
-	uint64 Attacked(SET set);
+	u64 Attacked(SET set);
 
 };
 }

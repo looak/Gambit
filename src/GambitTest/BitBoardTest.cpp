@@ -16,7 +16,7 @@ namespace GambitTest
 		{
 			GambitEngine::Board board;
 			Assert::AreEqual(true, board.PlacePiece(WHITE, KNIGHT, 'a', 3), L"Failed to place Knight", LINE_INFO());
-			uint64 attked = ~universe;
+			u64 attked = ~universe;
 			// b1 should be attacked
 			attked |= 1i64 << 1i64;
 			// c2 should be attacked
@@ -47,7 +47,7 @@ namespace GambitTest
 		{
 			GambitEngine::Board board;
 			Assert::AreEqual(true, board.PlacePiece(WHITE, KING, 'e', 1), L"Failed to place King", LINE_INFO());
-			uint64 attked = ~universe;
+			u64 attked = ~universe;
 			// d1 should be attacked
 			attked |= 1i64 << 3i64;
 			// f1 should be attacked
@@ -67,7 +67,7 @@ namespace GambitTest
 		{
 			GambitEngine::Board board;
 			Assert::AreEqual(true, board.PlacePiece(WHITE, ROOK, 'h', 8), L"Failed to place Rook", LINE_INFO());
-			uint64 attked = ~universe;
+			u64 attked = ~universe;
 			
 			// h file
 			__int64 h7 = 55;
@@ -76,8 +76,8 @@ namespace GambitTest
 				attked |= 1i64 << hfile;
 			}			
 			// 8 rank
-			uint64 g8 = 62;
-			for (uint64 rank = g8; rank > h7; rank -- )
+			u64 g8 = 62;
+			for (u64 rank = g8; rank > h7; rank -- )
 			{
 				attked |= 1i64 << rank;
 			}
@@ -93,7 +93,7 @@ namespace GambitTest
 			Assert::AreEqual(true, board.PlacePiece(WHITE, PAWN, 'f', 3), L"Failed to place Pawn", LINE_INFO());
 			Assert::AreEqual(true, board.PlacePiece(BLACK, PAWN, 'd', 3), L"Failed to place Pawn", LINE_INFO());
 			
-			uint64 attked = ~universe;
+			u64 attked = ~universe;
 			// d3 should be attacked
 			attked |= 1i64 << 19i64;
 			// e4 should be attacked

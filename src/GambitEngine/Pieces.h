@@ -64,7 +64,8 @@ static signed short Attacks0x88[NR_OF_PIECES][8] = {
 struct Piece
 {
 	byte	Type;
-	byte	Square;
+	byte	Square10x12;
+	byte	Square8x8;
 };
 
 }

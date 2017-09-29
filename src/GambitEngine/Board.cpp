@@ -102,11 +102,13 @@ byte Board::GetBoard64Index(byte file, byte rank) const
 bool 
 Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 {
-	byte bIndx = GetBoard120Index(file, rank);
+	byte bIndx64 = GetBoard64Index(file, rank);
+	byte bIndx = m_boardLookup[bIndx64];
 
 	Pieces::Piece p;
 	p.Type = piece;
-	p.Square = bIndx;
+	p.Square10x12 = bIndx;
+	p.Square8x8 = bIndx64;
 
 	m_pieceArray[set].push_back(p);
 
@@ -138,7 +140,7 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 	byte pieceByte = m_board[sInd] & 0x7;
 	byte pieceSet = m_board[sInd] >> 7;
 
-	u64 avaMoves = m_bitboard.AvailableMoves((SET)pieceSet, (PIECE)pieceByte, sInd64);	
+	u64 avaMoves = m_bitboard.AvailableMoves((SET)pieceSet, (PIECE)pieceByte, sInd64);
 	u64 moveMsk = 1i64 << tInd64;
 
 	if (avaMoves & moveMsk)
@@ -151,11 +153,12 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 		while (m_pieceArray[pieceSet].size() > ind)
 		{
 			p = &m_pieceArray[pieceSet][ind];
-			if (m_pieceArray[pieceSet][ind].Square == sInd)
+			if (m_pieceArray[pieceSet][ind].Square10x12 == sInd)
 				break;
 			ind++;
 		}
-		p->Square = tInd;
+		p->Square10x12 = tInd;
+		p->Square8x8 = tInd64;
 
 		m_bitboard.MakeMove(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
 		return true;

@@ -6,6 +6,7 @@
 
 #include "..\GambitEngine\GambitEngine.h"
 #include "..\GambitEngine\FENParser.h"
+#include "..\GambitEngine\MoveGenerator.h"
 
 
 byte too(byte toConvert)
@@ -55,6 +56,26 @@ void writeBoard(const GambitEngine::Board& board)
 	}
 }
 
+void writeMoves(std::vector<GambitEngine::Move> moves)
+{
+	for (u32 i = 0; i < moves.size(); i++)
+	{
+		auto mv = moves.at(i);
+		byte sRank = mv.fromSqr >> 3;
+		byte sFile = mv.fromSqr & 7; 
+		
+		byte tRank = mv.toSqr >> 3;
+		byte tFile = mv.toSqr & 7; 
+
+		char sF = sFile + 'a';
+		char sR = sRank + '1';
+		char tF = tFile + 'a';
+		char tR = tRank + '1';
+
+		std::cout << sF << sR << tF << tR << std::endl;
+	}
+}
+
 void writeBitboard(const u64 board)
 {
 	for (int r = 7; r >= 0; r--)
@@ -75,15 +96,16 @@ void writeBitboard(const u64 board)
 
 int main()
 {
-	char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	//char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	//char inputFen[] = "8/8/8/8/4N3/8/8/3kKN2 w - - 0 1";
 	//char inputFen[] = "Q7/3R4/4B3/8/6N1/8/2K5/8 w - - 0 1";
-	//char inputFen[] = "8/8/8/8/1K6/8/8/8 w - - 0 1";
+	char inputFen[] = "8/8/8/8/1K6/8/8/8 w - - 0 1";
 	//char inputFen[] = "8/8/8/8/1R6/8/8/8 w - - 0 1";
 	//char inputFen[] = "8/8/8/8/1Q6/8/8/8 w - - 0 1";
 	uint8_t length = sizeof(inputFen);
 	
 	GambitEngine::Board board;
+	GambitEngine::MoveGenerator mvGen;
 
 	GambitEngine::FENParser::Deserialize(inputFen, length, board, nullptr);
 
@@ -96,6 +118,10 @@ int main()
 		
 		std::cout << std::endl;
 		writeBitboard(board.GetBitboard().Attacked(WHITE));
+
+		u32 moveCount = 0;
+		std::vector<GambitEngine::Move> mvs = mvGen.getMoves(WHITE, &board, moveCount);
+		writeMoves(mvs);
 	
 		byte tmp[4];
 		std::cin >> tmp;

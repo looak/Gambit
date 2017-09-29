@@ -20,7 +20,7 @@ Board::Board() :
 		91, 92, 93, 94, 95, 96, 97, 98};
 	
 	memcpy_s(&m_boardLookup[0], sizeof(m_boardLookup), lookup, sizeof(lookup));
-
+	
 	ResetBoard();
 }
 
@@ -30,6 +30,7 @@ Board::Board(const Board & _src)
 	memcpy(m_boardLookup, _src.m_boardLookup, sizeof(_src.m_boardLookup));
 	m_castleState = _src.m_castleState;
 	m_enPassant = _src.m_enPassant;
+
 }
 
 
@@ -60,9 +61,17 @@ Board::ResetBoard()
 	memset(&m_board[79], 0xff, 2);
 	memset(&m_board[89], 0xff, 2);
 	memset(&m_board[99], 0xff, 21);
+
+	m_pieceArray[0].clear();
+	m_pieceArray[1].clear();
 }
 
-byte GambitEngine::Board::GetBoardIndex(byte file, byte rank) const
+bool Board::Occupied(byte indx)
+{
+	return m_board[indx] & 0x00;
+}
+
+byte Board::GetBoard120Index(byte file, byte rank) const
 {
 	byte corrFile = tolower(file) - 'a';
 	byte corrRank = rank - 1;
@@ -75,10 +84,34 @@ byte GambitEngine::Board::GetBoardIndex(byte file, byte rank) const
 	return m_boardLookup[index];
 }
 
+
+
+byte Board::GetBoard64Index(byte file, byte rank) const
+{
+	byte corrFile = tolower(file) - 'a';
+	byte corrRank = rank - 1;
+
+	// validate placement is inside the board.
+	if (corrFile < 0 || corrFile > 7 || corrRank < 0 || corrRank > 7)
+		return -1;
+
+	byte index = corrFile + (corrRank << 3);
+	return index;
+}
+
 bool 
 Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 {
-	byte bIndx = GetBoardIndex(file, rank);
+	byte bIndx = GetBoard120Index(file, rank);
+
+	Pieces::Piece p;
+	p.Type = piece;
+	p.Square = bIndx;
+
+	m_pieceArray[set].push_back(p);
+
+	if (piece == KING)
+		m_kings[set] = p;
 
 	byte comp = 0x07;
 	if ((m_board[bIndx] & comp) != 0x00)
@@ -90,42 +123,41 @@ Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 
 	m_board[bIndx] = pieceVal;
 
-	bitboard.PlacePiece(set, piece, file, rank);
+	m_bitboard.PlacePiece(set, piece, file, rank);
 	return true;
 }
 
 bool 
 Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
-{
-	byte sInd = GetBoardIndex(sFile, sRank);
-	byte tInd = GetBoardIndex(tFile, tRank);
-	short diff = tInd - sInd;
-
-	byte pieceByte = m_board[sInd] & 0x7;
-	short mvsCount = Pieces::MoveCount[pieceByte];
-	bool sliding = Pieces::Slides[pieceByte];
+{		
+	byte sInd64 = GetBoard64Index(sFile, sRank);
+	byte sInd = m_boardLookup[sInd64];
+	byte tInd64 = GetBoard64Index(tFile, tRank);
+	byte tInd = m_boardLookup[tInd64];
 	
-	// validation
-	bool validMove = false;	
-	while (mvsCount > 0)
-	{
-		if (Pieces::Moves[pieceByte][mvsCount] == diff)
-		{
-			validMove = true;
-			break;
-		}
+	byte pieceByte = m_board[sInd] & 0x7;
+	byte pieceSet = m_board[sInd] >> 7;
 
-		mvsCount--;
-	}
+	u64 avaMoves = m_bitboard.AvailableMoves((SET)pieceSet, (PIECE)pieceByte, sInd64);	
+	u64 moveMsk = 1i64 << tInd64;
 
-	// do move.
-	if (validMove)
+	if (avaMoves & moveMsk)
 	{
 		m_board[tInd] = m_board[sInd];
 		m_board[sInd] = 0x00;
 
-		// has moved flag set.
-		//m_board[tInd] |= 0x20;
+		int ind = 0;
+		Pieces::Piece *p = nullptr;
+		while (m_pieceArray[pieceSet].size() > ind)
+		{
+			p = &m_pieceArray[pieceSet][ind];
+			if (m_pieceArray[pieceSet][ind].Square == sInd)
+				break;
+			ind++;
+		}
+		p->Square = tInd;
+
+		m_bitboard.MakeMove(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
 		return true;
 	}
 
@@ -135,11 +167,11 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 byte 
 Board::GetValue(byte file, byte rank) const
 {
-	byte bIndx = GetBoardIndex(file, rank);
+	byte bIndx = GetBoard120Index(file, rank);
 	return  m_board[bIndx];	
 }
 
-uint64 
+u64 
 Board::GetAttacked(SET set)
 {
 	return 1;

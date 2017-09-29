@@ -75,11 +75,11 @@ void writeBitboard(const u64 board)
 
 int main()
 {
-	//char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	//char inputFen[] = "8/8/8/8/4N3/8/8/3kKN2 w - - 0 1";
 	//char inputFen[] = "Q7/3R4/4B3/8/6N1/8/2K5/8 w - - 0 1";
 	//char inputFen[] = "8/8/8/8/1K6/8/8/8 w - - 0 1";
-	char inputFen[] = "8/8/8/8/1R6/8/8/8 w - - 0 1";
+	//char inputFen[] = "8/8/8/8/1R6/8/8/8 w - - 0 1";
 	//char inputFen[] = "8/8/8/8/1Q6/8/8/8 w - - 0 1";
 	uint8_t length = sizeof(inputFen);
 	
@@ -92,10 +92,10 @@ int main()
 		writeBoard(board);
 
 		std::cout << std::endl;
-		writeBitboard(board.bitboard.MaterialCombined(WHITE));
+		writeBitboard(board.GetBitboard().MaterialCombined(WHITE));
 		
 		std::cout << std::endl;
-		writeBitboard(board.bitboard.Attacked(WHITE));
+		writeBitboard(board.GetBitboard().Attacked(WHITE));
 	
 		byte tmp[4];
 		std::cin >> tmp;

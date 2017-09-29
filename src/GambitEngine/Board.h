@@ -4,6 +4,8 @@
 #include "Pieces.h"
 
 #include "Bitboard.h"
+#include <array>
+#include <vector>
 
 //	FF FF FF FF FF FF FF FF FF FF
 //	FF FF FF FF FF FF FF FF FF FF
@@ -37,6 +39,27 @@ namespace GambitEngine
 class GAMBIT_API Board
 {
 friend class FENBoardWriter;
+private:
+	// resets board to be empty;
+	void ResetBoard();
+	bool Occupied(byte indx);
+
+	byte GetBoard120Index(byte file, byte rank) const;
+	byte GetBoard64Index(byte file, byte rank) const;
+
+	Bitboard m_bitboard;
+	byte m_board[120];
+	byte m_boardLookup[64];
+
+	byte m_enPassant;
+
+	// 0x01 == K, 0x02 == Q, 0x04 == k, 0x08 == q
+	byte m_castleState;
+
+	typedef std::array<std::vector<Pieces::Piece>, 2> PieceArray;
+	PieceArray m_pieceArray;
+
+	Pieces::Piece m_kings[2];
 public:
 	Board();
 	Board(const Board& _src);
@@ -49,25 +72,11 @@ public:
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);
 	bool MakeMove(byte sFile, byte sRank, byte tFile, byte tRank);
 
+	const std::vector<Pieces::Piece> GetPieces(SET set) const { return m_pieceArray[set]; };
+
 	byte GetValue(byte file, byte rank) const;
-
-	uint64 GetAttacked(SET set);
-
-	Bitboard bitboard;
-
-private:
-	// resets board to be empty;
-	void ResetBoard();
-
-	byte GetBoardIndex(byte file, byte rank) const;
-
-	byte m_board[120];
-	byte m_boardLookup[64];
-
-	byte m_enPassant;
+	Bitboard GetBitboard() const { return m_bitboard; }
+	u64 GetAttacked(SET set);
 	
-	// 0x01 == K, 0x02 == Q, 0x04 == k, 0x08 == q
-	byte m_castleState;
 };
-
-}
+}	

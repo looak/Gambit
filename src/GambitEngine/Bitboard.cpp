@@ -14,14 +14,34 @@ Bitboard::Bitboard()
 
 	for (int set = 0; set < NR_OF_SETS; set++)
 	{
-		m_materialCombined[set] = ~universe;
-		m_attacked[set]			= ~universe;
-		m_dirty[set]			= true;
+		m_materialCombined[set]  = ~universe;
+		m_attacked[set]			 = ~universe;
+		m_combMaterialDirty[set] = true;
+		m_attackedDirty[set]	 = true;
 	}
 
 	for (int val = 0; val < 128; val++)
 	{
 		m_board0x88[val] = val;
+	}
+}
+
+Bitboard::Bitboard(const Bitboard & _src)
+{
+	for (int s = 0; s < NR_OF_SETS; s++)
+		for (int p = 0; p < NR_OF_PIECES; p++)
+			m_material[s][p] = _src.m_material[s][p];
+
+
+	for (int set = 0; set < NR_OF_SETS; set++)
+	{
+		m_combMaterialDirty[set] = true;
+		m_attackedDirty[set] = true;
+	}
+
+	for (int val = 0; val < 128; val++)
+	{
+		m_board0x88[val] = _src.m_board0x88[val];
 	}
 }
 
@@ -39,15 +59,34 @@ Bitboard::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 
 	m_material[set][piece] |= 1i64 << shift;
 
-	m_dirty[set] = true;
+	m_materialCombined[set] = ~universe;
+	m_combMaterialDirty[set] = true;
+	m_attackedDirty[set] = true;
+	return true;
+}
 
+bool 
+Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
+{
+	u64 sMask = 1i64 << sSqr;
+	u64 tMask = 1i64 << tSqr;
+
+	m_material[set][piece] ^= sMask;
+	m_material[set][piece] |= tMask;
+
+	m_materialCombined[set] = ~universe;
+	m_combMaterialDirty[set] = true;
+	m_attackedDirty[set] = true;
 	return true;
 }
 
 u64 
 Bitboard::AvailableMoves(SET set, PIECE piece, u32 square)
 {
-	u64 m_matComb = MaterialCombined(set);
+	u64 m_matComb = MaterialCombined(set);	
+	int seti = (int)!set;
+	u64 m_matCombOp = MaterialCombined((SET)seti);
+
 	u64 retVal = ~universe;
 
 	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
@@ -64,15 +103,11 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square)
 
 		if (piece == PAWN)
 		{
-			short mvs = Pieces::MoveCount[piece];
 			byte sq0x88 = curSqr + (curSqr & ~7);
 			byte rank = sq0x88 >> 4;
-			if (startingRank != rank)
-				mvs = 1;
-
-			for (int i = 0; i < mvs; i ++)
+			if (startingRank == rank && a == 1)
 			{
-				sq0x88 += (mvMod * Pieces::Moves0x88[piece][i]);
+				sq0x88 += (mvMod * Pieces::Moves0x88[piece][a]);
 				byte sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
 				u64 sqbb = 1i64 << sq8x8;
 
@@ -81,6 +116,18 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square)
 
 				retVal |= sqbb;
 			}
+			else if (a == 0)
+			{
+				sq0x88 += (mvMod * Pieces::Moves0x88[piece][a]);
+				byte sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
+				u64 sqbb = 1i64 << sq8x8;
+
+				if (m_matComb & sqbb)
+					continue;
+
+				retVal |= sqbb;
+			}
+			
 		}
 
 		bool sliding = Pieces::Slides[piece];
@@ -98,9 +145,16 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square)
 			u64 sqbb = 1i64 << sq8x8;
 
 			if (sq0x88 & 0x88 || m_matComb & sqbb)
-				sliding = false;
-			else
+				sliding = false; 			
+			else if (m_matCombOp & sqbb)
+			{
 				retVal |= sqbb;
+				sliding = false;
+			}
+			else if (piece > 1) // if we're nt a pawn.
+			{
+				retVal |= sqbb;
+			}
 
 			curSqr = sq8x8;
 
@@ -113,7 +167,7 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square)
 u64
 Bitboard::MaterialCombined(SET set)
 {
-	if (m_dirty[set])
+	if (m_combMaterialDirty[set])
 	{
 		u64 combined = ~universe;
 		for (int i = NR_OF_PIECES - 1; i > 0; i--)
@@ -121,7 +175,7 @@ Bitboard::MaterialCombined(SET set)
 			combined |= m_material[set][i];
 		}
 		m_materialCombined[set] = combined;
-		m_dirty[set] = false;
+		m_combMaterialDirty[set] = false;
 	}
 
 	return m_materialCombined[set];
@@ -130,7 +184,13 @@ Bitboard::MaterialCombined(SET set)
 u64 
 Bitboard::Attacked(SET set)
 {
-	CalculateAttacked(set);
+	if (m_attackedDirty[set] == true)
+	{
+		m_attacked[set] = ~universe;
+		CalculateAttacked(set);
+		m_attackedDirty[set] = false;
+	}
+	
 	return m_attacked[set];
 }
 
@@ -164,6 +224,8 @@ void
 Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
 {
 	u64 m_matComb = MaterialCombined(set);
+	int seti = (int)!set;
+	u64 m_matCombOp = MaterialCombined((SET)seti);
 
 	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
 	{

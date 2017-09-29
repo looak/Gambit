@@ -26,7 +26,7 @@ namespace GambitTest
 			// b5 should be attacked
 			attked |= 1i64 << 33i64;
 
-			auto result = board.bitboard.Attacked(WHITE);
+			auto result = board.GetBitboard().Attacked(WHITE);
 			Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of attacked squares", LINE_INFO());
 
 			GambitEngine::Board board2;
@@ -38,7 +38,7 @@ namespace GambitTest
 			// a3 should be attacked
 			attked |= 1i64 << 17i64;			
 
-			result = board2.bitboard.Attacked(WHITE);
+			result = board2.GetBitboard().Attacked(WHITE);
 			Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of attacked squares", LINE_INFO());
 
 		}
@@ -59,7 +59,7 @@ namespace GambitTest
 			// f2 should be attacked
 			attked |= 1i64 << 13i64;			
 			
-			auto result = board.bitboard.Attacked(WHITE);
+			auto result = board.GetBitboard().Attacked(WHITE);
 			Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of attacked squares", LINE_INFO());
 		}
 
@@ -82,7 +82,7 @@ namespace GambitTest
 				attked |= 1i64 << rank;
 			}
 
-			auto result = board.bitboard.Attacked(WHITE);
+			auto result = board.GetBitboard().Attacked(WHITE);
 			Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of attacked squares", LINE_INFO());
 		}
 
@@ -101,7 +101,7 @@ namespace GambitTest
 			// g4 should be attacked
 			attked |= 1i64 << 30i64;
 		
-			auto result = board.bitboard.Attacked(WHITE);
+			auto result = board.GetBitboard().Attacked(WHITE);
 			Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of white attacked squares", LINE_INFO());
 
 			attked = ~universe;
@@ -110,7 +110,7 @@ namespace GambitTest
 			// g4 should be attacked
 			attked |= 1i64 << 12i64;
 
-			result = board.bitboard.Attacked(BLACK);
+			result = board.GetBitboard().Attacked(BLACK);
 			Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of black attacked squares", LINE_INFO());
 		}
 	};

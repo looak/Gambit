@@ -12,7 +12,8 @@ private:
 	PIECE getPieceOnSquare(SET set, int square);
 	void AddAttackedFrom(SET set, PIECE piece, int square);
 
-	bool m_dirty[NR_OF_SETS];
+	bool m_combMaterialDirty[NR_OF_SETS];
+	bool m_attackedDirty[NR_OF_SETS];
 
 	u64 m_material[NR_OF_SETS][NR_OF_PIECES];
 
@@ -23,10 +24,12 @@ private:
 
 public:
 	Bitboard();
+	Bitboard(const Bitboard& _src);
+
 	~Bitboard();
 		
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);	
-	bool MakeMove(SET set, PIECE piece, byte file, byte rank);
+	bool MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr);
 
 	u64 AvailableMoves(SET set, PIECE piece, u32 square);
 

@@ -13,6 +13,26 @@ TODO
 
 Dev Blog
 =====
+### (2017-10-1)
+#### Renovating living room.
+	Melanie and I have been renovating the living room the past few days. We're doing some pretty descent
+	progress with the wall putty, hilarious name btw. Wall Putty :D Going to paint it with the base color
+	during the week. Probably on Wedneseday. Goal is to make the room green, my computer and desk is also 
+	going to move into the living room. Probably for the better. 
+
+	Preston & Aaton are doing super, they seem not to have any issues with the transition. Though our
+	renovation hasn't been the most popular, nor the cleaning up after. But now it's basically just 
+	painting left so I think they'll be just fine, they're getting a big-ass tree to climb in too, so they
+	better be fine. :D
+
+	The chess programming is going forward too, I've been able to get in a few hours during the weekend while
+	putty(aaah, haha, I can't get over this word) has been drying. Got my move generation working, just need
+	to add castling and en passant then I'm ready to start working on the evaluation, the brain. 
+	
+	Stupid special cases, ruining my overall very generic code, it's so pretty. Hurt a bit to add the pawn
+	double step from starting position. Not super fond of that special case and how I'm handling it. En 
+	passant and castling are going to be the same.
+
 ### (2017-9-28)
 #### A few days have passed
 	Aaton & Preston are moving in tomrrow, thinking of renaming them Tau & Myon (Elementary Particles). Who

@@ -20,7 +20,7 @@ public:
 	MoveGenerator();
 	~MoveGenerator();
 
-	std::vector<Move> getMoves(SET set, const Board* board, u32& count);
+	std::vector<Move> getMoves(SET set, Board* board, u32& count);
 	
 };
 

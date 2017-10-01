@@ -13,7 +13,7 @@ MoveGenerator::~MoveGenerator()
 }
 
 std::vector<Move>
-MoveGenerator::getMoves(SET set, const Board* board, u32& count)
+MoveGenerator::getMoves(SET set, Board* board, u32& count)
 {
 	std::vector<Move> moves;
 	count = 0;
@@ -21,7 +21,7 @@ MoveGenerator::getMoves(SET set, const Board* board, u32& count)
 	for (int i = 0; i < pieceArry.size(); i++)
 	{
 		auto piece = pieceArry.at(i);
-		u64 avaMvs = board->GetBitboard().AvailableMoves(set, (PIECE)piece.Type, piece.Square8x8);
+		u64 avaMvs = board->AvailableMoves(set, (PIECE)piece.Type, piece.Square8x8);
 
 		byte sqr = 0;
 		while (avaMvs != ~universe)

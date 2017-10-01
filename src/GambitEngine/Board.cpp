@@ -6,7 +6,7 @@ using namespace GambitEngine;
 
 Board::Board() :
 	m_castleState(0),
-	m_enPassant(0)
+	m_enPassant64(0)
 {
 	// initialize lookup
 	byte lookup[64] = {
@@ -29,7 +29,7 @@ Board::Board(const Board & _src)
 	memcpy(m_board, _src.m_board, sizeof(_src.m_board));
 	memcpy(m_boardLookup, _src.m_boardLookup, sizeof(_src.m_boardLookup));
 	m_castleState = _src.m_castleState;
-	m_enPassant = _src.m_enPassant;
+	m_enPassant64 = _src.m_enPassant64;
 
 }
 
@@ -99,9 +99,24 @@ byte Board::GetBoard64Index(byte file, byte rank) const
 	return index;
 }
 
-byte GambitEngine::Board::EnPassant()
+byte GambitEngine::Board::EnPassant(byte sSqr, PIECE piece, byte tSqr)
 {
-	return byte();
+	if (piece != PAWN)
+	{
+		// reset en passant since our move didn't add one.
+		m_enPassant64 = 0;
+		return m_enPassant64;
+	}
+
+	short enPassant = (short)tSqr - (short)sSqr;
+	if (abs(enPassant) == 16)
+	{
+		enPassant /= 2;
+		m_enPassant64 = sSqr + enPassant;
+		
+	}
+
+	return m_enPassant64;
 }
 
 bool 
@@ -146,7 +161,7 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 	byte pieceByte = m_board[sInd] & 0x7;
 	byte pieceSet = m_board[sInd] >> 7;
 
-	u64 avaMoves = m_bitboard.AvailableMoves((SET)pieceSet, (PIECE)pieceByte, sInd64);
+	u64 avaMoves = m_bitboard.AvailableMoves((SET)pieceSet, (PIECE)pieceByte, sInd64, m_enPassant64);
 	u64 moveMsk = 1i64 << tInd64;
 
 	if (avaMoves & moveMsk)
@@ -165,7 +180,7 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 		}
 		p->Square10x12 = tInd;
 		p->Square8x8 = tInd64;
-		
+		EnPassant(sInd64, (PIECE)pieceByte, tInd64);
 		m_bitboard.MakeMove(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
 		return true;
 	}

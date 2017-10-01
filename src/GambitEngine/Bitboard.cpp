@@ -81,7 +81,7 @@ Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
 }
 
 u64 
-Bitboard::AvailableMoves(SET set, PIECE piece, u32 square)
+Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant)
 {
 	u64 m_matComb = MaterialCombined(set);	
 	int seti = (int)!set;
@@ -121,10 +121,16 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square)
 					retVal |= sqbb;
 			}
 		}
+
+		// add en passant to op's material.
+		u64 enPass = 1i64 << enPassant;
+		m_matCombOp |= enPass;
 	}
 	
 	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
 	{
+		curSqr = square;
+
 		bool sliding = Pieces::Slides[piece];
 		signed short dir = (mvMod * Pieces::Attacks0x88[piece][a]);
 		do

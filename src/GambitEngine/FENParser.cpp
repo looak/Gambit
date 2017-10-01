@@ -117,7 +117,7 @@ FENBoardWriter::WriteCastlingState(char* states, int length, Board & board)
 bool 
 FENBoardWriter::WriteEnPassant(byte square, Board & board)
 {
-	board.m_enPassant = square;
+	board.m_enPassant64 = square;
 	return true;
 }
 

@@ -2,7 +2,8 @@
 
 TODO								
 =====
- ^^ [ ] FIX Pawn Move Issue!
+	[ ] Remove pawn after En Passant Move.
+	[x] FIX Pawn Move Issue!
 	[x] fix markup in readme...
 	[ ] move blog?
 	[ ] get last error error handling

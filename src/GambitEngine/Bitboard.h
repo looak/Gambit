@@ -31,7 +31,7 @@ public:
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);	
 	bool MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr);
 
-	u64 AvailableMoves(SET set, PIECE piece, u32 square);
+	u64 AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant);
 
 	u64 MaterialCombined(SET set);
 

@@ -89,50 +89,44 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square)
 
 	u64 retVal = ~universe;
 
+	byte startingRank = 6;
+	signed short mvMod = 1;
+	if (set == WHITE)
+	{
+		startingRank = 1;
+		mvMod = -1; // inverse move if we're White.
+	}
+
+	byte curSqr = square;
+
+	if (piece == PAWN)
+	{
+		byte sq0x88 = curSqr + (curSqr & ~7);
+		byte rank = sq0x88 >> 4;
+
+		sq0x88 += (mvMod * Pieces::Moves0x88[piece][0]);
+		byte sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
+		u64 sqbb = 1i64 << sq8x8;
+
+		if (!(m_matComb & sqbb || m_matCombOp & sqbb))
+		{
+			retVal |= sqbb;
+
+			if (rank == startingRank)
+			{
+				sq0x88 += (mvMod * Pieces::Moves0x88[piece][0]);
+				sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
+				sqbb = 1i64 << sq8x8;
+				if (!(m_matComb & sqbb || m_matCombOp & sqbb))
+					retVal |= sqbb;
+			}
+		}
+	}
+	
 	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
 	{
-		byte curSqr = square;
-
-		byte startingRank = 6;
-		signed short mvMod = 1;
-		if (set == WHITE)
-		{
-			startingRank = 1;
-			mvMod = -1; // inverse move if we're White.
-		}
-
-		if (piece == PAWN)
-		{
-			byte sq0x88 = curSqr + (curSqr & ~7);
-			byte rank = sq0x88 >> 4;
-			if (startingRank == rank && a == 1)
-			{
-				sq0x88 += (mvMod * Pieces::Moves0x88[piece][a]);
-				byte sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-				u64 sqbb = 1i64 << sq8x8;
-
-				if (m_matComb & sqbb)
-					continue;
-
-				retVal |= sqbb;
-			}
-			else if (a == 0)
-			{
-				sq0x88 += (mvMod * Pieces::Moves0x88[piece][a]);
-				byte sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-				u64 sqbb = 1i64 << sq8x8;
-
-				if (m_matComb & sqbb)
-					continue;
-
-				retVal |= sqbb;
-			}
-			
-		}
-
 		bool sliding = Pieces::Slides[piece];
-		
-		byte dir = (mvMod * Pieces::Attacks0x88[piece][a]);
+		signed short dir = (mvMod * Pieces::Attacks0x88[piece][a]);
 		do
 		{
 			byte sq0x88 = 0x00;
@@ -145,7 +139,7 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square)
 			u64 sqbb = 1i64 << sq8x8;
 
 			if (sq0x88 & 0x88 || m_matComb & sqbb)
-				sliding = false; 			
+				sliding = false;
 			else if (m_matCombOp & sqbb)
 			{
 				retVal |= sqbb;

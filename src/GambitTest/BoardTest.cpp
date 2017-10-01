@@ -32,6 +32,31 @@ public:
 		byte var = 0x00 | KING;
 		Assert::AreEqual(var, board.GetValue('e', 2), L"There should be a king on e2.", LINE_INFO());
 	}
+
+
+	TEST_METHOD(BoardTest_MovePawn)
+	{
+		GambitEngine::Board board;
+
+		Assert::AreEqual(true, board.PlacePiece(WHITE, PAWN, 'e', 2), L"Failed to place Pawn", LINE_INFO());
+		Assert::AreEqual(true, board.MakeMove('e', 2, 'e', 4), L"Pawn should be able to jump two steps from starting position.", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(BLACK, PAWN, 'e', 7), L"Failed to place Pawn", LINE_INFO());
+		Assert::AreEqual(true, board.MakeMove('e', 7, 'e', 5), L"Pawn should be able to jump two steps from starting position.", LINE_INFO());
+
+		Assert::AreEqual(true, board.PlacePiece(WHITE, PAWN, 'f', 4), L"Failed to place Pawn", LINE_INFO());
+		Assert::AreEqual(true, board.MakeMove('e', 5, 'f', 4), L"Pawn should be able to take diagonally.", LINE_INFO());
+		
+		Assert::AreEqual(true, board.PlacePiece(BLACK, PAWN, 'a', 3), L"Failed to place Pawn", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(WHITE, PAWN, 'a', 2), L"Failed to place Pawn", LINE_INFO());
+		Assert::AreEqual(false, board.MakeMove('a', 2, 'a', 4), L"Can't move through other pieces.", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(WHITE, PAWN, 'b', 2), L"Failed to place Pawn", LINE_INFO());
+		Assert::AreEqual(true, board.MakeMove('b', 2, 'a', 3), L"Should be able to take piece diagonally.", LINE_INFO());
+
+		byte var = 0x00 | PAWN;
+		Assert::AreEqual(var, board.GetValue('a', 3), L"There should be a king on e2.", LINE_INFO());
+		var |= 1 << 7;
+		Assert::AreEqual(var, board.GetValue('f', 4), L"There should be a king on e2.", LINE_INFO());
+	}
 };
 
 }

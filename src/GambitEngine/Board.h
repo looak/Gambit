@@ -47,6 +47,8 @@ private:
 	byte GetBoard120Index(byte file, byte rank) const;
 	byte GetBoard64Index(byte file, byte rank) const;
 
+	byte EnPassant();
+
 	Bitboard m_bitboard;
 	byte m_board[120];
 	byte m_boardLookup[64];

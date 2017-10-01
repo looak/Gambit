@@ -99,6 +99,11 @@ byte Board::GetBoard64Index(byte file, byte rank) const
 	return index;
 }
 
+byte GambitEngine::Board::EnPassant()
+{
+	return byte();
+}
+
 bool 
 Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 {
@@ -133,9 +138,10 @@ bool
 Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 {		
 	byte sInd64 = GetBoard64Index(sFile, sRank);
-	byte sInd = m_boardLookup[sInd64];
+	byte sInd	= m_boardLookup[sInd64];
+
 	byte tInd64 = GetBoard64Index(tFile, tRank);
-	byte tInd = m_boardLookup[tInd64];
+	byte tInd	= m_boardLookup[tInd64];
 	
 	byte pieceByte = m_board[sInd] & 0x7;
 	byte pieceSet = m_board[sInd] >> 7;
@@ -159,7 +165,7 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 		}
 		p->Square10x12 = tInd;
 		p->Square8x8 = tInd64;
-
+		
 		m_bitboard.MakeMove(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
 		return true;
 	}

@@ -11,6 +11,7 @@ private:
 	void CalculateAttacked(SET set = NR_OF_SETS);
 	PIECE GetPieceOnSquare(SET set, int square);
 	void AddAttackedFrom(SET set, PIECE piece, int square);
+	u64 AvailableCastling(SET set, byte castling);
 
 	void MarkDirty(SET set);
 
@@ -24,6 +25,8 @@ private:
 
 	byte m_board0x88[128];
 
+	
+
 public:
 	Bitboard();
 	Bitboard(const Bitboard& _src);
@@ -34,7 +37,7 @@ public:
 	bool CapturePiece(SET set, PIECE piece, byte tSqr);
 	bool MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr);
 
-	u64 AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant);
+	u64 AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte castling);
 
 	u64 MaterialCombined(SET set);
 

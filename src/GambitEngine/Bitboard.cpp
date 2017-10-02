@@ -89,7 +89,7 @@ Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
 }
 
 u64 
-Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant)
+Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte castling)
 {
 	u64 m_matComb = MaterialCombined(set);	
 	int seti = (int)!set;
@@ -134,6 +134,8 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant)
 		u64 enPass = 1i64 << enPassant;
 		m_matCombOp |= enPass;
 	}
+	if (piece == KING)
+		retVal |= AvailableCastling(set, castling);
 	
 	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
 	{
@@ -267,7 +269,34 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
 	}
 }
 
-void GambitEngine::Bitboard::MarkDirty(SET set)
+u64 
+Bitboard::AvailableCastling(SET set, byte castling)
+{
+	u64 retVal = ~universe;
+	byte state = 1;
+	byte rank = 0;
+	if (set == BLACK)
+	{
+		rank = 7;
+		state = 4;
+	}
+
+	// king side
+	byte file = 'g' - 'a';
+	if (castling & state)
+		retVal |= 1i64 << (file + (rank * 8));
+
+	// queen side
+	state *= 2;
+	file = 'c' - 'a';
+	if(castling & state)
+		retVal |= 1i64 << (file + (rank * 8));
+
+	return retVal;
+}
+
+void 
+Bitboard::MarkDirty(SET set)
 {
 	m_materialCombined[set] = ~universe;
 	m_combMaterialDirty[set] = true;

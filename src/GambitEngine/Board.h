@@ -47,7 +47,10 @@ private:
 	byte GetBoard120Index(byte file, byte rank) const;
 	byte GetBoard64Index(byte file, byte rank) const;
 
+	// handles setting en passant, removing en passant square
+	// and also if move is taking an enpassant that's also handled.
 	byte EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr);
+	bool Castling(byte sSqr, SET set, PIECE piece, byte tSqr);
 
 	Bitboard m_bitboard;
 	byte m_board[120];
@@ -84,7 +87,7 @@ public:
 
 
 	u64 AvailableMoves(SET set, PIECE piece, u32 square) {
-		return m_bitboard.AvailableMoves(set, piece, square, m_enPassant64);
+		return m_bitboard.AvailableMoves(set, piece, square, m_enPassant64, m_castleState);
 	}
 	
 };

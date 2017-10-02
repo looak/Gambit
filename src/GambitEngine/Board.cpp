@@ -64,6 +64,8 @@ Board::ResetBoard()
 
 	m_pieceArray[0].clear();
 	m_pieceArray[1].clear();
+
+	m_castleState = 15; // all castling available
 }
 
 bool Board::Occupied(byte indx)
@@ -84,8 +86,6 @@ byte Board::GetBoard120Index(byte file, byte rank) const
 	return m_boardLookup[index];
 }
 
-
-
 byte Board::GetBoard64Index(byte file, byte rank) const
 {
 	byte corrFile = tolower(file) - 'a';
@@ -99,7 +99,7 @@ byte Board::GetBoard64Index(byte file, byte rank) const
 	return index;
 }
 
-byte GambitEngine::Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
+byte Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
 {
 	if (piece != PAWN)
 	{
@@ -130,6 +130,29 @@ byte GambitEngine::Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
 	}
 
 	return m_enPassant64;
+}
+
+bool 
+Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
+{
+	// was our piece a king?
+	if (piece != KING)
+		return false;
+			
+	byte diff = sSqr - tSqr;
+	byte sRank = sSqr >> 3;
+	byte rookFile = 0;
+	byte tFile = 3;
+	if (diff > 0) // king side, get rook on file h.
+	{
+		rookFile = 7;
+		tFile = 5;
+	}
+	
+
+	byte rookSqr = rookFile + (sRank * 8);
+
+	return false;
 }
 
 bool 
@@ -198,7 +221,7 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 	byte pieceByte = m_board[sInd] & 0x7;
 	byte pieceSet = m_board[sInd] >> 7;
 
-	u64 avaMoves = m_bitboard.AvailableMoves((SET)pieceSet, (PIECE)pieceByte, sInd64, m_enPassant64);
+	u64 avaMoves = m_bitboard.AvailableMoves((SET)pieceSet, (PIECE)pieceByte, sInd64, m_enPassant64, m_castleState);
 	u64 moveMsk = 1i64 << tInd64;
 
 	if (avaMoves & moveMsk)
@@ -218,6 +241,7 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 		p->Square10x12 = tInd;
 		p->Square8x8 = tInd64;
 		EnPassant(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
+		
 		m_bitboard.MakeMove(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
 		return true;
 	}

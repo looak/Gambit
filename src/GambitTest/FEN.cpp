@@ -71,7 +71,7 @@ namespace GambitTest
 		}
 
 
-		TEST_METHOD(FenInput_EnPassant)
+		TEST_METHOD(FenInput_EnPassant_White)
 		{
 			bool expectedValue = true;
 
@@ -87,6 +87,29 @@ namespace GambitTest
 			// take pawn
 			result = board.MakeMove('f', 4, 'e', 3);
 			Assert::AreEqual(expectedValue, result, L"Failed to take en passant pawn", LINE_INFO());
+			byte var = 0x00;
+			Assert::AreEqual(var, board.GetValue('e', 4), L"There should not be a pawn on e4.", LINE_INFO());
+		}
+
+		TEST_METHOD(FenInput_EnPassant_Black)
+		{
+			bool expectedValue = true;
+
+			// white king on white king starting position.
+			char inputFen[] = "8/8/8/4Pp2/8/8/8/R3K2R w KQ f6 0 1";
+			uint8_t length = sizeof(inputFen);
+			GambitEngine::Board board;
+
+			bool result = GambitEngine::FEN::InputFen(inputFen, length, board);
+
+			Assert::AreEqual(expectedValue, result, L"Failed to input FEN", LINE_INFO());
+
+			// take pawn
+			result = board.MakeMove('e', 5, 'f', 6);
+			Assert::AreEqual(expectedValue, result, L"Failed to take en passant pawn", LINE_INFO());
+			byte var = 0x00;
+			Assert::AreEqual(var, board.GetValue('f', 5), L"There should not be a pawn on e4.", LINE_INFO());
+
 		}
 
 	};

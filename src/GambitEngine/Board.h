@@ -47,13 +47,14 @@ private:
 	byte GetBoard120Index(byte file, byte rank) const;
 	byte GetBoard64Index(byte file, byte rank) const;
 
-	byte EnPassant(byte sSqr, PIECE piece, byte tSqr);
+	byte EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr);
 
 	Bitboard m_bitboard;
 	byte m_board[120];
 	byte m_boardLookup[64];
 
 	byte m_enPassant64;
+	byte m_enPassantTargetSqr64;
 
 	// 0x01 == K, 0x02 == Q, 0x04 == k, 0x08 == q
 	byte m_castleState;
@@ -72,6 +73,7 @@ public:
 	// returns false if this failed either because of being outside of board 
 	// or square is occupied
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);
+	bool CapturePiece(SET set, PIECE piece, byte tSqr);
 	bool MakeMove(byte sFile, byte sRank, byte tFile, byte tRank);
 	
 	const std::vector<Pieces::Piece> GetPieces(SET set) const { return m_pieceArray[set]; };

@@ -67,7 +67,7 @@ public:
 		Assert::AreEqual(true, board.MakeMove('e', 2, 'e', 4), L"Pawn should be able to jump two steps from starting position.", LINE_INFO());		
 		Assert::AreEqual(true, board.MakeMove('f', 4, 'e', 3), L"Pawn should be able to take en passant pawn.", LINE_INFO());
 		
-		byte var = 0x00 | PAWN;
+		byte var = 0x00;
 		Assert::AreEqual(var, board.GetValue('e', 4), L"There should not be a pawn on e4.", LINE_INFO());
 		
 	}

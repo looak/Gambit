@@ -115,9 +115,21 @@ FENBoardWriter::WriteCastlingState(char* states, int length, Board & board)
 }
 
 bool 
-FENBoardWriter::WriteEnPassant(byte square, Board & board)
+FENBoardWriter::WriteEnPassant(byte file, byte rank, Board& board)
 {
-	board.m_enPassant64 = square;
+	byte r = rank;
+	if (r == 5) // black
+	{
+		r--;
+	}
+	else
+	{
+		r++;
+	}
+	// target square 
+	byte tSqr = file + (r * 8);
+	board.m_enPassantTargetSqr64 = tSqr;
+	board.m_enPassant64 = file + (rank * 8);
 	return true;
 }
 
@@ -214,13 +226,11 @@ bool FENParser::Deserialize(const char* fen, byte length, Board& outputBoard, Ga
 	// should be on en passant now.
 	if (fen[index] != '-')
 	{
-		byte square = fen[index] - 'a';
+		byte file = fen[index] - 'a';
 		index++;
-		byte rank = fen[index] - '0';
+		byte rank = fen[index] - '1';
 
-		square = square << 4;
-		square |= rank;
-		boardWriter.WriteEnPassant(square, outputBoard);
+		boardWriter.WriteEnPassant(file, rank, outputBoard);
 	}
 
 	index++;

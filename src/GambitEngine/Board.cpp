@@ -99,7 +99,7 @@ byte Board::GetBoard64Index(byte file, byte rank) const
 	return index;
 }
 
-byte GambitEngine::Board::EnPassant(byte sSqr, PIECE piece, byte tSqr)
+byte GambitEngine::Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
 {
 	if (piece != PAWN)
 	{
@@ -107,13 +107,26 @@ byte GambitEngine::Board::EnPassant(byte sSqr, PIECE piece, byte tSqr)
 		m_enPassant64 = 0;
 		return m_enPassant64;
 	}
-
 	short enPassant = (short)tSqr - (short)sSqr;
-	if (abs(enPassant) == 16)
+	short absPass = abs(enPassant);
+
+	if (m_enPassant64 != 0)
+	{
+		if (tSqr == m_enPassant64)
+		{
+			int captSet = !int(set);
+			CapturePiece((SET)captSet, PAWN, m_enPassantTargetSqr64);
+			m_enPassantTargetSqr64 = 0;
+			m_enPassant64 = 0;
+		}
+	}
+	
+	if (absPass == 16)
 	{
 		enPassant /= 2;
 		m_enPassant64 = sSqr + enPassant;
 		
+		m_enPassantTargetSqr64 = tSqr;
 	}
 
 	return m_enPassant64;
@@ -150,6 +163,30 @@ Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 }
 
 bool 
+Board::CapturePiece(SET set, PIECE piece, byte tSqr)
+{
+	int ind = 0;
+	Pieces::Piece *p = nullptr;
+	while (m_pieceArray[set].size() > ind)
+	{
+		if (m_pieceArray[set][ind].Square8x8 == tSqr)
+		{
+			p = &m_pieceArray[set][ind];
+			break;
+		}
+		ind++;
+	}
+
+	if (p == nullptr)
+		return false;
+		
+	m_board[m_boardLookup[tSqr]] = 0x00;
+	m_pieceArray[set].erase(m_pieceArray[set].begin() + ind);
+	m_bitboard.CapturePiece(set, piece, tSqr);
+	return true;
+}
+
+bool 
 Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 {		
 	byte sInd64 = GetBoard64Index(sFile, sRank);
@@ -180,7 +217,7 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 		}
 		p->Square10x12 = tInd;
 		p->Square8x8 = tInd64;
-		EnPassant(sInd64, (PIECE)pieceByte, tInd64);
+		EnPassant(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
 		m_bitboard.MakeMove(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
 		return true;
 	}

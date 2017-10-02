@@ -26,7 +26,7 @@ public:
 
 	bool Write(SET set, PIECE piece, Board& board);
 	bool WriteCastlingState(char* states, int count, Board& board);
-	bool WriteEnPassant(byte square, Board& board);
+	bool WriteEnPassant(byte file, byte rank, Board& board);
 
 	void NextFile();
 	void DownRank();

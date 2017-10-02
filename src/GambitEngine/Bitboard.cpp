@@ -66,6 +66,16 @@ Bitboard::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 }
 
 bool 
+Bitboard::CapturePiece(SET set, PIECE piece, byte tSqr)
+{
+	u64 mask = 1i64 << tSqr;
+	m_material[set][piece] ^= mask;
+
+	MarkDirty(set);
+	return true;
+}
+
+bool 
 Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
 {
 	u64 sMask = 1i64 << sSqr;
@@ -74,9 +84,7 @@ Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
 	m_material[set][piece] ^= sMask;
 	m_material[set][piece] |= tMask;
 
-	m_materialCombined[set] = ~universe;
-	m_combMaterialDirty[set] = true;
-	m_attackedDirty[set] = true;
+	MarkDirty(set);
 	return true;
 }
 
@@ -199,7 +207,7 @@ Bitboard::CalculateAttacked(SET set)
 {
 	for (int i = 0; i < 64; i++)
 	{
-		PIECE pc = getPieceOnSquare(set, i);
+		PIECE pc = GetPieceOnSquare(set, i);
 		if (pc != NR_OF_PIECES)
 		{
 			AddAttackedFrom(set, pc, i);
@@ -208,7 +216,7 @@ Bitboard::CalculateAttacked(SET set)
 }
 
 PIECE 
-Bitboard::getPieceOnSquare(SET set, int square)
+Bitboard::GetPieceOnSquare(SET set, int square)
 {
 	u64 sqr = 1i64 << square;
 	for (int i = 1; i < NR_OF_PIECES; i++)
@@ -257,4 +265,13 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
 
 		} while (sliding);			
 	}
+}
+
+void GambitEngine::Bitboard::MarkDirty(SET set)
+{
+	m_materialCombined[set] = ~universe;
+	m_combMaterialDirty[set] = true;
+
+	m_attacked[set] = ~universe;
+	m_attackedDirty[set] = true;
 }

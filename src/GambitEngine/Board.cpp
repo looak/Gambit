@@ -61,10 +61,7 @@ Board::ResetBoard()
 	memset(&m_board[79], 0xff, 2);
 	memset(&m_board[89], 0xff, 2);
 	memset(&m_board[99], 0xff, 21);
-
-	m_pieceArray[0].clear();
-	m_pieceArray[1].clear();
-
+	
 	m_castleState = 15; // all castling available
 }
 
@@ -138,21 +135,35 @@ Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
 	// was our piece a king?
 	if (piece != KING)
 		return false;
-			
-	byte diff = sSqr - tSqr;
+	
+	// are we castling?
+	short diff = sSqr - tSqr;
+	if (diff != -2 && diff != 2)
+		return false;
+
 	byte sRank = sSqr >> 3;
 	byte rookFile = 0;
 	byte tFile = 3;
-	if (diff > 0) // king side, get rook on file h.
+	if (diff < 0) // king side, get rook on file h.
 	{
 		rookFile = 7;
 		tFile = 5;
-	}
+	}	
+
+	// move rook
+	byte sRookSqr = rookFile + (sRank * 8);
+	byte tRookSqr = tFile + (sRank * 8);
+	// get rook on rookSqr
+	Pieces::Piece* pRook = m_material[set].GetPiece(ROOK, sRookSqr);
+	// make moves
+	m_bitboard.MakeMove(pRook->Square8x8, set, (PIECE)pRook->Type, tRookSqr);
+	pRook->Square8x8 = tRookSqr;
+	pRook->Square10x12 = m_boardLookup[tRookSqr];
+	m_material[set].MakeMove(pRook, sRookSqr);	
 	
-
-	byte rookSqr = rookFile + (sRank * 8);
-
-	return false;
+	m_board[m_boardLookup[tRookSqr]] = m_board[m_boardLookup[sRookSqr]];
+	m_board[m_boardLookup[sRookSqr]] = 0x00;
+	return true;
 }
 
 bool 
@@ -166,11 +177,7 @@ Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 	p.Square10x12 = bIndx;
 	p.Square8x8 = bIndx64;
 
-	m_pieceArray[set].push_back(p);
-
-	if (piece == KING)
-		m_kings[set] = p;
-
+	
 	byte comp = 0x07;
 	if ((m_board[bIndx] & comp) != 0x00)
 		return false;
@@ -182,29 +189,20 @@ Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 	m_board[bIndx] = pieceVal;
 
 	m_bitboard.PlacePiece(set, piece, file, rank);
+	m_material[set].AddPiece(p);
 	return true;
 }
 
 bool 
 Board::CapturePiece(SET set, PIECE piece, byte tSqr)
-{
-	int ind = 0;
-	Pieces::Piece *p = nullptr;
-	while (m_pieceArray[set].size() > ind)
-	{
-		if (m_pieceArray[set][ind].Square8x8 == tSqr)
-		{
-			p = &m_pieceArray[set][ind];
-			break;
-		}
-		ind++;
-	}
+{	
+	Pieces::Piece *p = m_material[set].GetPiece(piece, tSqr);
 
 	if (p == nullptr)
 		return false;
 		
 	m_board[m_boardLookup[tSqr]] = 0x00;
-	m_pieceArray[set].erase(m_pieceArray[set].begin() + ind);
+	m_material[set].CapturePiece(p);
 	m_bitboard.CapturePiece(set, piece, tSqr);
 	return true;
 }
@@ -229,20 +227,14 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 		m_board[tInd] = m_board[sInd];
 		m_board[sInd] = 0x00;
 
-		int ind = 0;
-		Pieces::Piece *p = nullptr;
-		while (m_pieceArray[pieceSet].size() > ind)
-		{
-			p = &m_pieceArray[pieceSet][ind];
-			if (m_pieceArray[pieceSet][ind].Square10x12 == sInd)
-				break;
-			ind++;
-		}
+		Pieces::Piece *p = m_material[pieceSet].GetPiece((PIECE)pieceByte, sInd64);
 		p->Square10x12 = tInd;
 		p->Square8x8 = tInd64;
-		EnPassant(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
-		
 		m_bitboard.MakeMove(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
+		m_material[pieceSet].MakeMove(p, sInd64);
+
+		EnPassant(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
+		Castling(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
 		return true;
 	}
 

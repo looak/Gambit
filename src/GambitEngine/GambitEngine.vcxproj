@@ -166,6 +166,7 @@
     <ClCompile Include="GambitEngine.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="MoveGenerator.cpp" />
+    <ClCompile Include="Pieces.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

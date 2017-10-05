@@ -1,8 +1,10 @@
 #pragma once
+#include "typedef.h"
+#include <vector>
+#include <array>
 
 enum PIECE
 {
-
 	NONE = 0,
 	PAWN = 1,
 	KNIGHT = 2,
@@ -68,4 +70,31 @@ struct Piece
 	byte	Square8x8;
 };
 
+}
+
+namespace GambitEngine
+{
+class Material
+{
+private:
+	typedef std::array<std::vector<Pieces::Piece>,NR_OF_PIECES> MaterialGrid;	
+	MaterialGrid m_materialGrid;
+	MaterialGrid m_capturedMaterial;
+
+	Pieces::Piece* m_king;
+
+	Pieces::Piece* m_board[64];
+
+public:
+	Material();
+	~Material();
+	Pieces::Piece* GetPiece(PIECE pType, byte square);
+	Pieces::Piece* GetKing() { return m_king; };
+
+	std::vector<Pieces::Piece> GetMaterial() const;
+
+	bool AddPiece(Pieces::Piece piece);
+	bool CapturePiece(Pieces::Piece* piece);
+	bool MakeMove(Pieces::Piece* piece, byte sSquare);
+};
 }

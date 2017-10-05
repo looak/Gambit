@@ -62,10 +62,9 @@ private:
 	// 0x01 == K, 0x02 == Q, 0x04 == k, 0x08 == q
 	byte m_castleState;
 
-	typedef std::array<std::vector<Pieces::Piece>, 2> PieceArray;
-	PieceArray m_pieceArray;
+	typedef std::array<Material, 2> MaterialArray;
+	MaterialArray m_material;
 
-	Pieces::Piece m_kings[2];
 public:
 	Board();
 	Board(const Board& _src);
@@ -79,7 +78,7 @@ public:
 	bool CapturePiece(SET set, PIECE piece, byte tSqr);
 	bool MakeMove(byte sFile, byte sRank, byte tFile, byte tRank);
 	
-	const std::vector<Pieces::Piece> GetPieces(SET set) const { return m_pieceArray[set]; };
+	const std::vector<Pieces::Piece> GetPieces(SET set) const { return m_material[set].GetMaterial(); };
 
 	byte GetValue(byte file, byte rank) const;
 	Bitboard GetBitboard() const { return m_bitboard; }

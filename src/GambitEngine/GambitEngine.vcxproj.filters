@@ -71,6 +71,7 @@
     <ClCompile Include="MoveGenerator.cpp">
       <Filter>Brain</Filter>
     </ClCompile>
+    <ClCompile Include="Pieces.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.md" />

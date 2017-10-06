@@ -49,7 +49,7 @@ private:
 
 	// handles setting en passant, removing en passant square
 	// and also if move is taking an enpassant that's also handled.
-	byte EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr);
+	bool EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr);
 	bool Castling(byte sSqr, SET set, PIECE piece, byte tSqr);
 
 	Bitboard m_bitboard;

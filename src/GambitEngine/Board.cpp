@@ -96,13 +96,13 @@ byte Board::GetBoard64Index(byte file, byte rank) const
 	return index;
 }
 
-byte Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
+bool Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
 {
 	if (piece != PAWN)
 	{
 		// reset en passant since our move didn't add one.
 		m_enPassant64 = 0;
-		return m_enPassant64;
+		return false;
 	}
 	short enPassant = (short)tSqr - (short)sSqr;
 	short absPass = abs(enPassant);
@@ -115,6 +115,7 @@ byte Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
 			CapturePiece((SET)captSet, PAWN, m_enPassantTargetSqr64);
 			m_enPassantTargetSqr64 = 0;
 			m_enPassant64 = 0;
+			return true;
 		}
 	}
 	
@@ -126,7 +127,7 @@ byte Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
 		m_enPassantTargetSqr64 = tSqr;
 	}
 
-	return m_enPassant64;
+	return false;
 }
 
 bool 
@@ -242,7 +243,12 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 
 	byte tInd64 = GetBoard64Index(tFile, tRank);
 	byte tInd	= m_boardLookup[tInd64];
-	
+
+	bool isCapture = false;
+	byte target = m_board[tInd] & 0x7;
+	if (target & 0x7 != 0x0)
+		isCapture = true;
+
 	byte pieceByte = m_board[sInd] & 0x7;
 	byte pieceSet = m_board[sInd] >> 7;
 
@@ -251,17 +257,26 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank)
 
 	if (avaMoves & moveMsk)
 	{
+		bool isCapture = false;
+		byte targetPiece = m_board[tInd] & 0x7;
+		if (target & 0x7 != 0x0)
+			isCapture = true;
+
 		m_board[tInd] = m_board[sInd];
 		m_board[sInd] = 0x00;
 
 		Pieces::Piece *p = m_material[pieceSet].GetPiece((PIECE)pieceByte, sInd64);
 		p->Square10x12 = tInd;
 		p->Square8x8 = tInd64;
+
 		m_bitboard.MakeMove(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
 		m_material[pieceSet].MakeMove(p, sInd64);
-
-		EnPassant(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
+		bool enPassantCapture = EnPassant(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
 		Castling(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
+
+		if (!enPassantCapture && isCapture)
+			CapturePiece((SET)!(int)pieceSet, (PIECE)targetPiece, tInd64);
+
 		return true;
 	}
 

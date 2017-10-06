@@ -57,7 +57,7 @@ namespace GambitTest
 			bool expectedValue = true;
 
 			// white king on white king starting position.
-			char inputFen[] = "8/8/8/8/8/8/8/R3K2R w KQ - 0 1";
+			char inputFen[] = "r3k2r/8/8/8/8/8/8/R3K2R w KQ - 0 1";
 			uint8_t length = sizeof(inputFen);
 			GambitEngine::Board board;
 
@@ -66,8 +66,11 @@ namespace GambitTest
 			Assert::AreEqual(expectedValue, result, L"Failed to input FEN", LINE_INFO());
 
 			// castling
-			result = board.MakeMove('e', 1, 'a', 1);
+			result = board.MakeMove('e', 1, 'c', 1);
 			Assert::AreEqual(expectedValue, result, L"Failed to castle", LINE_INFO());
+
+			result = board.MakeMove('e', 8, 'c', 8);
+			Assert::AreEqual(false, result, L"Failed to castle", LINE_INFO());
 		}
 
 

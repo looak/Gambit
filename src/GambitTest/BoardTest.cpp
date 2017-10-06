@@ -68,7 +68,8 @@ public:
 		Assert::AreEqual(true, board.MakeMove('f', 4, 'e', 3), L"Pawn should be able to take en passant pawn.", LINE_INFO());
 		
 		byte var = 0x00;
-		Assert::AreEqual(var, board.GetValue('e', 4), L"There should not be a pawn on e4.", LINE_INFO());		
+		Assert::AreEqual(var, board.GetValue('e', 4), L"There should not be a pawn on e4.", LINE_INFO());
+		Assert::AreEqual((byte)0x01, board.GetValue('e', 3), L"There should be a pawn on e3.", LINE_INFO());
 	}
 
 	TEST_METHOD(BoardTest_Castling_White_KingSide)

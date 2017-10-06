@@ -132,6 +132,22 @@ byte Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
 bool 
 Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
 {
+	if (piece == ROOK)
+	{
+		// fetch rook square;
+		byte rookByte = m_board[m_boardLookup[tSqr]];
+		if (!(rookByte & 64))
+		{
+			rookByte |= 64; // set has moved;
+			byte sFile = sSqr % 8;
+			if(sFile == 7) // king side;
+				m_castleState ^= 1 + (set * 3);
+			else // assume we're moving queen side rook
+				m_castleState ^= 2 + (set * 6);
+
+			m_board[m_boardLookup[tSqr]] = rookByte;
+		}
+	}
 	// was our piece a king?
 	if (piece != KING)
 		return false;
@@ -139,7 +155,18 @@ Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
 	// are we castling?
 	short diff = sSqr - tSqr;
 	if (diff != -2 && diff != 2)
+	{
+		/*if (m_castleState & (1 + (set * 2)))
+			return false;*/
+
+		// set castle state to always make sure we're unsetting it in the toggle step.
+		m_castleState |= 1 + (set * 3);
+		m_castleState |= 2 + (set * 6);
+
+		m_castleState ^= 1 + (set * 3);
+		m_castleState ^= 2 + (set * 6);
 		return false;
+	}
 
 	byte sRank = sSqr >> 3;
 	byte rookFile = 0;

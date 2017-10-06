@@ -138,6 +138,49 @@ public:
 		Assert::AreEqual(true, board.MakeMove('e', 1, 'c', 1), L"Failed to castle queen side.", LINE_INFO());
 	}
 
+	TEST_METHOD(BoardTest_Castling_Black_KingSide_Failed)
+	{
+		GambitEngine::Board board;
+
+		Assert::AreEqual(true, board.PlacePiece(BLACK, KING, 'e', 8), L"Failed to place King", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(WHITE, ROOK, 'f', 1), L"Failed to place Rook", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(BLACK, ROOK, 'h', 8), L"Failed to place Rook", LINE_INFO());
+
+		Assert::AreEqual(false, board.MakeMove('e', 8, 'g', 8), L"Can't castle when path is attacked.", LINE_INFO());
+	}
+
+
+	TEST_METHOD(BoardTest_Castling_Black_RookMoved)
+	{
+		GambitEngine::Board board;
+
+		Assert::AreEqual(true, board.PlacePiece(BLACK, KING, 'e', 8), L"Failed to place King", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(BLACK, ROOK, 'h', 8), L"Failed to place Rook", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(BLACK, ROOK, 'a', 8), L"Failed to place Rook", LINE_INFO());
+
+		board.MakeMove('h', 8, 'h', 7);
+		board.MakeMove('h', 7, 'h', 8);
+
+		Assert::AreEqual(false, board.MakeMove('e', 8, 'g', 8), L"Can't castle after rook has moved.", LINE_INFO());
+		Assert::AreEqual(true, board.MakeMove('e', 8, 'c', 8), L"Can still castle queen side.", LINE_INFO());
+	}
+
+	TEST_METHOD(BoardTest_Castling_White_KingMoved)
+	{
+		GambitEngine::Board board;
+
+		Assert::AreEqual(true, board.PlacePiece(WHITE, KING, 'e', 1), L"Failed to place King", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(WHITE, ROOK, 'a', 1), L"Failed to place Rook", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(WHITE, ROOK, 'h', 1), L"Failed to place Rook", LINE_INFO());
+
+		board.MakeMove('e', 1, 'e', 2);
+		board.MakeMove('e', 2, 'e', 1);
+
+		Assert::AreEqual(false, board.MakeMove('e', 1, 'c', 1), L"Failed to castle queen side.", LINE_INFO());
+		Assert::AreEqual(false, board.MakeMove('e', 1, 'g', 1), L"Failed to castle king side.", LINE_INFO());
+	}
+
+
 };
 
 }

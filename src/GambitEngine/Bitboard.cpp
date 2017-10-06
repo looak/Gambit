@@ -280,17 +280,54 @@ Bitboard::AvailableCastling(SET set, byte castling)
 		rank = 7;
 		state = 4;
 	}
-
+	
+	SET opSet = (SET)!(int)set;
+	u64 atked = Attacked(opSet);
+	u64 combMat = MaterialCombined(set);
+	combMat |= MaterialCombined(opSet);
+	combMat |= atked;
+	
 	// king side
 	byte file = 'g' - 'a';
+	byte toCheck = file;
+	bool available = true;
 	if (castling & state)
-		retVal |= 1i64 << (file + (rank * 8));
+	{
+		while (available)
+		{
+			u64 sqr = 1i64 << toCheck + (rank * 8);
+			if (sqr & combMat)
+				available = false;
+			toCheck--;
+
+			if (toCheck == ('e' - 'a'))
+				break;
+		}
+	
+		if(available)
+			retVal |= 1i64 << (file + (rank * 8));
+	}
 
 	// queen side
 	state *= 2;
 	file = 'c' - 'a';
-	if(castling & state)
-		retVal |= 1i64 << (file + (rank * 8));
+	toCheck = 'b' - 'a';
+	if (castling & state)
+	{
+		while (available)
+		{
+			u64 sqr = 1i64 << toCheck + (rank * 8);
+			if (sqr & combMat)
+				available = false;
+			toCheck++;
+
+			if (toCheck == ('e' - 'a'))
+				break;
+		}
+
+		if (available)
+			retVal |= 1i64 << (file + (rank * 8));
+	}
 
 	return retVal;
 }

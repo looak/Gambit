@@ -11,16 +11,6 @@ namespace GambitTest
 	TEST_CLASS(FenTests)
 	{
 	public:
-		
-		TEST_METHOD(FenInput_StartingBoardTest)
-		{
-			// starting position FEN
-			// rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-
-			char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-
-			Assert::AreEqual(true, false, L"Failed to setup board.", LINE_INFO());
-		}
 
 		TEST_METHOD(FenInput_WrongFen_TooFewPieces)
 		{
@@ -92,6 +82,7 @@ namespace GambitTest
 			Assert::AreEqual(expectedValue, result, L"Failed to take en passant pawn", LINE_INFO());
 			byte var = 0x00;
 			Assert::AreEqual(var, board.GetValue('e', 4), L"There should not be a pawn on e4.", LINE_INFO());
+			Assert::AreEqual((byte)0x81, board.GetValue('e', 3), L"There should be a pawn on e3.", LINE_INFO());
 		}
 
 		TEST_METHOD(FenInput_EnPassant_Black)

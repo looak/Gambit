@@ -70,7 +70,7 @@ namespace GambitTest
 			u64 attked = ~universe;
 			
 			// h file
-			__int64 h7 = 55;
+			u64 h7 = 55;
 			for (__int64 hfile = h7; hfile >= 0; hfile-=8)
 			{
 				attked |= 1i64 << hfile;

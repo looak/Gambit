@@ -70,6 +70,48 @@ struct Piece
 	byte	Square8x8;
 };
 
+static PIECE converter(byte toConvert)
+{
+	switch (toConvert)
+	{
+	case 'p':
+		return PAWN;
+	case 'n':
+		return KNIGHT;
+	case 'b':
+		return BISHOP;
+	case 'r':
+		return ROOK;
+	case 'q':
+		return QUEEN;
+	case 'k':
+		return KING;
+	default:
+		return PAWN;
+	}
+}
+
+static byte converter(PIECE toConvert)
+{
+	switch (toConvert)
+	{
+	case PAWN:
+		return 'p';
+	case KNIGHT:
+		return 'n';
+	case BISHOP:
+		return 'b';
+	case ROOK:
+		return 'r';
+	case QUEEN:
+		return 'q';
+	case KING:
+		return 'k';
+	default:
+		return PAWN;
+	}
+}
+
 }
 
 namespace GambitEngine
@@ -95,6 +137,6 @@ public:
 
 	bool AddPiece(Pieces::Piece piece);
 	bool CapturePiece(Pieces::Piece* piece);
-	bool MakeMove(Pieces::Piece* piece, byte sSquare);
+	bool MakeMove(byte sSqr, PIECE pType, byte tSqr, byte tSqr120);
 };
 }

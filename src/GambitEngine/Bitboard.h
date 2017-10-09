@@ -11,7 +11,9 @@ private:
 	void CalculateAttacked(SET set = NR_OF_SETS);
 	PIECE GetPieceOnSquare(SET set, int square);
 	void AddAttackedFrom(SET set, PIECE piece, int square);
+	
 	u64 AvailableCastling(SET set, byte castling);
+	bool AvailablePromotion(SET set);
 
 	void MarkDirty(SET set);
 
@@ -24,7 +26,6 @@ private:
 	u64 m_attacked[NR_OF_SETS];
 
 	byte m_board0x88[128];
-
 	
 
 public:
@@ -36,12 +37,16 @@ public:
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);	
 	bool CapturePiece(SET set, PIECE piece, byte tSqr);
 	bool MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr);
+	bool Promote(SET set, PIECE toPiece, byte sqr);
 
-	u64 AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte castling);
+	u64 AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte castling, byte& promotion);
+	// ignoring Pawns
+	u64 AvailableMovesSimple(SET set, PIECE piece, byte square);
 
 	u64 MaterialCombined(SET set);
-
 	u64 Attacked(SET set);
+
+	bool IsSquareAttacked(SET opSet, byte sqr);
 
 };
 }

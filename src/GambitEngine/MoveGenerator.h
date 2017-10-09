@@ -10,8 +10,10 @@ class Board;
 
 struct GAMBIT_API Move
 {
-	byte fromSqr;
-	byte toSqr;
+	byte fromSqr = 0x00;
+	byte toSqr = 0x00;
+
+	byte promotion = 0x00;
 };
 
 class GAMBIT_API MoveGenerator

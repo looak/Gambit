@@ -21,7 +21,8 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count)
 	for (int i = 0; i < pieceArry.size(); i++)
 	{
 		auto piece = pieceArry.at(i);
-		u64 avaMvs = board->AvailableMoves(set, (PIECE)piece.Type, piece.Square8x8);
+		byte promotion = 0x00;
+		u64 avaMvs = board->AvailableMoves(set, (PIECE)piece.Type, piece.Square8x8, promotion);
 
 		byte sqr = 0;
 		while (avaMvs != ~universe)
@@ -29,10 +30,24 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count)
 			u64 mask = 1i64 << sqr;
 			if (mask & avaMvs)
 			{
-				Move newMove;
-				newMove.fromSqr = piece.Square8x8;
-				newMove.toSqr	= sqr;
-				moves.push_back(newMove);
+				if (promotion != 0x00)
+				{
+					for (int i = 2; i < KING; i++)
+					{
+						Move newMove;
+						newMove.fromSqr = piece.Square8x8;
+						newMove.toSqr = sqr;
+						newMove.promotion = Pieces::converter((PIECE)i);
+						moves.push_back(newMove);
+					}
+				}
+				else
+				{
+					Move newMove;
+					newMove.fromSqr = piece.Square8x8;
+					newMove.toSqr = sqr;
+					moves.push_back(newMove);
+				}
 
 				avaMvs ^= mask;
 			}

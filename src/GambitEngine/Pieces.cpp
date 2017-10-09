@@ -35,7 +35,13 @@ Material::GetPiece(PIECE pType, byte square)
 	if (pType == KING)
 		return m_king;
 
-	return m_board[square];
+	auto ret = m_board[square];
+	if (ret == nullptr)
+		return ret;
+	if (ret->Type != pType)
+		return nullptr;
+	
+	return ret;
 }
 
 std::vector<Pieces::Piece> GambitEngine::Material::GetMaterial() const
@@ -83,9 +89,16 @@ Material::CapturePiece(Pieces::Piece* piece)
 }
 
 bool 
-Material::MakeMove(Pieces::Piece* piece, byte sSquare)
+Material::MakeMove(byte sSqr, PIECE pType, byte tSqr, byte tSqr120)
 {
-	m_board[sSquare] = nullptr;
-	m_board[piece->Square8x8] = piece;
+	auto pP = GetPiece(pType, sSqr);
+	if (pP == nullptr)
+		return false;
+
+	m_board[sSqr] = nullptr;
+	m_board[tSqr] = pP;
+	pP->Square8x8 = tSqr;
+	pP->Square10x12 = tSqr120;
+
 	return true;
 }

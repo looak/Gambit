@@ -88,8 +88,19 @@ Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
 	return true;
 }
 
+bool 
+Bitboard::Promote(SET set, PIECE toPiece, byte sqr)
+{
+	u64 mask = 1i64 << sqr;
+	m_material[set][PAWN] ^= mask;
+	m_material[set][toPiece] |= mask;
+
+	MarkDirty(set);
+	return true;
+}
+
 u64 
-Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte castling)
+Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte castling, byte& promotion)
 {
 	u64 m_matComb = MaterialCombined(set);	
 	int seti = (int)!set;
@@ -119,6 +130,9 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 		if (!(m_matComb & sqbb || m_matCombOp & sqbb))
 		{
 			retVal |= sqbb;
+
+			if (rank == 6 || rank == 1)
+				promotion = sq8x8;
 
 			if (rank == startingRank)
 			{
@@ -171,6 +185,64 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 		} while (sliding);
 	}
 
+	if (piece == PAWN)
+	{
+		// white promotion
+		u64 mask = 0xff00000000000000;
+		if (retVal & mask)
+			promotion = square;
+
+		// black promotion
+		mask = 0xff;
+		if (retVal & mask)
+			promotion = square;
+	}
+
+	return retVal;
+}
+
+u64 
+Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square)
+{
+	u64 retVal = ~universe;
+	u64 m_matComb = MaterialCombined(set);
+	int opSet = !(int)set;
+	u64 m_matCombOp = MaterialCombined((SET)opSet);
+	
+	byte curSqr = square;
+	for (int pI = 2; pI < Pieces::MoveCount[piece]; pI++)
+	{
+		curSqr = square;
+		bool sliding = Pieces::Slides[piece];
+		signed short dir = Pieces::Attacks0x88[piece][pI];
+		do
+		{
+			byte sq0x88 = 0x00;
+			byte sq8x8 = 0x00;
+			sq0x88 = curSqr + (curSqr & ~7);
+
+			sq0x88 += dir;
+
+			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
+			u64 sqbb = 1i64 << sq8x8;
+
+			if (sq0x88 & 0x88 || m_matComb & sqbb)
+			{
+				sliding = false;
+				continue;
+			}
+			else if (m_matCombOp & sqbb)
+			{
+				retVal |= sqbb;
+				sliding = false;
+			}
+			retVal |= sqbb;
+		
+			curSqr = sq8x8;
+
+		} while (sliding);
+	}
+
 	return retVal;
 }
 
@@ -202,6 +274,15 @@ Bitboard::Attacked(SET set)
 	}
 	
 	return m_attacked[set];
+}
+
+bool 
+Bitboard::IsSquareAttacked(SET opSet, byte sqr)
+{
+	u64 sqrMask = 1i64 << sqr;
+	u64 atked = Attacked(opSet);
+
+	return (atked & sqrMask);
 }
 
 void 
@@ -260,6 +341,11 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
 			
 			if (sq0x88 & 0x88 || m_matComb & sqbb)
 				sliding = false;
+			else if (m_matCombOp & sqbb)
+			{
+				sliding = false;
+				m_attacked[set] |= sqbb;
+			}
 			else
 				m_attacked[set] |= sqbb;
 
@@ -295,7 +381,7 @@ Bitboard::AvailableCastling(SET set, byte castling)
 	{
 		while (available)
 		{
-			u64 sqr = 1i64 << toCheck + (rank * 8);
+			u64 sqr = 1i64 << (toCheck + (rank * 8));
 			if (sqr & combMat)
 				available = false;
 			toCheck--;
@@ -316,7 +402,7 @@ Bitboard::AvailableCastling(SET set, byte castling)
 	{
 		while (available)
 		{
-			u64 sqr = 1i64 << toCheck + (rank * 8);
+			u64 sqr = 1i64 << (toCheck + (rank * 8));
 			if (sqr & combMat)
 				available = false;
 			toCheck++;
@@ -330,6 +416,12 @@ Bitboard::AvailableCastling(SET set, byte castling)
 	}
 
 	return retVal;
+}
+
+bool 
+Bitboard::AvailablePromotion(SET set)
+{
+	return false;
 }
 
 void 

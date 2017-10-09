@@ -67,12 +67,17 @@ void writeMoves(std::vector<GambitEngine::Move> moves)
 		byte tRank = mv.toSqr >> 3;
 		byte tFile = mv.toSqr & 7; 
 
+		byte promote = mv.promotion;
+
 		char sF = sFile + 'a';
 		char sR = sRank + '1';
 		char tF = tFile + 'a';
 		char tR = tRank + '1';
 
-		std::cout << sF << sR << tF << tR << std::endl;
+		if(promote != 0x00)
+			std::cout << sF << sR << tF << tR << promote << std::endl;
+		else
+			std::cout << sF << sR << tF << tR << std::endl;
 	}
 }
 
@@ -99,10 +104,13 @@ int main()
 	//char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	//char inputFen[] = "8/8/8/8/4N3/8/8/3kKN2 w - - 0 1";
 	//char inputFen[] = "Q7/3R4/4B3/8/6N1/8/2K5/8 w - - 0 1";
-	//char inputFen[] = "8/8/8/8/1K6/8/8/8 w - - 0 1";
-	char inputFen[] = "8/8/8/8/1R3r2/8/8/8 w - - 0 1";
+	//char inputFen[] = "8/8/8/8/8/8/8/4K3 w - - 0 1";
+	//char inputFen[] = "8/8/8/8/1R3r2/8/8/8 w - - 0 1";
 	//char inputFen[] = "8/8/8/8/1Q6/8/8/8 w - - 0 1";
 	//char inputFen[] = "8/8/8/8/8/8/8/R3K2R w KQ -";
+	//char inputFen[] = "8/8/8/4Pp2/8/8/8/8 w KQ f6 0 1";
+	//char inputFen[] = "8/1P6/8/8/8/8/8/8 w KQ f6 0 1";
+	char inputFen[] = "8/8/8/1R6/8/8/r7/1r2K3 w KQ f6 0 1";
 	uint8_t length = sizeof(inputFen);
 	
 	GambitEngine::Board board;
@@ -115,26 +123,28 @@ int main()
 		writeBoard(board);
 
 		std::cout << std::endl;
-		writeBitboard(board.GetBitboard().MaterialCombined(WHITE));
+		writeBitboard(board.GetBitboard().Attacked(BLACK));
 		
 		auto pieces = board.GetPieces(WHITE);
 		u64 avaMoves = ~universe;
+		byte promotion = 0x00;
 		for (int i = pieces.size() - 1; i >= 0; --i)
 		{
 			auto pP = pieces.at(i);
-			avaMoves |= board.GetBitboard().AvailableMoves(WHITE, (PIECE)pP.Type, pP.Square8x8, 0x00, 0x00);
+			avaMoves |= board.AvailableMoves(WHITE, (PIECE)pP.Type, pP.Square8x8, promotion);
 		}
 		std::cout << std::endl;
 		writeBitboard(avaMoves);
 
-		u32 moveCount = 0;
+		/*u32 moveCount = 0;
 		std::vector<GambitEngine::Move> mvs = mvGen.getMoves(WHITE, &board, moveCount);
 		writeMoves(mvs);
-	
-		byte tmp[4];
+	*/
+		byte tmp[5];
 		std::cin >> tmp;
 
-		board.MakeMove(tmp[0], tmp[1]-'0', tmp[2], tmp[3]-'0');
+		promotion = tmp[4] == 0 ? 0 : tmp[4];
+		board.MakeMove(tmp[0], tmp[1]-'0', tmp[2], tmp[3]-'0', promotion);
 	}
 
     return 0;

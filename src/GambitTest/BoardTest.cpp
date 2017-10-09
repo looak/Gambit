@@ -132,6 +132,18 @@ public:
 		Assert::AreEqual((byte)0x84, board.GetValue('f', 8), L"There should be a rook on f8.", LINE_INFO());
 	}
 
+	TEST_METHOD(BoardTest_Castling_Black_KingSide_Checked)
+	{
+		GambitEngine::Board board;
+		board.SetCastlingRights(15); // all available
+
+		Assert::AreEqual(true, board.PlacePiece(BLACK, KING, 'e', 8), L"Failed to place King", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(WHITE, ROOK, 'a', 8), L"Failed to place Rook", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(BLACK, ROOK, 'h', 8), L"Failed to place Rook", LINE_INFO());
+
+		Assert::AreEqual(false, board.MakeMove('e', 8, 'g', 8), L"Can't castle while in check.", LINE_INFO());
+	}
+
 	TEST_METHOD(BoardTest_Castling_Black_QueenSide)
 	{
 		GambitEngine::Board board;
@@ -221,6 +233,7 @@ public:
 	TEST_METHOD(BoardTest_CheckMate_White)
 	{
 		GambitEngine::Board board;
+		board.SetCastlingRights(0);
 
 		Assert::AreEqual(true, board.PlacePiece(WHITE, KING, 'e', 1), L"Failed to place King", LINE_INFO());
 		Assert::AreEqual(true, board.PlacePiece(BLACK, ROOK, 'b', 1), L"Failed to place Rook", LINE_INFO());

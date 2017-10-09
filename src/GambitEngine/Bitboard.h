@@ -8,9 +8,9 @@ namespace GambitEngine
 class GAMBIT_API Bitboard
 {
 private:
-	void CalculateAttacked(SET set = NR_OF_SETS);
+	void CalculateAttacked(SET set, bool ignoreKing = false);
 	PIECE GetPieceOnSquare(SET set, int square);
-	void AddAttackedFrom(SET set, PIECE piece, int square);
+	void AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp);
 	
 	u64 AvailableCastling(SET set, byte castling);
 	bool AvailablePromotion(SET set);
@@ -44,7 +44,8 @@ public:
 	u64 AvailableMovesSimple(SET set, PIECE piece, byte square);
 
 	u64 MaterialCombined(SET set);
-	u64 Attacked(SET set);
+	u64 MatCombinedNoKing(SET set);
+	u64 Attacked(SET set, bool ignoreKing = false);
 
 	bool IsSquareAttacked(SET opSet, byte sqr);
 

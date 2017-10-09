@@ -205,9 +205,9 @@ u64
 Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square)
 {
 	u64 retVal = ~universe;
-	u64 m_matComb = MaterialCombined(set);
 	int opSet = !(int)set;
-	u64 m_matCombOp = MaterialCombined((SET)opSet);
+	u64 matCombOp = MaterialCombined((SET)opSet);
+	u64 matComb = MaterialCombined(set);
 	
 	byte curSqr = square;
 	for (int pI = 2; pI < Pieces::MoveCount[piece]; pI++)
@@ -226,12 +226,12 @@ Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square)
 			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
 			u64 sqbb = 1i64 << sq8x8;
 
-			if (sq0x88 & 0x88 || m_matComb & sqbb)
+			if (sq0x88 & 0x88 || matComb & sqbb)
 			{
 				sliding = false;
 				continue;
 			}
-			else if (m_matCombOp & sqbb)
+			else if (matCombOp & sqbb)
 			{
 				retVal |= sqbb;
 				sliding = false;
@@ -244,6 +244,18 @@ Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square)
 	}
 
 	return retVal;
+}
+
+u64 
+Bitboard::MatCombinedNoKing(SET set)
+{
+	u64 combined = ~universe;
+	for (int i = KING - 1; i > 0; i--)
+	{
+		combined |= m_material[set][i];
+	}
+
+	return combined;
 }
 
 u64
@@ -264,13 +276,15 @@ Bitboard::MaterialCombined(SET set)
 }
 
 u64 
-Bitboard::Attacked(SET set)
+Bitboard::Attacked(SET set, bool ignoreKing)
 {
-	if (m_attackedDirty[set] == true)
+	if (m_attackedDirty[set] == true || ignoreKing)
 	{
 		m_attacked[set] = ~universe;
-		CalculateAttacked(set);
-		m_attackedDirty[set] = false;
+		CalculateAttacked(set, ignoreKing);
+
+		// don't want to save state if we ignore king.
+		m_attackedDirty[set] = ignoreKing;
 	}
 	
 	return m_attacked[set];
@@ -285,15 +299,22 @@ Bitboard::IsSquareAttacked(SET opSet, byte sqr)
 	return (atked & sqrMask);
 }
 
-void 
-Bitboard::CalculateAttacked(SET set)
+void
+Bitboard::CalculateAttacked(SET set, bool ignoreKing)
 {
+	SET setOp = (SET)!(int)set;
+	u64 matCombOp = ~universe;
+	if (ignoreKing)
+		matCombOp = MatCombinedNoKing(setOp);
+	else
+		matCombOp = MaterialCombined(setOp);
+
 	for (int i = 0; i < 64; i++)
 	{
 		PIECE pc = GetPieceOnSquare(set, i);
 		if (pc != NR_OF_PIECES)
 		{
-			AddAttackedFrom(set, pc, i);
+			AddAttackedFrom(set, pc, i, matCombOp);
 		}
 	}
 }
@@ -312,11 +333,9 @@ Bitboard::GetPieceOnSquare(SET set, int square)
 }
 
 void 
-Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
+Bitboard::AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp)
 {
-	u64 m_matComb = MaterialCombined(set);
-	int seti = (int)!set;
-	u64 m_matCombOp = MaterialCombined((SET)seti);
+	u64 matComb = MaterialCombined(set);
 
 	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
 	{
@@ -339,9 +358,9 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square)
 			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
 			u64 sqbb = 1i64 << sq8x8;
 			
-			if (sq0x88 & 0x88 || m_matComb & sqbb)
+			if (sq0x88 & 0x88 || matComb & sqbb)
 				sliding = false;
-			else if (m_matCombOp & sqbb)
+			else if (matCombedOp & sqbb)
 			{
 				sliding = false;
 				m_attacked[set] |= sqbb;

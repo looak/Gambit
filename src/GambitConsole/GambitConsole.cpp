@@ -123,7 +123,7 @@ int main()
 		writeBoard(board);
 
 		std::cout << std::endl;
-		writeBitboard(board.GetBitboard().Attacked(BLACK));
+		writeBitboard(board.GetBitboard().Attacked(BLACK, true));
 		
 		auto pieces = board.GetPieces(WHITE);
 		u64 avaMoves = ~universe;

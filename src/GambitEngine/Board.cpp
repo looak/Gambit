@@ -155,9 +155,6 @@ Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
 	short diff = sSqr - tSqr;
 	if (diff != -2 && diff != 2)
 	{
-		/*if (m_castleState & (1 + (set * 2)))
-			return false;*/
-
 		// set castle state to always make sure we're unsetting it in the toggle step.
 		m_castleState |= 1 + (set * 3);
 		m_castleState |= 2 + (set * 6);
@@ -223,29 +220,37 @@ Board::CheckMate(SET set)
 	SET opSet = (SET)!(int)set;
 
 	// can we move king?
-	u64 attked = m_bitboard.Attacked(opSet);
+	u64 attked = m_bitboard.Attacked(opSet, true);
 	u64 moves = m_bitboard.AvailableMovesSimple(set, (PIECE)pKing->Type, pKing->Square8x8);
+
+	// find diagonals from king
+	u64 digs = m_bitboard.AvailableMovesSimple(set, QUEEN, pKing->Square8x8);
 		
 	u64 attkedMask = ~attked;
 	u64 avaMoves = attkedMask & moves;
+	u64 attkedDiagnoals = attked & digs;
 
-	// can't move king
-	if (avaMoves == 0)
-	{ // can we block or capture us out of check mate?
-		auto material = m_material[set].GetMaterial();
-		for (u32 i = 0; i < material.size(); i++)
-		{
-			byte promotion = 0xff;
-			Pieces::Piece pP = material.at(i);
-			moves = m_bitboard.AvailableMoves(set, (PIECE)pP.Type, pP.Square8x8, m_enPassant64, m_castleState, promotion);
+	// can king move
+	if (avaMoves != 0)
+		return false;
+
+	// can we block or capture us out of check mate?
+	auto material = m_material[set].GetMaterial();
+	for (u32 i = 0; i < material.size(); i++)
+	{
+		byte promotion = 0;
+		Pieces::Piece pP = material.at(i);
+		if(pP.Type == 6)
+			continue;
+
+		moves = m_bitboard.AvailableMoves(set, (PIECE)pP.Type, pP.Square8x8, m_enPassant64, m_castleState, promotion);
 			
-			avaMoves = attkedMask & moves;
-			if (avaMoves > 0)
-				return false;
-		}
-		
+		avaMoves = attkedDiagnoals & moves;
+		if (avaMoves > 0)
+			return false;
 	}
-	return false;
+		
+	return true;
 }
 
 bool 

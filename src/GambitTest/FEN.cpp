@@ -47,7 +47,7 @@ namespace GambitTest
 			bool expectedValue = true;
 
 			// white king on white king starting position.
-			char inputFen[] = "r3k2r/8/8/8/8/8/8/R3K2R w KQ - 0 1";
+			char inputFen[] = "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQ - 0 1";
 			uint8_t length = sizeof(inputFen);
 			GambitEngine::Board board;
 

@@ -110,7 +110,8 @@ int main()
 	//char inputFen[] = "8/8/8/8/8/8/8/R3K2R w KQ -";
 	//char inputFen[] = "8/8/8/4Pp2/8/8/8/8 w KQ f6 0 1";
 	//char inputFen[] = "8/1P6/8/8/8/8/8/8 w KQ f6 0 1";
-	char inputFen[] = "8/8/8/1R6/8/8/r7/1r2K3 w KQ f6 0 1";
+	//char inputFen[] = "8/8/8/1R6/8/8/r7/1r2K3 w KQ f6 0 1";
+	char inputFen[] = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -";
 	uint8_t length = sizeof(inputFen);
 	
 	GambitEngine::Board board;
@@ -136,10 +137,12 @@ int main()
 		std::cout << std::endl;
 		writeBitboard(avaMoves);
 
-		/*u32 moveCount = 0;
-		std::vector<GambitEngine::Move> mvs = mvGen.getMoves(WHITE, &board, moveCount);
-		writeMoves(mvs);
-	*/
+		u32 moveCount = 0;
+		mvGen.FindBestMove(WHITE, &board, moveCount, 2);
+	//	writeMoves(mvs);
+
+		std::cout << moveCount << std::endl;
+	
 		byte tmp[5];
 		std::cin >> tmp;
 

@@ -30,7 +30,11 @@ Board::Board(const Board & _src)
 	memcpy(m_boardLookup, _src.m_boardLookup, sizeof(_src.m_boardLookup));
 	m_castleState = _src.m_castleState;
 	m_enPassant64 = _src.m_enPassant64;
+	m_enPassantTargetSqr64 = _src.m_enPassantTargetSqr64;
 
+	m_material[0] = _src.m_material[0];
+	m_material[1] = _src.m_material[1];
+	m_bitboard = _src.m_bitboard;
 }
 
 
@@ -319,39 +323,45 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promote)
 	return false;
 }
 
+void
+Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
+{
+	byte sSqr120 = m_boardLookup[sSqr];
+	byte tSqr120 = m_boardLookup[tSqr];
+
+	byte pieceByte = m_board[sSqr120] & 0x7;
+	byte pieceSet = m_board[sSqr120] >> 7;
+
+	bool isCapture = false;
+	byte targetPiece = m_board[tSqr120] & 0x7;
+	if ((targetPiece & 0x7) != 0x0)
+		isCapture = true;
+
+	EnPassant(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
+
+	if (isCapture)
+		CapturePiece((SET)!(int)pieceSet, (PIECE)targetPiece, tSqr);
+
+	Castling(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
+
+	m_bitboard.MakeMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
+	m_material[pieceSet].MakeMove(sSqr, (PIECE)pieceByte, tSqr, tSqr120);
+
+	// do move
+	m_board[tSqr120] = m_board[sSqr120];
+	m_board[sSqr120] = 0x00;
+
+	if (promote != 0x00)
+		Promote(tSqr, (SET)pieceSet, promote);
+}
+
 void 
 Board::MakeLegalMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promote)
 {
-	byte sInd64 = GetBoard64Index(sFile, sRank);
-	byte sInd = m_boardLookup[sInd64];
-
+	byte sInd64 = GetBoard64Index(sFile, sRank);	
 	byte tInd64 = GetBoard64Index(tFile, tRank);
-	byte tInd = m_boardLookup[tInd64];
+	MakeLegalMove(sInd64, tInd64, promote);
 	
-	byte pieceByte = m_board[sInd] & 0x7;
-	byte pieceSet = m_board[sInd] >> 7;
-		
-	bool isCapture = false;
-	byte targetPiece = m_board[tInd] & 0x7;
-	if ((targetPiece & 0x7) != 0x0)
-		isCapture = true;
-	
-	EnPassant(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
-	
-	if (isCapture)
-		CapturePiece((SET)!(int)pieceSet, (PIECE)targetPiece, tInd64);
-
-	Castling(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
-
-	m_bitboard.MakeMove(sInd64, (SET)pieceSet, (PIECE)pieceByte, tInd64);
-	m_material[pieceSet].MakeMove(sInd64, (PIECE)pieceByte, tInd64, tInd);
-	
-	// do move
-	m_board[tInd] = m_board[sInd];
-	m_board[sInd] = 0x00;
-	
-	if (promote != 0x00)
-		Promote(tInd64, (SET)pieceSet, promote);
 }
 
 byte 

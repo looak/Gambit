@@ -84,6 +84,7 @@ public:
 	bool MakeMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promotion = 0x00);
 
 	void MakeLegalMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promotion = 0x00);
+	void MakeLegalMove(byte sSqr, byte tSqr, byte promote = 0x00);
 	
 	bool Check(SET set);
 	bool CheckMate(SET set);

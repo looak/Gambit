@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MoveGenerator.h"
 #include "Board.h"
+#include <algorithm>
 
 using namespace GambitEngine;
 
@@ -10,6 +11,21 @@ MoveGenerator::MoveGenerator()
 
 MoveGenerator::~MoveGenerator()
 {
+}
+
+void 
+MoveGenerator::FindBestMove(SET set, Board* board, u32& count, short depth)
+{
+	auto moves = getMoves(set, board, count);
+
+	for (auto mv : moves)
+	{
+		Board testBoard = *board;
+		testBoard.MakeLegalMove(mv.fromSqr, mv.toSqr, mv.promotion);
+		
+		if (depth > 0)
+			FindBestMove(set, &testBoard, count, depth--);
+	}
 }
 
 std::vector<Move>
@@ -39,6 +55,7 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count)
 						newMove.toSqr = sqr;
 						newMove.promotion = Pieces::converter((PIECE)i);
 						moves.push_back(newMove);
+						count++;
 					}
 				}
 				else
@@ -47,13 +64,14 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count)
 					newMove.fromSqr = piece.Square8x8;
 					newMove.toSqr = sqr;
 					moves.push_back(newMove);
+					count++;
 				}
 
 				avaMvs ^= mask;
 			}
 
 			sqr++;
-		}		
+		}
 	}
 
 	return moves;	

@@ -56,6 +56,7 @@ public:
 		Assert::AreEqual(var, board.GetValue('a', 3), L"There should be a white pawn on a3.", LINE_INFO());
 		var |= 1 << 7;
 		Assert::AreEqual(var, board.GetValue('f', 4), L"There should be a black pawn on f4.", LINE_INFO());
+		Assert::AreEqual(true, board.MakeMove('e', 4, 'e', 5), L"Should be able to move pawn one step.", LINE_INFO());
 	}
 
 	TEST_METHOD(BoardTest_Move_Promotion)
@@ -139,6 +140,18 @@ public:
 
 		Assert::AreEqual(true, board.PlacePiece(BLACK, KING, 'e', 8), L"Failed to place King", LINE_INFO());
 		Assert::AreEqual(true, board.PlacePiece(WHITE, ROOK, 'a', 8), L"Failed to place Rook", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(BLACK, ROOK, 'h', 8), L"Failed to place Rook", LINE_INFO());
+
+		Assert::AreEqual(false, board.MakeMove('e', 8, 'g', 8), L"Can't castle while in check.", LINE_INFO());
+	}
+
+	TEST_METHOD(BoardTest_Castling_Black_KingSide_Rook_Attacked)
+	{
+		GambitEngine::Board board;
+		board.SetCastlingRights(15); // all available
+
+		Assert::AreEqual(true, board.PlacePiece(BLACK, KING, 'e', 8), L"Failed to place King", LINE_INFO());
+		Assert::AreEqual(true, board.PlacePiece(WHITE, ROOK, 'h', 1), L"Failed to place Rook", LINE_INFO());
 		Assert::AreEqual(true, board.PlacePiece(BLACK, ROOK, 'h', 8), L"Failed to place Rook", LINE_INFO());
 
 		Assert::AreEqual(false, board.MakeMove('e', 8, 'g', 8), L"Can't castle while in check.", LINE_INFO());

@@ -29,6 +29,25 @@ Material::~Material()
 		m_board[i] = nullptr;
 }
 
+Material::Material(const Material & _src)
+{
+	for (int i = 0; i < NR_OF_PIECES; i++)
+	{
+		m_materialGrid[i] = _src.m_materialGrid[i];
+		m_capturedMaterial[i] = _src.m_capturedMaterial[i];
+	}
+
+
+	for (int i = 0; i < NR_OF_PIECES; i++)
+	{
+		for (Pieces::Piece mat : m_materialGrid[i])
+		{
+			m_board[mat.Square8x8] = &mat;
+		}
+	}
+	
+}
+
 Pieces::Piece* 
 Material::GetPiece(PIECE pType, byte square)
 {

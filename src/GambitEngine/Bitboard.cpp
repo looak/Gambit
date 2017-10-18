@@ -130,10 +130,6 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 		if (!(m_matComb & sqbb || m_matCombOp & sqbb))
 		{
 			retVal |= sqbb;
-
-			if (rank == 6 || rank == 1)
-				promotion = sq8x8;
-
 			if (rank == startingRank)
 			{
 				sq0x88 += (mvMod * Pieces::Moves0x88[piece][0]);
@@ -148,7 +144,9 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 		u64 enPass = 1i64 << enPassant;
 		m_matCombOp |= enPass;
 	}
-	if (piece == KING)
+
+	u64 sqbb = 1i64 << square;
+	if (piece == KING && !(sqbb & Attacked((SET)seti)))
 		retVal |= AvailableCastling(set, castling);
 	
 	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
@@ -391,13 +389,14 @@ Bitboard::AvailableCastling(SET set, byte castling)
 	u64 combMat = MaterialCombined(set);
 	combMat |= MaterialCombined(opSet);
 	combMat |= atked;
-	
+
 	// king side
 	byte file = 'g' - 'a';
 	byte toCheck = file;
 	bool available = true;
 	if (castling & state)
 	{
+		available = !(atked & (1i64 << (('h' - 'a') + (rank * 8))));
 		while (available)
 		{
 			u64 sqr = 1i64 << (toCheck + (rank * 8));
@@ -419,6 +418,7 @@ Bitboard::AvailableCastling(SET set, byte castling)
 	toCheck = 'b' - 'a';
 	if (castling & state)
 	{
+		available = !(atked & (1i64 << (('a' - 'a') + (rank * 8))));
 		while (available)
 		{
 			u64 sqr = 1i64 << (toCheck + (rank * 8));

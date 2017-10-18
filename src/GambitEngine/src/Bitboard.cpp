@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Bitboard.h"
 #include "BitMath.h"
 

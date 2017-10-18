@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "GameState.h"
 #include "FENParser.h"
 
@@ -11,6 +10,7 @@ GameState::GameState()
 
 GameState::~GameState()
 {
+
 }
 
 void 

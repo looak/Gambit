@@ -1,10 +1,8 @@
-#include "stdafx.h"
 #include "FENParser.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 using namespace GambitEngine;
-
 
 PieceStruct
 FENPieceConverter::Convert(byte aNotation)

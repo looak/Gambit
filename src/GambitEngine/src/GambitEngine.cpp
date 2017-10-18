@@ -1,10 +1,5 @@
-// GambitEngine.cpp : Defines the exported functions for the DLL application.
-//
-
-#include "stdafx.h"
 #include "GambitEngine.h"
 #include "FENParser.h"
-
 
 namespace GambitEngine
 {

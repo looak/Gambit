@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include <ctype.h>
 #include "Board.h"
 

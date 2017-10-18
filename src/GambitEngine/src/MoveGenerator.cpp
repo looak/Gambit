@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "MoveGenerator.h"
 #include "Board.h"
 #include <algorithm>

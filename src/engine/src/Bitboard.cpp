@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Bitboard.h"
 #include "BitMath.h"
 
@@ -57,7 +56,7 @@ Bitboard::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 	byte corrRank = rank - 1;
 	byte shift = corrRank * 8 + corrFile;
 
-	m_material[set][piece] |= 1i64 << shift;
+	m_material[set][piece] |= INT64_C(1) << shift;
 
 	m_materialCombined[set] = ~universe;
 	m_combMaterialDirty[set] = true;
@@ -68,7 +67,7 @@ Bitboard::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 bool 
 Bitboard::CapturePiece(SET set, PIECE piece, byte tSqr)
 {
-	u64 mask = 1i64 << tSqr;
+	u64 mask = INT64_C(1) << tSqr;
 	m_material[set][piece] ^= mask;
 
 	MarkDirty(set);
@@ -78,8 +77,8 @@ Bitboard::CapturePiece(SET set, PIECE piece, byte tSqr)
 bool 
 Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
 {
-	u64 sMask = 1i64 << sSqr;
-	u64 tMask = 1i64 << tSqr;
+	u64 sMask = INT64_C(1) << sSqr;
+	u64 tMask = INT64_C(1) << tSqr;
 
 	m_material[set][piece] ^= sMask;
 	m_material[set][piece] |= tMask;
@@ -91,7 +90,7 @@ Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
 bool 
 Bitboard::Promote(SET set, PIECE toPiece, byte sqr)
 {
-	u64 mask = 1i64 << sqr;
+	u64 mask = INT64_C(1) << sqr;
 	m_material[set][PAWN] ^= mask;
 	m_material[set][toPiece] |= mask;
 
@@ -125,7 +124,7 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 
 		sq0x88 += (mvMod * Pieces::Moves0x88[piece][0]);
 		byte sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-		u64 sqbb = 1i64 << sq8x8;
+		u64 sqbb = INT64_C(1) << sq8x8;
 
 		if (!(m_matComb & sqbb || m_matCombOp & sqbb))
 		{
@@ -134,18 +133,18 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 			{
 				sq0x88 += (mvMod * Pieces::Moves0x88[piece][0]);
 				sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-				sqbb = 1i64 << sq8x8;
+				sqbb = INT64_C(1) << sq8x8;
 				if (!(m_matComb & sqbb || m_matCombOp & sqbb))
 					retVal |= sqbb;
 			}
 		}
 
 		// add en passant to op's material.
-		u64 enPass = 1i64 << enPassant;
+		u64 enPass = INT64_C(1) << enPassant;
 		m_matCombOp |= enPass;
 	}
 
-	u64 sqbb = 1i64 << square;
+	u64 sqbb = INT64_C(1) << square;
 	if (piece == KING && !(sqbb & Attacked((SET)seti)))
 		retVal |= AvailableCastling(set, castling);
 	
@@ -164,7 +163,7 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 			sq0x88 += dir;
 
 			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-			u64 sqbb = 1i64 << sq8x8;
+			u64 sqbb = INT64_C(1) << sq8x8;
 
 			if (sq0x88 & 0x88 || m_matComb & sqbb)
 				sliding = false;
@@ -222,7 +221,7 @@ Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square)
 			sq0x88 += dir;
 
 			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-			u64 sqbb = 1i64 << sq8x8;
+			u64 sqbb = INT64_C(1) << sq8x8;
 
 			if (sq0x88 & 0x88 || matComb & sqbb)
 			{
@@ -291,7 +290,7 @@ Bitboard::Attacked(SET set, bool ignoreKing)
 bool 
 Bitboard::IsSquareAttacked(SET opSet, byte sqr)
 {
-	u64 sqrMask = 1i64 << sqr;
+	u64 sqrMask = INT64_C(1) << sqr;
 	u64 atked = Attacked(opSet);
 
 	return (atked & sqrMask);
@@ -320,7 +319,7 @@ Bitboard::CalculateAttacked(SET set, bool ignoreKing)
 PIECE 
 Bitboard::GetPieceOnSquare(SET set, int square)
 {
-	u64 sqr = 1i64 << square;
+	u64 sqr = INT64_C(1) << square;
 	for (int i = 1; i < NR_OF_PIECES; i++)
 	{
 		if (m_material[set][i] & sqr)
@@ -354,7 +353,7 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp)
 			sq0x88 += atk;
 
 			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-			u64 sqbb = 1i64 << sq8x8;
+			u64 sqbb = INT64_C(1) << sq8x8;
 			
 			if (sq0x88 & 0x88 || matComb & sqbb)
 				sliding = false;
@@ -396,10 +395,10 @@ Bitboard::AvailableCastling(SET set, byte castling)
 	bool available = true;
 	if (castling & state)
 	{
-		available = !(atked & (1i64 << (('h' - 'a') + (rank * 8))));
+		available = !(atked & (INT64_C(1) << (('h' - 'a') + (rank * 8))));
 		while (available)
 		{
-			u64 sqr = 1i64 << (toCheck + (rank * 8));
+			u64 sqr = INT64_C(1) << (toCheck + (rank * 8));
 			if (sqr & combMat)
 				available = false;
 			toCheck--;
@@ -409,7 +408,7 @@ Bitboard::AvailableCastling(SET set, byte castling)
 		}
 	
 		if(available)
-			retVal |= 1i64 << (file + (rank * 8));
+			retVal |= INT64_C(1) << (file + (rank * 8));
 	}
 
 	// queen side
@@ -418,10 +417,10 @@ Bitboard::AvailableCastling(SET set, byte castling)
 	toCheck = 'b' - 'a';
 	if (castling & state)
 	{
-		available = !(atked & (1i64 << (('a' - 'a') + (rank * 8))));
+		available = !(atked & (INT64_C(1) << (('a' - 'a') + (rank * 8))));
 		while (available)
 		{
-			u64 sqr = 1i64 << (toCheck + (rank * 8));
+			u64 sqr = INT64_C(1) << (toCheck + (rank * 8));
 			if (sqr & combMat)
 				available = false;
 			toCheck++;
@@ -431,7 +430,7 @@ Bitboard::AvailableCastling(SET set, byte castling)
 		}
 
 		if (available)
-			retVal |= 1i64 << (file + (rank * 8));
+			retVal |= INT64_C(1) << (file + (rank * 8));
 	}
 
 	return retVal;

@@ -5,6 +5,8 @@
 intermediate/
 output/
 .vs/
+.idea/
+cmake-build-debug/
 
 # Compiled Object files
 *.slo

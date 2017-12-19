@@ -3,11 +3,6 @@
 #include <stdint.h>
 #include "Board.h"
 
-#ifdef GAMBIT_ENGINE_EXPORTS  
-#define GAMBIT_API __declspec(dllexport)   
-#else  
-#define GAMBIT_API __declspec(dllimport)   
-#endif  
 
 
 namespace GambitEngine

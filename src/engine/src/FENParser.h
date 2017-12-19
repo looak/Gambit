@@ -40,7 +40,6 @@ private:
 
 class GAMBIT_API FENParser
 {
-
 public:
 	FENParser();
 	~FENParser();

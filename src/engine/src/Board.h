@@ -56,8 +56,8 @@ private:
 	bool Castling(byte sSqr, SET set, PIECE piece, byte tSqr);
 	bool Promote(byte sqr, SET set, byte promoteTo);
 
-
 	Bitboard m_bitboard;
+
 	byte m_board[120];
 	byte m_boardLookup[64];
 

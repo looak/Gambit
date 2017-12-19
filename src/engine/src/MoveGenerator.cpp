@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "MoveGenerator.h"
 #include "Board.h"
 #include <algorithm>
@@ -43,7 +42,7 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count)
 		byte sqr = 0;
 		while (avaMvs != ~universe)
 		{
-			u64 mask = 1i64 << sqr;
+			u64 mask = INT64_C(1) << sqr;
 			if (mask & avaMvs)
 			{
 				if (promotion != 0x00)

@@ -1,19 +1,62 @@
-#include "stdafx.h"
-#include "CppUnitTest.h"
+#include "gtest/gtest.h"
+////////////////////////////////////////////////////////////////
 
-using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-
-#include "..\GambitEngine\GambitEngine.h"
-#include "..\GambitEngine\Board.h"
+#include "../../engine/src/Board.h"
+////////////////////////////////////////////////////////////////
 
 namespace GambitTest
 {
-	//
+////////////////////////////////////////////////////////////////
+    class BitboardFixture : public ::testing::Test
+    {
+        //virtual void SetUp() { };
+        //virtual void TearDown() {};
+    };
+////////////////////////////////////////////////////////////////
+    TEST_F(BitboardFixture, EmptyBitboard)
+    {
+        EXPECT_EQ(true, false);
+    };
+
+    TEST_F(BitboardFixture, Bitboard_Knight_Attack)
+    {
+        GambitEngine::Board board;
+        EXPECT_EQ(true, board.PlacePiece(WHITE, KNIGHT, 'a', 3));
+
+        u64 attked = ~universe;
+        // b1 should be attacked
+        attked |= INT64_C(1) << INT64_C(1);
+        // c2 should be attacked
+        attked |= INT64_C(1) << INT64_C(10);
+        // c4 should be attacked
+        attked |= INT64_C(1) << INT64_C(26);
+        // b5 should be attacked
+        attked |= INT64_C(1) << INT64_C(33);
+
+        auto result = board.GetBitboard().Attacked(WHITE);
+        EXPECT_EQ(~universe, result ^ attked); //, L"Something is wrong with the result of attacked squares", LINE_INFO());
+/*
+        GambitEngine::Board board2;
+        Assert::AreEqual(true, board2.PlacePiece(WHITE, KNIGHT, 'a', 1), L"Failed to place Knight", LINE_INFO());
+
+        attked = ~universe;
+        // c2 should be attacked
+        attked |= 1i64 << 10i64;
+        // a3 should be attacked
+        attked |= 1i64 << 17i64;
+
+        result = board2.GetBitboard().Attacked(WHITE);
+        Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of attacked squares", LINE_INFO()); */
+    };
+////////////////////////////////////////////////////////////////
+
+}
+
+	/*
 	TEST_CLASS(BitBoardTest)
 	{
 	public:
 		TEST_METHOD(BitBoardTest_Knight_Attack)
-		{
 			GambitEngine::Board board;
 			Assert::AreEqual(true, board.PlacePiece(WHITE, KNIGHT, 'a', 3), L"Failed to place Knight", LINE_INFO());
 			u64 attked = ~universe;
@@ -36,12 +79,13 @@ namespace GambitTest
 			// c2 should be attacked
 			attked |= 1i64 << 10i64;
 			// a3 should be attacked
-			attked |= 1i64 << 17i64;			
+			attked |= 1i64 << 17i64;
 
 			result = board2.GetBitboard().Attacked(WHITE);
 			Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of attacked squares", LINE_INFO());
 
 		}
+		{
 
 		TEST_METHOD(BitBoardTest_King_Attack)
 		{
@@ -114,4 +158,4 @@ namespace GambitTest
 			Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of black attacked squares", LINE_INFO());
 		}
 	};
-};
+	 */

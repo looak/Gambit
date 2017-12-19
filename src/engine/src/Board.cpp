@@ -1,5 +1,5 @@
-#include "stdafx.h"
 #include <ctype.h>
+#include <cstring>
 #include "Board.h"
 
 using namespace GambitEngine;
@@ -18,8 +18,8 @@ Board::Board() :
 		71, 72, 73, 74, 75, 76, 77, 78,
 		81, 82, 83, 84, 85, 86, 87, 88,
 		91, 92, 93, 94, 95, 96, 97, 98};
-	
-	memcpy_s(&m_boardLookup[0], sizeof(m_boardLookup), lookup, sizeof(lookup));
+
+	memcpy(&m_boardLookup[0], lookup, sizeof(lookup));
 	
 	ResetBoard();
 }
@@ -312,7 +312,7 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promote)
 
 	byte temp = 0x00;
 	u64 avaMoves = m_bitboard.AvailableMoves((SET)pieceSet, (PIECE)pieceByte, sInd64, m_enPassant64, m_castleState, temp);
-	u64 moveMsk = 1i64 << tInd64;
+	u64 moveMsk = INT64_C(1) << tInd64;
 
 	if (avaMoves & moveMsk)
 	{

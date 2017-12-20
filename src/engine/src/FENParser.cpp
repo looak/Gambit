@@ -236,11 +236,11 @@ bool FENParser::Deserialize(const char* fen, byte length, Board& outputBoard, Ga
 	if (state != nullptr)
 	{		
 		const char* a = &fen[index];
-		state->m_plyCounter = int(a - 'a');
+		state->m_plyCounter = int(a - (int)'a');
 		index += 2;
 		
 		a = &fen[index];
-		state->m_moveCounter = int(a - 'a');
+		state->m_moveCounter = int(a - (int)'a');
 	}
 
 	return true;

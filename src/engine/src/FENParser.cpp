@@ -235,12 +235,12 @@ bool FENParser::Deserialize(const char* fen, byte length, Board& outputBoard, Ga
 	// now on ply moves or half moves.
 	if (state != nullptr)
 	{		
-		const char* a = &fen[index];
-		state->m_plyCounter = int(a - (int)'a');
+		char a = fen[index];
+		state->m_plyCounter = a - 'a';
 		index += 2;
 		
-		a = &fen[index];
-		state->m_moveCounter = int(a - (int)'a');
+		a = fen[index];
+		state->m_moveCounter = a - 'a';
 	}
 
 	return true;

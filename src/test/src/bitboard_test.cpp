@@ -16,7 +16,7 @@ namespace GambitTest
     TEST_F(BitboardFixture, EmptyBitboard)
     {
         EXPECT_EQ(true, false);
-    };
+    }
 
     TEST_F(BitboardFixture, Bitboard_Knight_Attack)
     {
@@ -47,7 +47,7 @@ namespace GambitTest
 
         result = board2.GetBitboard().Attacked(WHITE);
         Assert::AreEqual(~universe, result ^ attked, L"Something is wrong with the result of attacked squares", LINE_INFO()); */
-    };
+    }
 ////////////////////////////////////////////////////////////////
 
 }

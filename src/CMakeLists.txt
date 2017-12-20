@@ -15,4 +15,6 @@ set(CMAKE_CXX_STANDARD 14)
 #set(Gambit_INC ${PROJECT_SOURCE_DIR}/engine/src)
 
 add_subdirectory(engine)
+
+enable_testing()
 add_subdirectory(test)

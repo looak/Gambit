@@ -1,4 +1,5 @@
 -# Gambit Chess Engine
+[![Build Status](https://travis-ci.org/looak/Gambit.svg?branch=master)](https://travis-ci.org/looak/Gambit)
 
 TODO								
 =====

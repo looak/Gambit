@@ -15,5 +15,6 @@ target_link_libraries(${PROJECT_NAME} GambitEngine gtest gtest_main)
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
 message(STATUS "Enabling testing")
+include(CTest)
 enable_testing()
 add_test(UnitTests ${PROJECT_BINARY_DIR}\${PROJECT_NAME})

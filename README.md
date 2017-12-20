@@ -1,4 +1,5 @@
 -# Gambit Chess Engine
+
 [![Build Status](https://travis-ci.org/looak/Gambit.svg?branch=master)](https://travis-ci.org/looak/Gambit)
 
 TODO								
@@ -15,6 +16,14 @@ TODO
 
 Dev Blog
 =====
+### (2017-12-20)
+#### Travis CI Green!!
+	Haven't worked so much on this project in a while. But today and yesterday I spent most of my day hacking
+	away at finalizing the CMake Migration (now I can compile in MSVC, CLion with MinGW, on unix with clang &
+	gcc). Finally got everything running, I also added googletest and can run them from my IDE's but haven't
+	been able to make Travis run them. That is the next step. Think I'll take a break from this for today 
+	though, been working 12h straight on the same issues.	
+
 ### (2017-10-6)
 #### Castling & En Passant
 	The past few days I've been working on getting castling & en passant working. Not yet checking if I'm

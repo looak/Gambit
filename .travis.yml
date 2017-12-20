@@ -11,4 +11,4 @@ before_script:
 
 script: 
   - make
-  - src\test\Debug\GambiteEngineTest.exe
+  - src/test/Debug/GambiteEngineTest.exe

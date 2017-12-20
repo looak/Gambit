@@ -8,7 +8,8 @@ set(SOURCE_FILES
         src/bitboard_test.cpp
         src/board_test.cpp
         src/fen_test.cpp
-        src/perft_test.cpp)
+        src/perft_test.cpp
+        src/movegenerator_test.cpp)
 
 project(${PROJECT_NAME})
 

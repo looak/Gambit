@@ -8,7 +8,7 @@ namespace GambitEngine
 
 class Board;
 
-struct GAMBIT_API Move
+struct Move
 {
 	byte fromSqr = 0x00;
 	byte toSqr = 0x00;
@@ -16,7 +16,7 @@ struct GAMBIT_API Move
 	byte promotion = 0x00;
 };
 
-class GAMBIT_API MoveGenerator
+class MoveGenerator
 {
 public:
 	MoveGenerator();

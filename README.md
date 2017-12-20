@@ -4,18 +4,35 @@
 
 TODO								
 =====
-	[ ] Remove pawn after En Passant Move.
+	[ ] Found a bug were I'm not allowed to Castle when the rook is threatened.
+	[ ] Remove pawn after En Passant Move. <- Check if this is still valid?
 	[x] FIX Pawn Move Issue!
 	[x] fix markup in readme...
 	[ ] move blog?
 	[ ] get last error error handling
 	[ ] FEN Unit Tests
 		[x] Give error on too short FEN
-	[ ] Google tests?
-	[ ] gcc & make instead of visual studio?
+	[x] Google tests?
+	[x] gcc & make instead of visual studio?
 
 Dev Blog
 =====
+### (2017-12-20)
+#### Two updates in one day?
+	Well, I'm on vacation and have really been longing to get going with this project again. I converted all my
+	existing unit tests to gtest and added a few new ones too. Travis is awesome, my new BFF. 
+
+	Coding wise, I've not been able to do much. I can't believe how complicated the code is to read in some
+	places. Really need to do something about that. Been away from it for a month and now I'm having issues 
+	understanding things. Says something about the code I write. Or just how much I over complicate things.
+	For instance, I don't think I need to have both the Board & Bitboard, they're pretty much just duplicating
+	eachothers behavior. I find the bitboards more powerfull and nice to do interesting comparisons on but they
+	are hard to grasp and debug. It's weird to just see a giant value in the watch...
+
+	The little time I did spend, I added some Perft test cases which obviously turned out to be wrong. So I 
+	started testing the MoveGenerator and realized that my Castling isn't according to the rules of the game.
+	So I updated my castling unit test and started looking at how to fix it...
+
 ### (2017-12-20)
 #### Travis CI Green!!
 	Haven't worked so much on this project in a while. But today and yesterday I spent most of my day hacking

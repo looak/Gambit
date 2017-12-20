@@ -157,7 +157,7 @@ TEST_F(BoardFixture, Castling_Black_KingSide_Rook_Attacked)
 	EXPECT_EQ(true, board.PlacePiece(WHITE, ROOK, 'h', 1));
 	EXPECT_EQ(true, board.PlacePiece(BLACK, ROOK, 'h', 8));
 
-	EXPECT_EQ(false, board.MakeMove('e', 8, 'g', 8));
+	EXPECT_EQ(true, board.MakeMove('e', 8, 'g', 8));
 }
 
 TEST_F(BoardFixture, Castling_Black_QueenSide)
@@ -262,6 +262,7 @@ TEST_F(BoardFixture, CheckMate_White)
 
 	board.MakeLegalMove('c', 5, 'b', 5);
 	EXPECT_EQ(false, board.CheckMate(WHITE));
+	EXPECT_EQ(true, board.Check(WHITE));
 }
 
 ////////////////////////////////////////////////////////////////

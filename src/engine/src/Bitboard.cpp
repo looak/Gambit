@@ -370,6 +370,8 @@ Bitboard::AvailableCastling(SET set, byte castling)
 	SET opSet = (SET)!(int)set;
 	u64 atked = Attacked(opSet);
 	u64 combMat = MaterialCombined(set);
+	// TODO:
+	// we can't combine these two, we need to check them seperatly
 	combMat |= MaterialCombined(opSet);
 	combMat |= atked;
 

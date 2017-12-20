@@ -88,7 +88,7 @@ namespace GambitTest
 
         // h file
         u64 h7 = 55;
-        for (__int64 hfile = h7; hfile >= 0; hfile-=8)
+        for (i64 hfile = h7; hfile >= 0; hfile-=8)
         {
             attked |= INT64_C(1) << hfile;
         }

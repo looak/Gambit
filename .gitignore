@@ -4,6 +4,7 @@
 # Compiled Paths
 intermediate/
 output/
+build/
 .vs/
 .idea/
 cmake-build-debug/

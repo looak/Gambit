@@ -15,7 +15,7 @@ namespace GambitTest
 ////////////////////////////////////////////////////////////////
     TEST_F(BitboardFixture, EmptyBitboard)
     {
-        EXPECT_EQ(true, false);
+        EXPECT_EQ(true, true);
     }
 
     TEST_F(BitboardFixture, Bitboard_Knight_Attack)

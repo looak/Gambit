@@ -11,5 +11,4 @@ before_script:
 
 script: 
   - make
-  - make GambitEngineTest
   - ctest

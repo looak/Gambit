@@ -6,23 +6,7 @@ using namespace GambitEngine;
 
 Bitboard::Bitboard()
 {
-	for (int s = 0; s < NR_OF_SETS; s++)
-		for (int p = 0; p < NR_OF_PIECES; p++)
-			m_material[s][p] = ~universe;
-
-
-	for (int set = 0; set < NR_OF_SETS; set++)
-	{
-		m_materialCombined[set]  = ~universe;
-		m_attacked[set]			 = ~universe;
-		m_combMaterialDirty[set] = true;
-		m_attackedDirty[set]	 = true;
-	}
-
-	for (int val = 0; val < 128; val++)
-	{
-		m_board0x88[val] = val;
-	}
+	Clear();
 }
 
 Bitboard::Bitboard(const Bitboard & _src)
@@ -450,4 +434,25 @@ Bitboard::MarkDirty(SET set)
 
 	m_attacked[set] = ~universe;
 	m_attackedDirty[set] = true;
+}
+
+void Bitboard::Clear()
+{
+	for (int s = 0; s < NR_OF_SETS; s++)
+		for (int p = 0; p < NR_OF_PIECES; p++)
+			m_material[s][p] = ~universe;
+
+
+	for (int set = 0; set < NR_OF_SETS; set++)
+	{
+		m_materialCombined[set]  = ~universe;
+		m_attacked[set]			 = ~universe;
+		m_combMaterialDirty[set] = true;
+		m_attackedDirty[set]	 = true;
+	}
+
+	for (int val = 0; val < 128; val++)
+	{
+		m_board0x88[val] = val;
+	}
 }

@@ -49,6 +49,8 @@ public:
 
 	bool IsSquareAttacked(SET opSet, byte sqr);
 
+	void Clear();
+
 };
 }
 

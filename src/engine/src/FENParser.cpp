@@ -167,7 +167,7 @@ bool FENParser::Deserialize(const char* fen, byte length, Board& outputBoard, Ga
 			}
 			else if (curr == ' ')
 			{
-				printf("Syntax error in FEN string");
+				printf("Syntax error in FEN string\n");
 				return false;
 			}
 			else
@@ -200,7 +200,7 @@ bool FENParser::Deserialize(const char* fen, byte length, Board& outputBoard, Ga
 			state->m_activeSet = BLACK;
 			break;
 		default:
-			printf("Syntax error in FEN string");
+			printf("Syntax error in FEN string\n");
 			return false;
 		}
 	}
@@ -216,7 +216,7 @@ bool FENParser::Deserialize(const char* fen, byte length, Board& outputBoard, Ga
 	}
 	if (!boardWriter.WriteCastlingState(castlState, castlingCounter, outputBoard))
 	{
-		printf("Syntax error in FEN string");
+		printf("Syntax error in FEN string\n");
 		return false;
 	}
 	

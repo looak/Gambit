@@ -3,7 +3,12 @@ message(STATUS "Enabling testing")
 
 include(CTest)
 set(PROJECT_NAME GambitEngineTest)
-set(SOURCE_FILES main.cpp src/bitboard_test.cpp)
+set(SOURCE_FILES
+        main.cpp
+        src/bitboard_test.cpp
+        src/board_test.cpp
+        src/fen_test.cpp
+        src/perft_test.cpp)
 
 project(${PROJECT_NAME})
 

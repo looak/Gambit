@@ -24,8 +24,14 @@ TEST_F(UnmakeFixture, Pawn_One_Move)
 	board.PlacePiece(WHITE, PAWN, 'e', 2);
 	MakeMove("e2e3");
 
-	EXPECT_EQ(true, board.UnmakeMove());
+	EXPECT_TRUE(board.UnmakeMove());
 	EXPECT_EQ(0x01, board.GetValue('e', 2));
+
+	EXPECT_TRUE(board.GetBitboard().IsSquareAttacked(WHITE, 21));
+	auto mat = board.GetPieces(WHITE);
+	EXPECT_EQ(1, mat.size());
+	EXPECT_EQ(12, mat[0].Square8x8);
+	EXPECT_EQ(PAWN, mat[0].Type);
 }
 ////////////////////////////////////////////////////////////////
 

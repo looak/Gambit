@@ -9,7 +9,7 @@ set(SOURCE_FILES
         src/board_test.cpp
         src/fen_test.cpp
         src/perft_test.cpp
-        src/movegenerator_test.cpp)
+        src/movegenerator_test.cpp src/unmake_test.cpp)
 
 project(${PROJECT_NAME})
 

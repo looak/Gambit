@@ -4,9 +4,11 @@
 
 using namespace GambitEngine;
 
-Board::Board() :
-	m_castleState(0),
-	m_enPassant64(0)
+Board::Board()
+		: m_castleState(0)
+		, m_enPassant64(0)
+		, m_lastNode(nullptr)
+		, m_rootNode(nullptr)
 {
 	// initialize lookup
 	byte lookup[64] = {
@@ -346,6 +348,7 @@ Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 
 	m_bitboard.MakeMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
 	m_material[pieceSet].MakeMove(sSqr, (PIECE)pieceByte, tSqr, tSqr120);
+	RegisterMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
 
 	// do move
 	m_board[tSqr120] = m_board[sSqr120];
@@ -361,7 +364,6 @@ Board::MakeLegalMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promot
 	byte sInd64 = GetBoard64Index(sFile, sRank);	
 	byte tInd64 = GetBoard64Index(tFile, tRank);
 	MakeLegalMove(sInd64, tInd64, promote);
-	
 }
 
 byte 
@@ -369,4 +371,38 @@ Board::GetValue(byte file, byte rank) const
 {
 	byte bIndx = GetBoard120Index(file, rank);
 	return  m_board[bIndx];	
+}
+
+bool Board::UnmakeMove()
+{
+	const Move* mv = m_lastNode->getMove();
+	// reset pieces
+	m_bitboard.MakeMove(mv->toSqr, m_lastNode->getSet(), m_lastNode->getPiece(), mv->fromSqr);
+	byte tSqr120 = m_boardLookup[mv->fromSqr];
+	byte sSqr120 = m_boardLookup[mv->toSqr];
+	m_material[m_lastNode->getSet()].MakeMove(mv->toSqr, m_lastNode->getPiece(), mv->fromSqr, tSqr120);
+
+	m_board[tSqr120] = m_board[sSqr120];
+	m_board[sSqr120] = 0x00;
+
+	return true;
+}
+
+bool Board::RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr)
+{
+	Move move;
+	move.fromSqr = sSqr;
+	move.toSqr = tSqr;
+
+	if(m_rootNode == nullptr)
+	{
+		m_rootNode = new MoveNode(move, nullptr, set, piece);
+		m_lastNode = m_rootNode;
+	}
+	else
+	{
+		m_lastNode = m_lastNode->AddMoveNode(move, set, piece);
+	}
+
+	return true;
 }

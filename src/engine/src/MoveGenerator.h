@@ -1,6 +1,7 @@
 #pragma once
 #include "typedef.h"
 #include "Pieces.h"
+#include "MoveNode.h"
 #include <vector>
 
 namespace GambitEngine
@@ -8,13 +9,6 @@ namespace GambitEngine
 
 class Board;
 
-struct Move
-{
-	byte fromSqr = 0x00;
-	byte toSqr = 0x00;
-
-	byte promotion = 0x00;
-};
 
 class MoveGenerator
 {

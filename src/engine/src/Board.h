@@ -2,7 +2,7 @@
 
 #include "typedef.h"
 #include "Pieces.h"
-
+#include "MoveNode.h"
 #include "Bitboard.h"
 #include <array>
 #include <vector>
@@ -56,6 +56,8 @@ private:
 	bool Castling(byte sSqr, SET set, PIECE piece, byte tSqr);
 	bool Promote(byte sqr, SET set, byte promoteTo);
 
+	bool RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr);
+
 	Bitboard m_bitboard;
 
 	byte m_board[120];
@@ -70,6 +72,9 @@ private:
 	typedef std::array<Material, 2> MaterialArray;
 	MaterialArray m_material;
 
+	MoveNode* m_rootNode;
+	MoveNode* m_lastNode;
+
 public:
 	Board();
 	Board(const Board& _src);
@@ -82,6 +87,8 @@ public:
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);
 	bool CapturePiece(SET set, PIECE piece, byte tSqr);
 	bool MakeMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promotion = 0x00);
+	// Unmakes last move.
+	bool UnmakeMove();
 
 	void MakeLegalMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promotion = 0x00);
 	void MakeLegalMove(byte sSqr, byte tSqr, byte promote = 0x00);
@@ -90,10 +97,11 @@ public:
 	bool CheckMate(SET set);
 
 	u64 AvailableMoves(SET set, PIECE piece, u32 square, byte& promotion) { return m_bitboard.AvailableMoves(set, piece, square, m_enPassant64, m_castleState, promotion); };
-	void SetCastlingRights(byte castlingByte) { m_castleState = castlingByte; };
-	const std::vector<Pieces::Piece> GetPieces(SET set) const { return m_material[set].GetMaterial(); };
 
 	byte GetValue(byte file, byte rank) const;
-	Bitboard GetBitboard() const { return m_bitboard; }	
+	Bitboard GetBitboard() const { return m_bitboard; }
+	const std::vector<Pieces::Piece> GetPieces(SET set) const { return m_material[set].GetMaterial(); };
+	void SetCastlingRights(byte castlingByte) { m_castleState = castlingByte; };
+
 };
 }	

@@ -27,6 +27,10 @@ Dev Blog
 	other special rules such as capture, promote and enpassant. Feels good at least to get this far! Now I can
 	focus on what I was yesterday, fixing castling, but that's probably a task for tomorrow.
 
+	Not super happy about my implementations, could probably do something cooler with nested nodes of
+	different types. Maybe I'll be able to have reasons to do it later when I start looking at capture or 
+	promotion.
+
 
 ### (2017-12-20)
 #### Two updates in one day?

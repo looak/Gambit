@@ -76,6 +76,32 @@ TEST_F(UnmakeFixture, Castling)
 	EXPECT_EQ(KING, board.GetValue('e', 1));
 	EXPECT_EQ(0x0, board.GetValue('g', 1));
 }
+
+TEST_F(UnmakeFixture, Castling_ReCastle)
+{
+	board.SetCastlingRights(15); // all available
+
+	EXPECT_TRUE(board.PlacePiece(WHITE, KING, 'e', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'a', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'h', 1));
+
+	MakeMove("e1g1");
+	EXPECT_TRUE(board.UnmakeMove());
+	EXPECT_EQ(ROOK, board.GetValue('h', 1));
+	EXPECT_EQ(KING, board.GetValue('e', 1));
+	EXPECT_EQ(0x0, board.GetValue('g', 1));
+// second time, we can't believe it's tru it worked the first so we do it again :o
+	EXPECT_TRUE(MakeMove("e1g1"));
+	EXPECT_TRUE(board.UnmakeMove());
+	EXPECT_EQ(ROOK, board.GetValue('h', 1));
+	EXPECT_EQ(KING, board.GetValue('e', 1));
+	EXPECT_EQ(0x0, board.GetValue('g', 1));
+
+	EXPECT_TRUE(MakeMove("e1c1"));
+	EXPECT_EQ(ROOK, board.GetValue('d', 1));
+	EXPECT_EQ(KING, board.GetValue('c', 1));
+	EXPECT_EQ(0x0, board.GetValue('a', 1));
+}
 ////////////////////////////////////////////////////////////////
 
 }

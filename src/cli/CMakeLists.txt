@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.2)
+
+set(LIBRARY_NAME GambitCLI)
+set(PROJECT_NAME GambitCLI)
+
+project(${PROJECT_NAME} C CXX)
+
+set(GambitCLI_SCR
+        main.cpp)
+
+add_executable(${PROJECT_NAME} ${GambitCLI_SCR})
+target_link_libraries(${PROJECT_NAME} GambitEngine)
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)

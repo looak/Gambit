@@ -18,29 +18,36 @@ private:
 	Move m_move;
 	byte m_pieceByte;
 	byte m_setByte;
-	const MoveNode* m_parent;
-	std::vector<MoveNode> m_children;
+	byte m_state;
+	MoveNode* m_parent;
+	MoveNode* m_child;
 
 public:
-	MoveNode(Move move, const MoveNode* parent, byte set, byte piece)
+	MoveNode(Move move, MoveNode* parent, byte set, byte piece, byte state)
 		: m_parent(parent)
 		, m_move(move)
 		, m_setByte(set)
 		, m_pieceByte(piece)
+		, m_child(nullptr)
+		, m_state(state)
 	{
 	}
 
-	MoveNode* AddMoveNode(Move move, byte set, byte piece)
+	MoveNode* AddMoveNode(Move move, byte set, byte piece, byte state)
 	{
-		MoveNode node(move, this, set, piece);
-		m_children.push_back(node);
-
-		return &m_children[m_children.size() - 1];
+		if(m_child != nullptr) {
+			delete (m_child);
+			m_child = nullptr;
+		}
+		m_child = new MoveNode(move, this, set, piece, state);
+		return m_child;
 	}
 
 	const Move* getMove() { return &m_move; }
 	const SET getSet() { return (SET)m_setByte; }
 	const PIECE getPiece() { return (PIECE)m_pieceByte; }
+	MoveNode* getParent() { return m_parent; }
+	const byte getState() { return m_state; }
 };
 
 }; // namespace GambitEngine

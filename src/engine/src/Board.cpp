@@ -137,6 +137,9 @@ bool Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
 bool 
 Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
 {
+	// so we later can store it in our MoveNode.
+	byte prevCastleState = m_castleState;
+
 	if (piece == ROOK)
 	{
 		// fetch rook square;
@@ -165,6 +168,7 @@ Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
 		m_castleState |= 1 + (set * 3);
 		m_castleState |= 2 + (set * 6);
 
+		// toggle castle state
 		m_castleState ^= 1 + (set * 3);
 		m_castleState ^= 2 + (set * 6);
 		return false;
@@ -189,6 +193,9 @@ Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
 	
 	m_board[m_boardLookup[tRookSqr]] = m_board[m_boardLookup[sRookSqr]];
 	m_board[m_boardLookup[sRookSqr]] = 0x00;
+
+	prevCastleState ^= 128; // set bit to notifiy that we're castling
+	RegisterMove(sRookSqr, set, ROOK, tRookSqr, prevCastleState);
 	return true;
 }
 
@@ -344,11 +351,16 @@ Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 	if (isCapture)
 		CapturePiece((SET)!(int)pieceSet, (PIECE)targetPiece, tSqr);
 
-	Castling(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
+	bool castled = Castling(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
 
 	m_bitboard.MakeMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
 	m_material[pieceSet].MakeMove(sSqr, (PIECE)pieceByte, tSqr, tSqr120);
-	RegisterMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
+
+	byte state = 0x0;
+	if(castled)
+		state = 1 << 7;
+
+	RegisterMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr, state);
 
 	// do move
 	m_board[tSqr120] = m_board[sSqr120];
@@ -375,6 +387,7 @@ Board::GetValue(byte file, byte rank) const
 
 bool Board::UnmakeMove()
 {
+
 	const Move* mv = m_lastNode->getMove();
 	// reset pieces
 	m_bitboard.MakeMove(mv->toSqr, m_lastNode->getSet(), m_lastNode->getPiece(), mv->fromSqr);
@@ -385,10 +398,21 @@ bool Board::UnmakeMove()
 	m_board[tSqr120] = m_board[sSqr120];
 	m_board[sSqr120] = 0x00;
 
+	if(m_lastNode->getParent() == nullptr)
+		m_rootNode = nullptr;
+
+	auto prevLast = m_lastNode;
+	m_lastNode = m_lastNode->getParent();
+
+	if(prevLast->getState() == 128) // 128 is flag for castling
+		UnmakeMove();
+	else
+	if(prevLast->getState() & 128)
+		m_castleState = prevLast->getState() & 15;
 	return true;
 }
 
-bool Board::RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr)
+bool Board::RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state)
 {
 	Move move;
 	move.fromSqr = sSqr;
@@ -396,12 +420,12 @@ bool Board::RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr)
 
 	if(m_rootNode == nullptr)
 	{
-		m_rootNode = new MoveNode(move, nullptr, set, piece);
+		m_rootNode = new MoveNode(move, nullptr, set, piece, state);
 		m_lastNode = m_rootNode;
 	}
 	else
 	{
-		m_lastNode = m_lastNode->AddMoveNode(move, set, piece);
+		m_lastNode = m_lastNode->AddMoveNode(move, set, piece, state);
 	}
 
 	return true;

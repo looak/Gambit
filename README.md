@@ -17,6 +17,17 @@ TODO
 
 Dev Blog
 =====
+### (2017-12-21)
+#### Diving into the undo rabbit hole
+	To fix some of the issus I wanted to write more tests. But I felt limited in not being able to undo moves
+	in my test setup. So now I started writing Undo or 'Unmake' as I'm calling it in the engine.
+
+	Update:
+	Managed to fix unmake for a pawn chain and castling. Shouldn't be too much work to continue implementing 
+	other special rules such as capture, promote and enpassant. Feels good at least to get this far! Now I can
+	focus on what I was yesterday, fixing castling, but that's probably a task for tomorrow.
+
+
 ### (2017-12-20)
 #### Two updates in one day?
 	Well, I'm on vacation and have really been longing to get going with this project again. I converted all my

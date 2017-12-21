@@ -56,7 +56,7 @@ private:
 	bool Castling(byte sSqr, SET set, PIECE piece, byte tSqr);
 	bool Promote(byte sqr, SET set, byte promoteTo);
 
-	bool RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr);
+	bool RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state = 0x0);
 
 	Bitboard m_bitboard;
 

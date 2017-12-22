@@ -4,6 +4,11 @@
 namespace GambitEngine
 {
 
+enum MoveFlags
+{
+	NONE = 0x0,
+	CASTLING = 0x80,
+};
 struct Move
 {
 	byte fromSqr = 0x00;
@@ -23,6 +28,9 @@ private:
 	MoveNode* m_child;
 
 public:
+	// TODO() Maybe we could change this to some sort of undo stack?
+	// Generic undo units, but might be that this is something for the GUI.
+
 	MoveNode(Move move, MoveNode* parent, byte set, byte piece, byte state)
 		: m_parent(parent)
 		, m_move(move)

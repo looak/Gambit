@@ -128,8 +128,66 @@ namespace GambitTest
         attked |= INT64_C(1) << INT64_C(12);
 
         result = board.Attacked(BLACK);
-        EXPECT_EQ(~universe, result ^ attked);
+        EXPECT_FALSE(result ^ attked);
     }
+
+    TEST_F(BitboardFixture, King_Available_Moves)
+    {
+        GambitEngine::Bitboard board;
+        board.PlacePiece(WHITE, KING, 'e', 1);
+
+        u64 expectedAvaMv = ~universe;
+        expectedAvaMv |= INT64_C(1) << INT64_C(3);
+        expectedAvaMv |= INT64_C(1) << INT64_C(5);
+        expectedAvaMv |= INT64_C(1) << INT64_C(11);
+        expectedAvaMv |= INT64_C(1) << INT64_C(12);
+        expectedAvaMv |= INT64_C(1) << INT64_C(13);
+
+        u64 avaMoves = board.AvailableMovesSimple(WHITE, KING, 4);
+
+        EXPECT_EQ(expectedAvaMv, avaMoves);
+    }
+
+    TEST_F(BitboardFixture, King_Black_Available_Moves)
+    {
+        GambitEngine::Bitboard board;
+        board.PlacePiece(BLACK, KING, 'e', 8);
+
+        u64 expectedAvaMv = ~universe;
+        expectedAvaMv |= INT64_C(1) << INT64_C(59);
+        expectedAvaMv |= INT64_C(1) << INT64_C(61);
+        expectedAvaMv |= INT64_C(1) << INT64_C(53);
+        expectedAvaMv |= INT64_C(1) << INT64_C(52);
+        expectedAvaMv |= INT64_C(1) << INT64_C(51);
+
+		byte prom = 0;
+        u64 avaMoves = board.AvailableMoves(BLACK, KING, 60, 0, 0, prom);
+
+        EXPECT_EQ(expectedAvaMv, avaMoves);
+    }
+
+
+	TEST_F(BitboardFixture, King_Black_Available_Moves_With_Rooks)
+	{
+		GambitEngine::Bitboard board;
+		board.PlacePiece(BLACK, KING, 'e', 8);
+		board.PlacePiece(BLACK, ROOK, 'h', 8);
+		board.PlacePiece(BLACK, ROOK, 'a', 8);
+
+		u64 expectedAvaMv = ~universe;
+		expectedAvaMv |= INT64_C(1) << INT64_C(58);
+		expectedAvaMv |= INT64_C(1) << INT64_C(59);
+		expectedAvaMv |= INT64_C(1) << INT64_C(61);
+		expectedAvaMv |= INT64_C(1) << INT64_C(62);
+		expectedAvaMv |= INT64_C(1) << INT64_C(53);
+		expectedAvaMv |= INT64_C(1) << INT64_C(52);
+		expectedAvaMv |= INT64_C(1) << INT64_C(51);
+
+		byte prom = 0;
+		u64 avaMoves = board.AvailableMoves(BLACK, KING, 60, 0, 0xc, prom);
+
+		EXPECT_EQ(expectedAvaMv, avaMoves);
+	}
 ////////////////////////////////////////////////////////////////
 
 };

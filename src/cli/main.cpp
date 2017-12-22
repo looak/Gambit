@@ -105,8 +105,8 @@ int main()
 	//char inputFen[] = "8/8/8/8/8/8/8/R3K2R w KQ -";
 	//char inputFen[] = "8/8/8/4Pp2/8/8/8/8 w KQ f6 0 1";
 	//char inputFen[] = "8/1P6/8/8/8/8/8/8 w KQ f6 0 1";
-	//char inputFen[] = "8/8/8/1R6/8/8/r7/1r2K3 w KQ f6 0 1";
-	char inputFen[] = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -";
+	char inputFen[] = "4k2r/8/8/8/8/8/8/8 w kq - 0 1";
+	//char inputFen[] = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"; // position five
 	uint8_t length = sizeof(inputFen);
 	
 	GambitEngine::Board board;
@@ -114,29 +114,37 @@ int main()
 
 	GambitEngine::FENParser::Deserialize(inputFen, length, board, nullptr);
 
-	while (true)
+	while (1)
 	{		
 		writeBoard(board);
 
 		std::cout << std::endl;
-		writeBitboard(board.GetBitboard().Attacked(BLACK, true));
+		//u64 attked = ~universe;
+		//attked = board.GetBitboard().Attacked(BLACK);
+		//writeBitboard(attked);
 		
-		auto pieces = board.GetPieces(WHITE);
+		auto pieces = board.GetPieces(BLACK);
 		u64 avaMoves = ~universe;
 		byte promotion = 0x00;
 		for (int i = pieces.size() - 1; i >= 0; --i)
 		{
 			auto pP = pieces.at(i);
-			avaMoves |= board.AvailableMoves(WHITE, (PIECE)pP.Type, pP.Square8x8, promotion);
+			avaMoves = board.AvailableMoves(BLACK, (PIECE)pP.Type, pP.Square8x8, promotion);
+
+			std::cout << std::endl;
+			writeBitboard(avaMoves);
 		}
-		std::cout << std::endl;
-		writeBitboard(avaMoves);
 
-		u32 moveCount = 0;
-		mvGen.FindBestMove(WHITE, &board, moveCount, 2);
-	//	writeMoves(mvs);
+		//std::cout << std::endl;
+		//avaMoves = board.GetBitboard().MaterialCombined(WHITE);
+		//writeBitboard(avaMoves);
 
-		std::cout << moveCount << std::endl;
+
+		//u32 moveCount = 0;
+		//mvGen.FindBestMove(WHITE, &board, moveCount, 2);
+		//writeMoves(mvs);
+
+//		std::cout << moveCount << std::endl;
 	
 		byte tmp[5];
 		std::cin >> tmp;

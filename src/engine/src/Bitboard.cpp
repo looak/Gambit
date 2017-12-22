@@ -191,7 +191,7 @@ Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square)
 	u64 matComb = MaterialCombined(set);
 	
 	byte curSqr = square;
-	for (int pI = 2; pI < Pieces::MoveCount[piece]; pI++)
+	for (int pI = 0; pI < Pieces::MoveCount[piece]; pI++)
 	{
 		curSqr = square;
 		bool sliding = Pieces::Slides[piece];
@@ -360,31 +360,34 @@ Bitboard::AvailableCastling(SET set, byte castling)
 {
 	u64 retVal = ~universe;
 	byte state = 1;
-	byte rank = 0;
+	byte rankCalc = 0;
 	if (set == BLACK)
 	{
-		rank = 7;
+		rankCalc = 7;
 		state = 4;
 	}
-	
+
+	rankCalc *= 8;
+
 	SET opSet = (SET)!(int)set;
 	u64 atked = Attacked(opSet);
 	u64 combMat = MaterialCombined(set);
-	// TODO:
-	// we can't combine these two, we need to check them seperatly
 	combMat |= MaterialCombined(opSet);
-	combMat |= atked;
 
 	// king side
 	byte file = 'g' - 'a';
 	byte toCheck = file;
 	bool available = true;
+	u64 castlingSqrs = ~universe;
+	castlingSqrs |= (INT64_C(1) << (file + rankCalc));
+	castlingSqrs |= (INT64_C(1) << ((file-1) + rankCalc));
+
 	if (castling & state)
 	{
-		available = !(atked & (INT64_C(1) << (('h' - 'a') + (rank * 8))));
+		available = !(atked & castlingSqrs);
 		while (available)
 		{
-			u64 sqr = INT64_C(1) << (toCheck + (rank * 8));
+			u64 sqr = INT64_C(1) << (toCheck + rankCalc);
 			if (sqr & combMat)
 				available = false;
 			toCheck--;
@@ -394,19 +397,22 @@ Bitboard::AvailableCastling(SET set, byte castling)
 		}
 	
 		if(available)
-			retVal |= INT64_C(1) << (file + (rank * 8));
+			retVal |= INT64_C(1) << (file + rankCalc);
 	}
 
 	// queen side
 	state *= 2;
 	file = 'c' - 'a';
 	toCheck = 'b' - 'a';
+	castlingSqrs = ~universe;
+	castlingSqrs |= (INT64_C(1) << (file + rankCalc));
+	castlingSqrs |= (INT64_C(1) << ((file+1) + rankCalc));
 	if (castling & state)
 	{
-		available = !(atked & (INT64_C(1) << (('a' - 'a') + (rank * 8))));
+		available = !(atked & castlingSqrs);
 		while (available)
 		{
-			u64 sqr = INT64_C(1) << (toCheck + (rank * 8));
+			u64 sqr = INT64_C(1) << (toCheck + rankCalc);
 			if (sqr & combMat)
 				available = false;
 			toCheck++;
@@ -416,7 +422,7 @@ Bitboard::AvailableCastling(SET set, byte castling)
 		}
 
 		if (available)
-			retVal |= INT64_C(1) << (file + (rank * 8));
+			retVal |= INT64_C(1) << (file + rankCalc);
 	}
 
 	return retVal;

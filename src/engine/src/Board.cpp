@@ -387,7 +387,6 @@ Board::GetValue(byte file, byte rank) const
 
 bool Board::UnmakeMove()
 {
-
 	const Move* mv = m_lastNode->getMove();
 	// reset pieces
 	m_bitboard.MakeMove(mv->toSqr, m_lastNode->getSet(), m_lastNode->getPiece(), mv->fromSqr);
@@ -404,10 +403,11 @@ bool Board::UnmakeMove()
 	auto prevLast = m_lastNode;
 	m_lastNode = m_lastNode->getParent();
 
+	// TODO() change this to something more generic.
 	if(prevLast->getState() == 128) // 128 is flag for castling
 		UnmakeMove();
 	else
-	if(prevLast->getState() & 128)
+	if(prevLast->getState() & 128) // check if we set castling flag.
 		m_castleState = prevLast->getState() & 15;
 	return true;
 }

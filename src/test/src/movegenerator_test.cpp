@@ -33,7 +33,7 @@ TEST_F(MoveGeneratorFixture, Pawns_and_Knight_Available_Moves)
 
 TEST_F(MoveGeneratorFixture, Castling)
 {
-    board.SetCastlingRights(15); // all available
+    board.SetCastlingRights(0x04); // all available
 
     EXPECT_EQ(true, board.PlacePiece(BLACK, KING, 'e', 8));
     EXPECT_EQ(true, board.PlacePiece(BLACK, ROOK, 'h', 8));

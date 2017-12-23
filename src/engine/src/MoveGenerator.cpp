@@ -33,7 +33,7 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count)
 	std::vector<Move> moves;
 	count = 0;
 	auto pieceArry = board->GetPieces(set);
-	for (int i = 0; i < pieceArry.size(); i++)
+	for (unsigned int i = 0; i < pieceArry.size(); i++)
 	{
 		auto piece = pieceArry.at(i);
 		byte promotion = 0x00;

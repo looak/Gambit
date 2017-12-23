@@ -37,8 +37,8 @@ bool
 Bitboard::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 {
 	byte corrFile = file - 'a';
-	byte corrRank = rank - 1;
-	byte shift = corrRank * 8 + corrFile;
+	byte corrRank = (byte)(rank - 1);
+	byte shift = corrRank * (byte)8 + corrFile;
 
 	m_material[set][piece] |= INT64_C(1) << shift;
 
@@ -51,7 +51,7 @@ Bitboard::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 bool 
 Bitboard::CapturePiece(SET set, PIECE piece, byte tSqr)
 {
-	u64 mask = INT64_C(1) << tSqr;
+	u64 mask = UINT64_C(1) << tSqr;
 	m_material[set][piece] ^= mask;
 
 	MarkDirty(set);
@@ -61,8 +61,8 @@ Bitboard::CapturePiece(SET set, PIECE piece, byte tSqr)
 bool 
 Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
 {
-	u64 sMask = INT64_C(1) << sSqr;
-	u64 tMask = INT64_C(1) << tSqr;
+	u64 sMask = UINT64_C(1) << sSqr;
+	u64 tMask = UINT64_C(1) << tSqr;
 
 	m_material[set][piece] ^= sMask;
 	m_material[set][piece] |= tMask;
@@ -74,9 +74,28 @@ Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
 bool 
 Bitboard::Promote(SET set, PIECE toPiece, byte sqr)
 {
-	u64 mask = INT64_C(1) << sqr;
+	u64 mask = UINT64_C(1) << sqr;
 	m_material[set][PAWN] ^= mask;
 	m_material[set][toPiece] |= mask;
+
+	MarkDirty(set);
+	return true;
+}
+
+bool
+Bitboard::Demote(SET set, byte sqr)
+{
+	u64 mask = UINT64_C(1) << sqr;
+	m_material[set][PAWN] ^= mask;
+
+	for (int i = QUEEN; i > PAWN; i--)
+	{
+		if(m_material[set][i] & mask)
+		{
+			m_material[set][i] ^= mask;
+			break;
+		}
+	}
 
 	MarkDirty(set);
 	return true;

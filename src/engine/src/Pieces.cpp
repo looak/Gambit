@@ -62,6 +62,16 @@ Material::GetPiece(PIECE pType, byte square)
 	return ret;
 }
 
+Pieces::Piece*
+Material::GetPiece(byte square)
+{
+	auto ret = m_board[square];
+	if (ret == nullptr)
+		return ret;
+
+	return ret;
+}
+
 std::vector<Pieces::Piece> GambitEngine::Material::GetMaterial() const
 {
 	std::vector<Pieces::Piece> retVal;

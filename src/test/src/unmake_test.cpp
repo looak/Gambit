@@ -102,6 +102,23 @@ TEST_F(UnmakeFixture, Castling_ReCastle)
 	EXPECT_EQ(KING, board.GetValue('c', 1));
 	EXPECT_EQ(0x0, board.GetValue('a', 1));
 }
+
+TEST_F(UnmakeFixture, Promotion)
+{
+	board.PlacePiece(WHITE, PAWN, 'e', 7);
+	MakeMove("e7e8q");
+
+	EXPECT_EQ(0x05, board.GetValue('e', 8));
+
+	EXPECT_TRUE(board.UnmakeMove());
+	EXPECT_EQ(0x01, board.GetValue('e', 7));
+	EXPECT_EQ(0x00, board.GetValue('e', 8));
+
+	u64 matComb = board.GetBitboard().MaterialCombined(WHITE);
+	u64 mask = UINT64_C(1) << 52;
+	EXPECT_EQ(mask, matComb);
+
+}
 ////////////////////////////////////////////////////////////////
 
 }

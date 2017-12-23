@@ -307,31 +307,37 @@ Board::CapturePiece(SET set, PIECE piece, byte tSqr)
 	return true;
 }
 
+
+
 bool 
 Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promote)
 {		
 	byte sInd64 = GetBoard64Index(sFile, sRank);
-	byte sInd	= m_boardLookup[sInd64];
-
 	byte tInd64 = GetBoard64Index(tFile, tRank);
-	byte tInd	= m_boardLookup[tInd64];
 
-	byte pieceByte = m_board[sInd] & 0x7;
-	byte pieceSet = m_board[sInd] >> 7;
+	return MakeMove(sInd64, tInd64, promote);
+}
+
+bool Board::MakeMove(byte sSqr, byte tSqr, byte promotion)
+{
+	byte sSqr120 = m_boardLookup[sSqr];
+	byte tSqr120 = m_boardLookup[tSqr];
+
+	byte pieceByte = m_board[sSqr120] & 0x7;
+	byte pieceSet = m_board[sSqr120] >> 7;
 
 	byte temp = 0x00;
-	u64 avaMoves = m_bitboard.AvailableMoves((SET)pieceSet, (PIECE)pieceByte, sInd64, m_enPassant64, m_castleState, temp);
-	u64 moveMsk = INT64_C(1) << tInd64;
+	u64 avaMoves = m_bitboard.AvailableMoves((SET)pieceSet, (PIECE)pieceByte, sSqr, m_enPassant64, m_castleState, temp);
+	u64 moveMsk = INT64_C(1) << tSqr;
 
 	if (avaMoves & moveMsk)
 	{
-		MakeLegalMove(sFile, sRank, tFile, tRank, promote);
+		MakeLegalMove(sSqr, tSqr, promotion);
 		return true;
 	}
 
 	return false;
 }
-
 void
 Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 {
@@ -360,14 +366,17 @@ Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 	if(castled)
 		state = 1 << 7;
 
-	RegisterMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr, state);
-
 	// do move
 	m_board[tSqr120] = m_board[sSqr120];
 	m_board[sSqr120] = 0x00;
 
 	if (promote != 0x00)
+	{
 		Promote(tSqr, (SET)pieceSet, promote);
+		state |= PROMOTION;
+	}
+
+	RegisterMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr, state);
 }
 
 void 
@@ -388,10 +397,27 @@ Board::GetValue(byte file, byte rank) const
 bool Board::UnmakeMove()
 {
 	const Move* mv = m_lastNode->getMove();
-	// reset pieces
-	m_bitboard.MakeMove(mv->toSqr, m_lastNode->getSet(), m_lastNode->getPiece(), mv->fromSqr);
 	byte tSqr120 = m_boardLookup[mv->fromSqr];
 	byte sSqr120 = m_boardLookup[mv->toSqr];
+
+	// reset pieces
+	if(m_lastNode->getState() & PROMOTION)
+	{
+		byte newBoardByte = 0x01;
+		newBoardByte |= (m_lastNode->getSet() << 7);
+
+		m_board[sSqr120] = newBoardByte;
+
+		auto pP = m_material[m_lastNode->getSet()].GetPiece(mv->toSqr);
+		m_material[m_lastNode->getSet()].CapturePiece(pP);
+		pP->Type = PAWN;
+		m_material[m_lastNode->getSet()].AddPiece(*pP);
+
+		m_bitboard.Demote(m_lastNode->getSet(), mv->toSqr);
+	}
+
+	m_bitboard.MakeMove(mv->toSqr, m_lastNode->getSet(), m_lastNode->getPiece(), mv->fromSqr);
+
 	m_material[m_lastNode->getSet()].MakeMove(mv->toSqr, m_lastNode->getPiece(), mv->fromSqr, tSqr120);
 
 	m_board[tSqr120] = m_board[sSqr120];

@@ -1,9 +1,6 @@
 #pragma once
 
-#include <stdint.h>
 #include "Board.h"
-
-
 
 namespace GambitEngine
 {
@@ -12,19 +9,19 @@ namespace GambitEngine
 	class Chess
 	{
 	public:
-		static GAMBIT_API void Initialize();
+		static void Initialize();
 	};
 
 	class UCI
 	{
 	public:
-		static GAMBIT_API bool HelloWorld();
+		static bool HelloWorld();
 	};
 
 	class FEN
 	{
 	public:
-		static GAMBIT_API bool InputFen(char* fen, uint8_t length, Board& outputBoard);
+		static bool InputFen(char* fen, uint8_t length, Board& outputBoard);
 
 	};
 }

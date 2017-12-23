@@ -1,11 +1,20 @@
 #pragma once
 
 #include "typedef.h"
-#include "Pieces.h"
 #include "MoveNode.h"
 #include "Bitboard.h"
 #include <array>
 #include <vector>
+
+// 0xX1 - PAWN
+// 0xX2 - BISHOP
+// 0xX3 - KNIGHT
+// 0xX4 - ROOK
+// 0xX4 - QUEEN
+// 0xX4 - KING
+
+// 0x0X - WHITE
+// 0x8X - BLACK
 
 //	FF FF FF FF FF FF FF FF FF FF
 //	FF FF FF FF FF FF FF FF FF FF
@@ -87,6 +96,7 @@ public:
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);
 	bool CapturePiece(SET set, PIECE piece, byte tSqr);
 	bool MakeMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promotion = 0x00);
+	bool MakeMove(byte sSqr, byte tSqr, byte promotion = 0x00);
 	// Unmakes last move.
 	bool UnmakeMove();
 

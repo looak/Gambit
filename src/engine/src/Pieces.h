@@ -132,6 +132,7 @@ public:
 	~Material();
 	Material (const Material& _src);
 
+	Pieces::Piece* GetPiece(byte square);
 	Pieces::Piece* GetPiece(PIECE pType, byte square);
 	Pieces::Piece* GetKing() { return m_king; };
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "typedef.h"
+#include "Pieces.h"
 
 namespace GambitEngine
 {
@@ -8,6 +9,7 @@ enum MoveFlags
 {
 	NONE = 0x0,
 	CASTLING = 0x80,
+	PROMOTION = 0x40,
 };
 struct Move
 {
@@ -32,13 +34,13 @@ public:
 	// Generic undo units, but might be that this is something for the GUI.
 
 	MoveNode(Move move, MoveNode* parent, byte set, byte piece, byte state)
-		: m_parent(parent)
-		, m_move(move)
-		, m_setByte(set)
-		, m_pieceByte(piece)
-		, m_child(nullptr)
-		, m_state(state)
+			: m_move(move)
+			  , m_parent(parent)
+			  , m_child(nullptr)
 	{
+		m_pieceByte = piece;
+		m_setByte = set;
+		m_state = state;
 	}
 
 	MoveNode* AddMoveNode(Move move, byte set, byte piece, byte state)
@@ -58,4 +60,4 @@ public:
 	const byte getState() { return m_state; }
 };
 
-}; // namespace GambitEngine
+} // namespace GambitEngine

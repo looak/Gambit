@@ -1,5 +1,5 @@
 #include "Bitboard.h"
-#include "BitMath.h"
+#include "PieceGlobals.h"
 
 using namespace GambitEngine;
 
@@ -123,28 +123,28 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 
 	if (piece == PAWN)
 	{
-		byte sq0x88 = curSqr + (curSqr & ~7);
+		byte sq0x88 = curSqr + (curSqr & (byte)~7);
 		byte rank = sq0x88 >> 4;
 
-		sq0x88 += (mvMod * Pieces::Moves0x88[piece][0]);
-		byte sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-		u64 sqbb = INT64_C(1) << sq8x8;
+		sq0x88 += (mvMod * PieceDefs::Moves0x88(piece, 0));
+		byte sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> 1;
+		u64 sqbb = UINT64_C(1) << sq8x8;
 
 		if (!(matComb & sqbb || matCombOp & sqbb))
 		{
 			retVal |= sqbb;
 			if (rank == startingRank)
 			{
-				sq0x88 += (mvMod * Pieces::Moves0x88[piece][0]);
-				sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-				sqbb = INT64_C(1) << sq8x8;
+				sq0x88 += (mvMod * PieceDefs::Moves0x88(piece, 0));
+				sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> 1;
+				sqbb = UINT64_C(1) << sq8x8;
 				if (!(matComb & sqbb || matCombOp & sqbb))
 					retVal |= sqbb;
 			}
 		}
 	}
 
-	u64 sqbb = INT64_C(1) << square;
+	u64 sqbb = UINT64_C(1) << square;
 	if (piece == KING && !(sqbb & Attacked((SET)seti)))
 		retVal |= AvailableCastling(set, castling);
 
@@ -182,21 +182,21 @@ Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square, byte mvMod, by
 	}
 	
 	byte curSqr = square;
-	for (int pI = 0; pI < Pieces::MoveCount[piece]; pI++)
+	for (int pI = 0; pI < PieceDefs::MoveCount(piece); pI++)
 	{
 		curSqr = square;
-		bool sliding = Pieces::Slides[piece];
-		signed short dir = mvMod * Pieces::Attacks0x88[piece][pI];
+		bool sliding = PieceDefs::Slides(piece);
+		signed short dir = mvMod * PieceDefs::Attacks0x88(piece, pI);
 		do
 		{
 			byte sq0x88 = 0x00;
 			byte sq8x8 = 0x00;
-			sq0x88 = curSqr + (curSqr & ~7);
+			sq0x88 = curSqr + (curSqr & (byte)~7);
 
 			sq0x88 += dir;
 
-			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-			u64 sqbb = INT64_C(1) << sq8x8;
+			sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> (byte)1;
+			u64 sqbb = UINT64_C(1) << sq8x8;
 
 			if (sq0x88 & 0x88 || matComb & sqbb)
 				sliding = false;
@@ -309,26 +309,26 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp)
 {
 	u64 matComb = MaterialCombined(set);
 
-	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
+	for (int a = 0; a < PieceDefs::MoveCount(piece); a++)
 	{
 		signed short atk = 1;
 		if (piece == PAWN && set == WHITE)
 			atk = -1; // inverse attack if we're black.
 
-		atk *= Pieces::Attacks0x88[piece][a];
-		bool sliding = Pieces::Slides[piece];
-		byte curSqr = square;		
+		atk *= PieceDefs::Attacks0x88(piece, a);
+		bool sliding = PieceDefs::Slides(piece);
+		auto curSqr = (byte)square;
 
 		do 
 		{
 			byte sq0x88 = 0x00;
 			byte sq8x8 = 0x00;
-			sq0x88 = curSqr + (curSqr & ~7);
+			sq0x88 = curSqr + (curSqr & (byte)~7);
 			
 			sq0x88 += atk;
 
-			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-			u64 sqbb = INT64_C(1) << sq8x8;
+			sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> (byte)1;
+			u64 sqbb = UINT64_C(1) << sq8x8;
 			
 			if (sq0x88 & 0x88 || matComb & sqbb)
 				sliding = false;

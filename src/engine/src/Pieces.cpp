@@ -96,7 +96,7 @@ bool
 Material::CapturePiece(Pieces::Piece* piece)
 {
 	bool foundPiece = false;
-	int ind = 0;
+	unsigned int ind = 0;
 	while (m_materialGrid[piece->Type].size() > ind)
 	{
 		if (m_materialGrid[piece->Type].at(ind).Square8x8 == piece->Square8x8)

@@ -46,7 +46,7 @@ TEST_F(PerftFixture, PositionFive)
     movGen.getMoves(WHITE, &board, count);
     EXPECT_EQ(count, 44); // should be twenty different available moves from the initial board as white.
 }
-
+/*
 TEST_F(PerftFixture, PositionFive_Depth_Three)
 {
     GambitEngine::Board board;
@@ -72,6 +72,6 @@ TEST_F(PerftFixture, PositionFive_Depth_Three)
         EXPECT_EQ(count, 1486);
 
     }
-}
+}*/
 ////////////////////////////////////////////////////////////////
 }

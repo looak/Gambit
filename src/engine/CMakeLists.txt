@@ -22,7 +22,7 @@ set(GambitEngine_INC
         src/GameState.h
         src/MoveGenerator.h
         src/Pieces.h
-        src/typedef.h src/MoveNode.h)
+        src/typedef.h src/MoveNode.h src/PieceGlobals.h src/PieceGlobals.cpp)
 
 #include_directories(${GambitEngine_INCLUDE})
 

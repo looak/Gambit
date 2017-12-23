@@ -1,14 +1,16 @@
 #include <ctype.h>
 #include <cstring>
 #include "Board.h"
+#include "PieceGlobals.h"
 
 using namespace GambitEngine;
 
 Board::Board()
-		: m_castleState(0)
-		, m_enPassant64(0)
-		, m_lastNode(nullptr)
+		: m_enPassant64(0)
+		, m_enPassantTargetSqr64(0)
+		, m_castleState(0)
 		, m_rootNode(nullptr)
+		, m_lastNode(nullptr)
 {
 	// initialize lookup
 	byte lookup[64] = {
@@ -203,7 +205,7 @@ bool
 Board::Promote(byte sqr, SET set, byte promoteTo)
 {
 	auto pP = m_material[set].GetPiece(PAWN, sqr);
-	pP->Type = Pieces::converter(promoteTo);
+	pP->Type = PieceDefs::converter(promoteTo);
 
 	m_bitboard.Promote(set, (PIECE)pP->Type, sqr);
 
@@ -321,14 +323,13 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promote)
 bool Board::MakeMove(byte sSqr, byte tSqr, byte promotion)
 {
 	byte sSqr120 = m_boardLookup[sSqr];
-	byte tSqr120 = m_boardLookup[tSqr];
 
-	byte pieceByte = m_board[sSqr120] & 0x7;
+	byte pieceByte = m_board[sSqr120] & (byte)0x7;
 	byte pieceSet = m_board[sSqr120] >> 7;
 
 	byte temp = 0x00;
 	u64 avaMoves = m_bitboard.AvailableMoves((SET)pieceSet, (PIECE)pieceByte, sSqr, m_enPassant64, m_castleState, temp);
-	u64 moveMsk = INT64_C(1) << tSqr;
+	u64 moveMsk = UINT64_C(1) << tSqr;
 
 	if (avaMoves & moveMsk)
 	{

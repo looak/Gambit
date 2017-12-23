@@ -1,5 +1,6 @@
 #include "MoveGenerator.h"
 #include "Board.h"
+#include "PieceGlobals.h"
 #include <algorithm>
 
 using namespace GambitEngine;
@@ -42,7 +43,7 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count)
 		byte sqr = 0;
 		while (avaMvs != ~universe)
 		{
-			u64 mask = INT64_C(1) << sqr;
+			u64 mask = UINT64_C(1) << sqr;
 			if (mask & avaMvs)
 			{
 				if (promotion != 0x00)
@@ -52,7 +53,7 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count)
 						Move newMove;
 						newMove.fromSqr = piece.Square8x8;
 						newMove.toSqr = sqr;
-						newMove.promotion = Pieces::converter((PIECE)i);
+						newMove.promotion = PieceDefs::converter((PIECE)i);
 						moves.push_back(newMove);
 						count++;
 					}

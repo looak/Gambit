@@ -11,7 +11,7 @@ class UnmakeFixture : public ::testing::Test
 {
 public:
 	GambitEngine::Board board;
-	bool MakeMove(char move[4])
+	bool MakeMove(const char move[4])
 	{
 		byte promotion = move[4] == 0 ? 0 : move[4];
 		return board.MakeMove(move[0], move[1]-'0', move[2], move[3]-'0', promotion);
@@ -105,8 +105,9 @@ TEST_F(UnmakeFixture, Castling_ReCastle)
 
 TEST_F(UnmakeFixture, Promotion)
 {
+	std::string mvStr = "e7e8q";
 	board.PlacePiece(WHITE, PAWN, 'e', 7);
-	MakeMove("e7e8q");
+	MakeMove(mvStr.c_str());
 
 	EXPECT_EQ(0x05, board.GetValue('e', 8));
 

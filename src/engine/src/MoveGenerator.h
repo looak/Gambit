@@ -1,6 +1,6 @@
 #pragma once
 #include "typedef.h"
-#include "Pieces.h"
+#include "Material.h"
 #include "MoveNode.h"
 #include <vector>
 

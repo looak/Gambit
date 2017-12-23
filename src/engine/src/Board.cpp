@@ -1,7 +1,7 @@
 #include <ctype.h>
 #include <cstring>
 #include "Board.h"
-#include "PieceGlobals.h"
+#include "PieceDef.h"
 
 using namespace GambitEngine;
 
@@ -205,7 +205,7 @@ bool
 Board::Promote(byte sqr, SET set, byte promoteTo)
 {
 	auto pP = m_material[set].GetPiece(PAWN, sqr);
-	pP->Type = PieceDefs::converter(promoteTo);
+	pP->Type = PieceDef::converter(promoteTo);
 
 	m_bitboard.Promote(set, (PIECE)pP->Type, sqr);
 
@@ -254,7 +254,7 @@ Board::CheckMate(SET set)
 	for (u32 i = 0; i < material.size(); i++)
 	{
 		byte promotion = 0;
-		Pieces::Piece pP = material.at(i);
+		Piece pP = material.at(i);
 		if(pP.Type == 6)
 			continue;
 
@@ -274,7 +274,7 @@ Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 	byte bIndx64 = GetBoard64Index(file, rank);
 	byte bIndx = m_boardLookup[bIndx64];
 
-	Pieces::Piece p;
+	Piece p;
 	p.Type = piece;
 	p.Square10x12 = bIndx;
 	p.Square8x8 = bIndx64;
@@ -298,7 +298,7 @@ Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 bool 
 Board::CapturePiece(SET set, PIECE piece, byte tSqr)
 {	
-	Pieces::Piece *p = m_material[set].GetPiece(piece, tSqr);
+	Piece *p = m_material[set].GetPiece(piece, tSqr);
 
 	if (p == nullptr)
 		return false;

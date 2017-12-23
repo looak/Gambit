@@ -1,5 +1,5 @@
 #include "Bitboard.h"
-#include "PieceGlobals.h"
+#include "PieceDef.h"
 
 using namespace GambitEngine;
 
@@ -126,7 +126,7 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 		byte sq0x88 = curSqr + (curSqr & (byte)~7);
 		byte rank = sq0x88 >> 4;
 
-		sq0x88 += (mvMod * PieceDefs::Moves0x88(piece, 0));
+		sq0x88 += (mvMod * PieceDef::Moves0x88(piece, 0));
 		byte sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> 1;
 		u64 sqbb = UINT64_C(1) << sq8x8;
 
@@ -135,7 +135,7 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 			retVal |= sqbb;
 			if (rank == startingRank)
 			{
-				sq0x88 += (mvMod * PieceDefs::Moves0x88(piece, 0));
+				sq0x88 += (mvMod * PieceDef::Moves0x88(piece, 0));
 				sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> 1;
 				sqbb = UINT64_C(1) << sq8x8;
 				if (!(matComb & sqbb || matCombOp & sqbb))
@@ -182,11 +182,11 @@ Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square, byte mvMod, by
 	}
 	
 	byte curSqr = square;
-	for (int pI = 0; pI < PieceDefs::MoveCount(piece); pI++)
+	for (int pI = 0; pI < PieceDef::MoveCount(piece); pI++)
 	{
 		curSqr = square;
-		bool sliding = PieceDefs::Slides(piece);
-		signed short dir = mvMod * PieceDefs::Attacks0x88(piece, pI);
+		bool sliding = PieceDef::Slides(piece);
+		signed short dir = mvMod * PieceDef::Attacks0x88(piece, pI);
 		do
 		{
 			byte sq0x88 = 0x00;
@@ -309,14 +309,14 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp)
 {
 	u64 matComb = MaterialCombined(set);
 
-	for (int a = 0; a < PieceDefs::MoveCount(piece); a++)
+	for (int a = 0; a < PieceDef::MoveCount(piece); a++)
 	{
 		signed short atk = 1;
 		if (piece == PAWN && set == WHITE)
 			atk = -1; // inverse attack if we're black.
 
-		atk *= PieceDefs::Attacks0x88(piece, a);
-		bool sliding = PieceDefs::Slides(piece);
+		atk *= PieceDef::Attacks0x88(piece, a);
+		bool sliding = PieceDef::Slides(piece);
 		auto curSqr = (byte)square;
 
 		do 

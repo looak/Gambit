@@ -3,6 +3,7 @@
 
 #include "../../engine/src/Board.h"
 ////////////////////////////////////////////////////////////////
+using namespace GambitEngine;
 
 namespace GambitTest {
 

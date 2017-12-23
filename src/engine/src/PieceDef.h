@@ -1,8 +1,32 @@
 #pragma once
 
-#include "Pieces.h"
+#include "typedef.h"
+////////////////////////////////////////////////////////////////
 
-class PieceDefs
+namespace GambitEngine
+{
+////////////////////////////////////////////////////////////////
+
+enum PIECE
+{
+	PAWN = 1,
+	KNIGHT = 2,
+	BISHOP = 3,
+	ROOK = 4,
+	QUEEN = 5,
+	KING = 6,
+	NR_OF_PIECES =7,
+};
+
+enum SET
+{
+	WHITE = 0,
+	BLACK = 1,
+	NR_OF_SETS = 2,
+};
+////////////////////////////////////////////////////////////////
+
+class PieceDef
 {
 public:
 	static signed short 	MoveCount(unsigned int pIndex);
@@ -19,3 +43,7 @@ private:
 	static signed short m_moves0x88[NR_OF_PIECES][8];
 	static signed short m_attacks0x88[NR_OF_PIECES][8];
 };
+
+////////////////////////////////////////////////////////////////
+
+}

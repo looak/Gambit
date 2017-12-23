@@ -1,14 +1,18 @@
-#include "PieceGlobals.h"
+#include "PieceDef.h"
+////////////////////////////////////////////////////////////////
 
-signed short PieceDefs::m_moveCount[NR_OF_PIECES] = {
+using namespace GambitEngine;
+////////////////////////////////////////////////////////////////
+
+signed short PieceDef::m_moveCount[NR_OF_PIECES] = {
 		0, 2, 8, 4, 4, 8, 8
 };
 
-bool PieceDefs::m_slides[NR_OF_PIECES] = {
+bool PieceDef::m_slides[NR_OF_PIECES] = {
 		false, false, false, true, true, true, false,
 };
 
-signed short PieceDefs::m_moves0x88[NR_OF_PIECES][8] = {
+signed short PieceDef::m_moves0x88[NR_OF_PIECES][8] = {
 		{ 0, 0, 0, 0, 0, 0, 0, 0 },
 		{ -16, -32, 0, 0, 0, 0, 0, 0 },
 		{ -33, -31, -18, -14, 14, 18, 31, 33 },
@@ -19,7 +23,7 @@ signed short PieceDefs::m_moves0x88[NR_OF_PIECES][8] = {
 };
 
 
-signed short PieceDefs::m_attacks0x88[NR_OF_PIECES][8] = {
+signed short PieceDef::m_attacks0x88[NR_OF_PIECES][8] = {
 		{ 0, 0, 0, 0, 0, 0, 0, 0 },
 		{ -15, -17, 0, 0, 0, 0, 0, 0 },
 		{ -33, -31, -18, -14, 14, 18, 31, 33 },
@@ -29,29 +33,30 @@ signed short PieceDefs::m_attacks0x88[NR_OF_PIECES][8] = {
 		{ -17, -16, -15, -1, 1, 15, 16, 17 }
 };
 
+////////////////////////////////////////////////////////////////
 
-signed short PieceDefs::MoveCount(unsigned int pIndex)
+signed short PieceDef::MoveCount(unsigned int pIndex)
 {
 	return m_moveCount[pIndex];
 }
 
-bool PieceDefs::Slides(unsigned int pIndex)
+bool PieceDef::Slides(unsigned int pIndex)
 {
 	return m_slides[pIndex];
 }
 
-signed short PieceDefs::Moves0x88(unsigned int pIndex, unsigned int mIndex)
+signed short PieceDef::Moves0x88(unsigned int pIndex, unsigned int mIndex)
 {
 	return m_moves0x88[pIndex][mIndex];
 }
 
-signed short PieceDefs::Attacks0x88(unsigned int pIndex, unsigned int mIndex)
+signed short PieceDef::Attacks0x88(unsigned int pIndex, unsigned int mIndex)
 {
 	return m_attacks0x88[pIndex][mIndex];
 }
 
 
-PIECE PieceDefs::converter(byte toConvert)
+PIECE PieceDef::converter(byte toConvert)
 {
 	switch (toConvert)
 	{
@@ -72,7 +77,7 @@ PIECE PieceDefs::converter(byte toConvert)
 	}
 }
 
-byte PieceDefs::converter(PIECE toConvert)
+byte PieceDef::converter(PIECE toConvert)
 {
 	switch (toConvert)
 	{
@@ -93,3 +98,4 @@ byte PieceDefs::converter(PIECE toConvert)
 	}
 }
 
+////////////////////////////////////////////////////////////////

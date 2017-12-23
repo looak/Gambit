@@ -5,6 +5,7 @@
 #include "../../engine/src/GambitEngine.h"
 #include "../../engine/src/MoveGenerator.h"
 ////////////////////////////////////////////////////////////////
+using namespace GambitEngine;
 
 namespace GambitTest {
 

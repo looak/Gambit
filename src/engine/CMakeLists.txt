@@ -10,7 +10,7 @@ set(GambitEngine_SRC
         src/MoveGenerator.cpp
         src/GameState.cpp
         src/FENParser.cpp
-        src/Pieces.cpp
+        src/Material.cpp
         src/Board.cpp)
 
 set(GambitEngine_INC
@@ -21,8 +21,8 @@ set(GambitEngine_INC
         src/GambitEngine.h
         src/GameState.h
         src/MoveGenerator.h
-        src/Pieces.h
-        src/typedef.h src/MoveNode.h src/PieceGlobals.h src/PieceGlobals.cpp)
+        src/Material.h
+        src/typedef.h src/MoveNode.h src/PieceDef.h src/PieceDef.cpp)
 
 #include_directories(${GambitEngine_INCLUDE})
 

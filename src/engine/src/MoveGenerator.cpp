@@ -1,6 +1,6 @@
 #include "MoveGenerator.h"
 #include "Board.h"
-#include "PieceGlobals.h"
+#include "PieceDef.h"
 #include <algorithm>
 
 using namespace GambitEngine;
@@ -53,7 +53,7 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count)
 						Move newMove;
 						newMove.fromSqr = piece.Square8x8;
 						newMove.toSqr = sqr;
-						newMove.promotion = PieceDefs::converter((PIECE)i);
+						newMove.promotion = PieceDef::converter((PIECE)i);
 						moves.push_back(newMove);
 						count++;
 					}

@@ -1,4 +1,4 @@
-#include "Pieces.h"
+#include "Material.h"
 #include <algorithm>
 
 using namespace GambitEngine;
@@ -39,7 +39,7 @@ Material::Material(const Material & _src)
 
 	for (int i = 0; i < NR_OF_PIECES; i++)
 	{
-		for (Pieces::Piece mat : m_materialGrid[i])
+		for (Piece mat : m_materialGrid[i])
 		{
 			m_board[mat.Square8x8] = &mat;
 		}
@@ -47,7 +47,7 @@ Material::Material(const Material & _src)
 	
 }
 
-Pieces::Piece* 
+Piece*
 Material::GetPiece(PIECE pType, byte square)
 {
 	if (pType == KING)
@@ -62,7 +62,7 @@ Material::GetPiece(PIECE pType, byte square)
 	return ret;
 }
 
-Pieces::Piece*
+Piece*
 Material::GetPiece(byte square)
 {
 	auto ret = m_board[square];
@@ -72,9 +72,9 @@ Material::GetPiece(byte square)
 	return ret;
 }
 
-std::vector<Pieces::Piece> GambitEngine::Material::GetMaterial() const
+std::vector<Piece> GambitEngine::Material::GetMaterial() const
 {
-	std::vector<Pieces::Piece> retVal;
+	std::vector<Piece> retVal;
 	for (int i = 0; i < NR_OF_PIECES; i++)
 		retVal.insert(retVal.end(), m_materialGrid[i].begin(), m_materialGrid[i].end());
 	
@@ -82,7 +82,7 @@ std::vector<Pieces::Piece> GambitEngine::Material::GetMaterial() const
 }
 
 bool 
-Material::AddPiece(Pieces::Piece piece)
+Material::AddPiece(Piece piece)
 {
 	m_materialGrid[piece.Type].push_back(piece);
 	m_board[piece.Square8x8] = &m_materialGrid[piece.Type].at(m_materialGrid[piece.Type].size() - 1);
@@ -93,7 +93,7 @@ Material::AddPiece(Pieces::Piece piece)
 }
 
 bool 
-Material::CapturePiece(Pieces::Piece* piece)
+Material::CapturePiece(Piece* piece)
 {
 	bool foundPiece = false;
 	unsigned int ind = 0;

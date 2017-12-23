@@ -3,6 +3,7 @@
 
 #include "../../engine/src/Bitboard.h"
 ////////////////////////////////////////////////////////////////
+using namespace GambitEngine;
 
 namespace GambitTest
 {

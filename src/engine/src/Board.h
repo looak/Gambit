@@ -110,7 +110,7 @@ public:
 
 	byte GetValue(byte file, byte rank) const;
 	Bitboard GetBitboard() const { return m_bitboard; }
-	const std::vector<Pieces::Piece> GetPieces(SET set) const { return m_material[set].GetMaterial(); };
+	const std::vector<Piece> GetPieces(SET set) const { return m_material[set].GetMaterial(); };
 	void SetCastlingRights(byte castlingByte) { m_castleState = castlingByte; };
 
 };

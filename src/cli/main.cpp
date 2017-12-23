@@ -4,6 +4,8 @@
 #include "../engine/src/FENParser.h"
 #include "../engine/src/MoveGenerator.h"
 
+using namespace GambitEngine;
+
 byte too(byte toConvert)
 {
 	byte piece = toConvert & 7;	

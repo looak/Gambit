@@ -85,9 +85,10 @@ Bitboard::Promote(SET set, PIECE toPiece, byte sqr)
 u64 
 Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte castling, byte& promotion)
 {
-	u64 m_matComb = MaterialCombined(set);	
+	u64 matComb = MaterialCombined(set);
+
 	int seti = (int)!set;
-	u64 m_matCombOp = MaterialCombined((SET)seti);
+	u64 matCombOp = MaterialCombined((SET)seti);
 
 	u64 retVal = ~universe;
 
@@ -110,7 +111,7 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 		byte sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
 		u64 sqbb = INT64_C(1) << sq8x8;
 
-		if (!(m_matComb & sqbb || m_matCombOp & sqbb))
+		if (!(matComb & sqbb || matCombOp & sqbb))
 		{
 			retVal |= sqbb;
 			if (rank == startingRank)
@@ -118,53 +119,17 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 				sq0x88 += (mvMod * Pieces::Moves0x88[piece][0]);
 				sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
 				sqbb = INT64_C(1) << sq8x8;
-				if (!(m_matComb & sqbb || m_matCombOp & sqbb))
+				if (!(matComb & sqbb || matCombOp & sqbb))
 					retVal |= sqbb;
 			}
 		}
-
-		// add en passant to op's material.
-		u64 enPass = INT64_C(1) << enPassant;
-		m_matCombOp |= enPass;
 	}
 
 	u64 sqbb = INT64_C(1) << square;
 	if (piece == KING && !(sqbb & Attacked((SET)seti)))
 		retVal |= AvailableCastling(set, castling);
-	
-	for (int a = 0; a < Pieces::MoveCount[piece]; a++)
-	{
-		curSqr = square;
 
-		bool sliding = Pieces::Slides[piece];
-		signed short dir = (mvMod * Pieces::Attacks0x88[piece][a]);
-		do
-		{
-			byte sq0x88 = 0x00;
-			byte sq8x8 = 0x00;
-			sq0x88 = curSqr + (curSqr & ~7);
-
-			sq0x88 += dir;
-
-			sq8x8 = (sq0x88 + (sq0x88 & 7)) >> 1;
-			u64 sqbb = INT64_C(1) << sq8x8;
-
-			if (sq0x88 & 0x88 || m_matComb & sqbb)
-				sliding = false;
-			else if (m_matCombOp & sqbb)
-			{
-				retVal |= sqbb;
-				sliding = false;
-			}
-			else if (piece > 1) // if we're nt a pawn.
-			{
-				retVal |= sqbb;
-			}
-
-			curSqr = sq8x8;
-
-		} while (sliding);
-	}
+	retVal |= AvailableMovesSimple(set, piece, square, mvMod, enPassant);
 
 	if (piece == PAWN)
 	{
@@ -183,19 +148,26 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 }
 
 u64 
-Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square)
+Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square, byte mvMod, byte enPassant)
 {
 	u64 retVal = ~universe;
 	int opSet = !(int)set;
 	u64 matCombOp = MaterialCombined((SET)opSet);
 	u64 matComb = MaterialCombined(set);
+
+	if(piece == PAWN)
+	{
+		// add en passant sqr to op's material.
+		u64 enPass = INT64_C(1) << enPassant;
+		matCombOp |= enPass;
+	}
 	
 	byte curSqr = square;
 	for (int pI = 0; pI < Pieces::MoveCount[piece]; pI++)
 	{
 		curSqr = square;
 		bool sliding = Pieces::Slides[piece];
-		signed short dir = Pieces::Attacks0x88[piece][pI];
+		signed short dir = mvMod * Pieces::Attacks0x88[piece][pI];
 		do
 		{
 			byte sq0x88 = 0x00;
@@ -208,17 +180,17 @@ Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square)
 			u64 sqbb = INT64_C(1) << sq8x8;
 
 			if (sq0x88 & 0x88 || matComb & sqbb)
-			{
 				sliding = false;
-				continue;
-			}
 			else if (matCombOp & sqbb)
 			{
 				retVal |= sqbb;
 				sliding = false;
 			}
-			retVal |= sqbb;
-		
+			else if (piece > 1) // if we're nt a pawn.
+			{
+				retVal |= sqbb;
+			}
+
 			curSqr = sq8x8;
 
 		} while (sliding);

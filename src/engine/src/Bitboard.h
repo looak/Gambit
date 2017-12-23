@@ -41,7 +41,7 @@ public:
 
 	u64 AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte castling, byte& promotion);
 	// ignoring Pawns
-	u64 AvailableMovesSimple(SET set, PIECE piece, byte square);
+	u64 AvailableMovesSimple(SET set, PIECE piece, byte square, byte mvMod = 1, byte enPassant = 0x0);
 
 	u64 MaterialCombined(SET set);
 	u64 MatCombinedNoKing(SET set);

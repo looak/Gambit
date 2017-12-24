@@ -47,7 +47,7 @@ TEST_F(PerftFixture, PositionFive)
     movGen.getMoves(WHITE, &board, count);
     EXPECT_EQ(count, 44); // should be twenty different available moves from the initial board as white.
 }
-/*
+
 TEST_F(PerftFixture, PositionFive_Depth_Three)
 {
     GambitEngine::Board board;
@@ -60,10 +60,10 @@ TEST_F(PerftFixture, PositionFive_Depth_Three)
     auto mvs = movGen.getMoves(WHITE, &board, count);
     EXPECT_EQ(count, 44);
 
-    short depth = 0;
+//    short depth = 0;
     //while(depth < 2)
     {
-        for(int i = 0; i < mvs.size(); i ++)
+        for (unsigned int i = 0; i < mvs.size(); i ++)
         {
             auto move = mvs[i];
             board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
@@ -73,6 +73,6 @@ TEST_F(PerftFixture, PositionFive_Depth_Three)
         EXPECT_EQ(count, 1486);
 
     }
-}*/
+}
 ////////////////////////////////////////////////////////////////
 }

@@ -179,6 +179,19 @@ TEST_F(UnmakeFixture, EnPassantTake)
 	EXPECT_EQ(0x81, board.GetValue('e', 3));
 	EXPECT_EQ(0x0, board.GetValue('f', 4));
 }
+
+TEST_F(UnmakeFixture, King_Move_Castle)
+{
+	board.SetCastlingRights(0x01);
+	board.PlacePiece(WHITE, KING, 'e', 1);
+	board.PlacePiece(WHITE, ROOK, 'h', 1);
+
+	MakeMove("e1e2");
+	board.UnmakeMove();
+
+	EXPECT_TRUE(MakeMove("e1g1"));
+
+}
 ////////////////////////////////////////////////////////////////
 
 }

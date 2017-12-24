@@ -44,7 +44,7 @@ public:
 	FENParser();
 	~FENParser();
 
-	static bool Deserialize(const char* fen, byte length, Board& outputBoard, GameState* state);
+	static bool Deserialize(const char* fen, unsigned int length, Board& outputBoard, GameState* state);
 };
 
 }

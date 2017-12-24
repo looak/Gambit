@@ -76,7 +76,7 @@ bool Board::Occupied(byte indx)
 	return m_board[indx] & 0x00;
 }
 
-byte Board::GetBoard120Index(byte file, byte rank) const
+byte Board::GetBoard120Index(const byte file, const byte rank) const
 {
 	byte corrFile = tolower(file) - 'a';
 	byte corrRank = rank - 1;
@@ -102,12 +102,13 @@ byte Board::GetBoard64Index(byte file, byte rank) const
 	return index;
 }
 
-bool Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
+bool Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr, byte& state, byte& enPassantState)
 {
 	if (piece != PAWN)
 	{
 		// reset en passant since our move didn't add one.
 		m_enPassant64 = 0;
+		m_enPassantTargetSqr64 = 0;
 		return false;
 	}
 	short enPassant = (short)tSqr - (short)sSqr;
@@ -118,9 +119,11 @@ bool Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
 		if (tSqr == m_enPassant64)
 		{
 			int captSet = !int(set);
-			CapturePiece((SET)captSet, PAWN, m_enPassantTargetSqr64);
+			CapturePiece((SET)captSet, PAWN, m_enPassantTargetSqr64, state);
 			m_enPassantTargetSqr64 = 0;
 			m_enPassant64 = 0;
+			enPassantState = 128;
+			enPassantState = tSqr;
 			return true;
 		}
 	}
@@ -129,8 +132,11 @@ bool Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr)
 	{
 		enPassant /= 2;
 		m_enPassant64 = sSqr + enPassant;
-		
+		// to be able to solve capture
 		m_enPassantTargetSqr64 = tSqr;
+		enPassantState = 128;
+		enPassantState = tSqr;
+		return true;
 	}
 
 	return false;
@@ -272,44 +278,49 @@ bool
 Board::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 {
 	byte bIndx64 = GetBoard64Index(file, rank);
-	byte bIndx = m_boardLookup[bIndx64];
+	return PlacePiece(set, piece, bIndx64);
+}
+
+bool Board::PlacePiece(SET set, PIECE piece, byte square)
+{
+	byte sqr120 = m_boardLookup[square];
 
 	Piece p;
 	p.Type = piece;
-	p.Square10x12 = bIndx;
-	p.Square8x8 = bIndx64;
+	p.Square10x12 = sqr120;
+	p.Square8x8 = square;
 
-	
 	byte comp = 0x07;
-	if ((m_board[bIndx] & comp) != 0x00)
+	if ((m_board[sqr120] & comp) != 0x00)
 		return false;
 
 	byte pieceVal = 0x00;
 	pieceVal |= set << 7;
 	pieceVal |= piece;
 
-	m_board[bIndx] = pieceVal;
+	m_board[sqr120] = pieceVal;
 
-	m_bitboard.PlacePiece(set, piece, file, rank);
+	m_bitboard.PlacePiece(set, piece, square);
 	m_material[set].AddPiece(p);
 	return true;
 }
 
 bool 
-Board::CapturePiece(SET set, PIECE piece, byte tSqr)
-{	
+Board::CapturePiece(SET set, PIECE piece, byte tSqr, byte& state)
+{
+	state |= CAPTURE;
 	Piece *p = m_material[set].GetPiece(piece, tSqr);
 
 	if (p == nullptr)
 		return false;
-		
+
+	state |= p->Type;
+
 	m_board[m_boardLookup[tSqr]] = 0x00;
 	m_material[set].CapturePiece(p);
 	m_bitboard.CapturePiece(set, piece, tSqr);
 	return true;
 }
-
-
 
 bool 
 Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promote)
@@ -342,6 +353,8 @@ bool Board::MakeMove(byte sSqr, byte tSqr, byte promotion)
 void
 Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 {
+	byte state = 0x0;
+	byte enPassantState = 0x0;
 	byte sSqr120 = m_boardLookup[sSqr];
 	byte tSqr120 = m_boardLookup[tSqr];
 
@@ -353,17 +366,16 @@ Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 	if ((targetPiece & 0x7) != 0x0)
 		isCapture = true;
 
-	EnPassant(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
+	EnPassant(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr, state, enPassantState);
 
 	if (isCapture)
-		CapturePiece((SET)!(int)pieceSet, (PIECE)targetPiece, tSqr);
+		CapturePiece((SET)!(int)pieceSet, (PIECE)targetPiece, tSqr, state);
 
 	bool castled = Castling(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
 
 	m_bitboard.MakeMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
 	m_material[pieceSet].MakeMove(sSqr, (PIECE)pieceByte, tSqr, tSqr120);
 
-	byte state = 0x0;
 	if(castled)
 		state = 1 << 7;
 
@@ -377,7 +389,7 @@ Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 		state |= PROMOTION;
 	}
 
-	RegisterMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr, state);
+	RegisterMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr, state, enPassantState);
 }
 
 void 
@@ -389,7 +401,7 @@ Board::MakeLegalMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promot
 }
 
 byte 
-Board::GetValue(byte file, byte rank) const
+Board::GetValue(const byte file, const byte rank) const
 {
 	byte bIndx = GetBoard120Index(file, rank);
 	return  m_board[bIndx];	
@@ -431,15 +443,26 @@ bool Board::UnmakeMove()
 	m_lastNode = m_lastNode->getParent();
 
 	// TODO() change this to something more generic.
-	if(prevLast->getState() == 128) // 128 is flag for castling
+	if (prevLast->getState() == 128) // 128 is flag for castling
 		UnmakeMove();
-	else
-	if(prevLast->getState() & 128) // check if we set castling flag.
+	else if (prevLast->getState() & 128) // check if we set castling flag.
 		m_castleState = prevLast->getState() & 15;
+	else if (prevLast->getState() & CAPTURE)
+	{
+		byte piece = prevLast->getState() & 7;
+		PlacePiece((SET)!prevLast->getSet(), (PIECE)piece, mv->toSqr);
+	}
+
+	// should always set enPassantSqr if there was one
+	if(prevLast->getEnPassantState() != 0x0)
+	{
+		m_enPassantTargetSqr64 = mv->toSqr;
+		m_enPassant64 = prevLast->getEnPassantState() & 64;
+	}
 	return true;
 }
 
-bool Board::RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state)
+bool Board::RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state, byte enPassantState)
 {
 	Move move;
 	move.fromSqr = sSqr;
@@ -447,13 +470,14 @@ bool Board::RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state)
 
 	if(m_rootNode == nullptr)
 	{
-		m_rootNode = new MoveNode(move, nullptr, set, piece, state);
+		m_rootNode = new MoveNode(move, nullptr, set, piece, state, enPassantState);
 		m_lastNode = m_rootNode;
 	}
 	else
 	{
-		m_lastNode = m_lastNode->AddMoveNode(move, set, piece, state);
+		m_lastNode = m_lastNode->AddMoveNode(move, set, piece, state, enPassantState);
 	}
 
 	return true;
 }
+

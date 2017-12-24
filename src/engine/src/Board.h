@@ -7,8 +7,8 @@
 #include <vector>
 
 // 0xX1 - PAWN
-// 0xX2 - BISHOP
-// 0xX3 - KNIGHT
+// 0xX2 - KNIGHT
+// 0xX3 - BISHOP
 // 0xX4 - ROOK
 // 0xX4 - QUEEN
 // 0xX4 - KING
@@ -52,20 +52,18 @@ class GAMBIT_API Board
 {
 friend class FENBoardWriter;
 private:
-	// resets board to be empty;
-	void ResetBoard();
 	bool Occupied(byte indx);
 
-	byte GetBoard120Index(byte file, byte rank) const;
+	byte GetBoard120Index(const byte file, const byte rank) const;
 	byte GetBoard64Index(byte file, byte rank) const;
 
 	// handles setting en passant, removing en passant square
 	// and also if move is taking an enpassant that's also handled.
-	bool EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr);
+	bool EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr, byte& state, byte& enPassant);
 	bool Castling(byte sSqr, SET set, PIECE piece, byte tSqr);
 	bool Promote(byte sqr, SET set, byte promoteTo);
 
-	bool RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state = 0x0);
+	bool RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state = 0x0, byte enPassantState = 0x0);
 
 	Bitboard m_bitboard;
 
@@ -90,11 +88,16 @@ public:
 
 	~Board();
 
+	// resets board to be empty;
+	void ResetBoard();
+
 	// attempts to place said piece of said set in the given file & rank.
 	// returns false if this failed either because of being outside of board 
 	// or square is occupied
 	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);
-	bool CapturePiece(SET set, PIECE piece, byte tSqr);
+	bool PlacePiece(SET set, PIECE piece, byte square);
+
+	bool CapturePiece(SET set, PIECE piece, byte tSqr, byte& state);
 	bool MakeMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promotion = 0x00);
 	bool MakeMove(byte sSqr, byte tSqr, byte promotion = 0x00);
 	// Unmakes last move.
@@ -108,7 +111,7 @@ public:
 
 	u64 AvailableMoves(SET set, PIECE piece, u32 square, byte& promotion) { return m_bitboard.AvailableMoves(set, piece, square, m_enPassant64, m_castleState, promotion); };
 
-	byte GetValue(byte file, byte rank) const;
+	byte GetValue(const byte file, const byte rank) const;
 	Bitboard GetBitboard() const { return m_bitboard; }
 	const std::vector<Piece> GetPieces(SET set) const { return m_material[set].GetMaterial(); };
 	void SetCastlingRights(byte castlingByte) { m_castleState = castlingByte; };

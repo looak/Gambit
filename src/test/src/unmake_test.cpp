@@ -14,7 +14,7 @@ public:
 	GambitEngine::Board board;
 	bool MakeMove(const char move[4])
 	{
-		byte promotion = move[4] == 0 ? 0 : move[4];
+		const byte promotion = move[4] == 0 ? 0 : move[4];
 		return board.MakeMove(move[0], move[1]-'0', move[2], move[3]-'0', promotion);
 	}
 };
@@ -119,7 +119,65 @@ TEST_F(UnmakeFixture, Promotion)
 	u64 matComb = board.GetBitboard().MaterialCombined(WHITE);
 	u64 mask = UINT64_C(1) << 52;
 	EXPECT_EQ(mask, matComb);
+}
 
+TEST_F(UnmakeFixture, Capture)
+{
+	board.PlacePiece(WHITE, KNIGHT, 'e', 2);
+	board.PlacePiece(BLACK, KNIGHT, 'f', 4);
+
+	EXPECT_TRUE(MakeMove("f4e2"));
+	EXPECT_EQ(0x82, board.GetValue('e', 2));
+
+	EXPECT_TRUE(board.UnmakeMove());
+
+	EXPECT_EQ(0x02, board.GetValue('e', 2));
+	EXPECT_EQ(0x82, board.GetValue('f', 4));
+
+}
+
+TEST_F(UnmakeFixture, CapturePromote)
+{
+	board.PlacePiece(BLACK, BISHOP, 'f', 8);
+	board.PlacePiece(WHITE, PAWN, 'e', 7);
+	EXPECT_TRUE(MakeMove("e7f8q"));
+	EXPECT_EQ(0x0, board.GetValue('e', 7));
+	EXPECT_EQ(0x05, board.GetValue('f', 8));
+
+	EXPECT_TRUE(board.UnmakeMove());
+
+	EXPECT_EQ(0x01, board.GetValue('e', 7));
+	EXPECT_EQ(0x83, board.GetValue('f', 8));
+}
+
+TEST_F(UnmakeFixture, EnPassant)
+{
+	board.PlacePiece(WHITE, PAWN, 'e', 2);
+	MakeMove("e2e4"); // triggers enPassant;
+	board.UnmakeMove();
+
+	EXPECT_EQ(0x01, board.GetValue('e', 2));
+	board.PlacePiece(BLACK, PAWN, 'f', 4);
+	EXPECT_FALSE(MakeMove("f4e3"));
+
+	MakeMove("e2e4");
+	EXPECT_TRUE(MakeMove("f4e3"));
+}
+
+TEST_F(UnmakeFixture, EnPassantTake)
+{
+	board.PlacePiece(WHITE, PAWN, 'e', 2);
+	board.PlacePiece(BLACK, PAWN, 'f', 4);
+	MakeMove("e2e4"); // triggers enPassant;
+
+	EXPECT_TRUE(MakeMove("f4e3"));
+
+	board.UnmakeMove();
+	EXPECT_TRUE(MakeMove("f4e3"));
+
+	EXPECT_EQ(0x0, board.GetValue('e', 4));
+	EXPECT_EQ(0x81, board.GetValue('e', 3));
+	EXPECT_EQ(0x0, board.GetValue('f', 4));
 }
 ////////////////////////////////////////////////////////////////
 

@@ -140,7 +140,7 @@ FENParser::~FENParser()
 {
 }
 
-bool FENParser::Deserialize(const char* fen, byte length, Board& outputBoard, GameState* state)
+bool FENParser::Deserialize(const char* fen, unsigned int length, Board& outputBoard, GameState* state)
 {
 	FENBoardWriter boardWriter;
 	byte counter = 0;

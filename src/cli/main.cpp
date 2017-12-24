@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 #include "../engine/src/GambitEngine.h"
 #include "../engine/src/FENParser.h"
@@ -96,6 +97,8 @@ void writeBitboard(const u64 board)
 	}
 }
 
+
+
 int main()
 {
 	//char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -107,52 +110,52 @@ int main()
 	//char inputFen[] = "8/8/8/8/8/8/8/R3K2R w KQ -";
 	//char inputFen[] = "8/8/8/4Pp2/8/8/8/8 w KQ f6 0 1";
 	//char inputFen[] = "8/1P6/8/8/8/8/8/8 w KQ f6 0 1";
-	char inputFen[] = "4k2r/8/8/8/8/8/8/8 w kq - 0 1";
+//	char inputFen[] = "4k2r/8/8/8/8/8/8/8 w kq - 0 1";
 	//char inputFen[] = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"; // position five
-	uint8_t length = sizeof(inputFen);
+//	uint8_t length = sizeof(inputFen);
 	
 	GambitEngine::Board board;
 	GambitEngine::MoveGenerator mvGen;
 
-	GambitEngine::FENParser::Deserialize(inputFen, length, board, nullptr);
+//	GambitEngine::FENParser::Deserialize(inputFen, length, board, nullptr);
 
 	while (1)
 	{		
 		writeBoard(board);
 
 		std::cout << std::endl;
-		//u64 attked = ~universe;
-		//attked = board.GetBitboard().Attacked(BLACK);
-		//writeBitboard(attked);
-		
+
 		auto pieces = board.GetPieces(BLACK);
-		u64 avaMoves = ~universe;
+		//u64 avaMoves = ~universe;
 		byte promotion = 0x00;
-		for (int i = pieces.size() - 1; i >= 0; --i)
+		/*for (int i = pieces.size() - 1; i >= 0; --i)
 		{
 			auto pP = pieces.at(i);
 			avaMoves = board.AvailableMoves(BLACK, (PIECE)pP.Type, pP.Square8x8, promotion);
 
 			std::cout << std::endl;
-			writeBitboard(avaMoves);
+		//	writeBitboard(avaMoves);
+		}*/
+
+		std::string buffer = "";
+		std::getline(std::cin, buffer);
+
+		if(buffer == "UnmakeMove")
+			board.UnmakeMove();
+		else if(buffer == "clear")
+			board.ResetBoard();
+		else if(buffer == "fen")
+		{
+			std::string inputFen = "";
+			std::cout << "Input FEN:" << std::endl;
+			std::getline(std::cin, buffer);
+			FENParser::Deserialize(buffer.c_str(), buffer.length(), board, nullptr);
 		}
-
-		//std::cout << std::endl;
-		//avaMoves = board.GetBitboard().MaterialCombined(WHITE);
-		//writeBitboard(avaMoves);
-
-
-		//u32 moveCount = 0;
-		//mvGen.FindBestMove(WHITE, &board, moveCount, 2);
-		//writeMoves(mvs);
-
-//		std::cout << moveCount << std::endl;
-	
-		byte tmp[5];
-		std::cin >> tmp;
-
-		promotion = tmp[4] == 0 ? 0 : tmp[4];
-		board.MakeMove(tmp[0], tmp[1]-'0', tmp[2], tmp[3]-'0', promotion);
+		else
+		{
+			promotion = buffer[4] == 0 ? 0 : buffer[4];
+			board.MakeMove(buffer[0], buffer[1]-'0', buffer[2], buffer[3]-'0', promotion);
+		}
 	}
 
     return 0;

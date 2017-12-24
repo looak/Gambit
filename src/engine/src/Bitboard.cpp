@@ -40,7 +40,13 @@ Bitboard::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 	byte corrRank = (byte)(rank - 1);
 	byte shift = corrRank * (byte)8 + corrFile;
 
-	m_material[set][piece] |= INT64_C(1) << shift;
+	return PlacePiece(set, piece, shift);
+}
+
+
+bool Bitboard::PlacePiece(SET set, PIECE piece, byte tSqr)
+{
+	m_material[set][piece] |= INT64_C(1) << tSqr;
 
 	m_materialCombined[set] = ~universe;
 	m_combMaterialDirty[set] = true;
@@ -177,7 +183,7 @@ Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square, byte mvMod, by
 	if(piece == PAWN)
 	{
 		// add en passant sqr to op's material.
-		u64 enPass = INT64_C(1) << enPassant;
+		u64 enPass = UINT64_C(1) << enPassant;
 		matCombOp |= enPass;
 	}
 	
@@ -455,3 +461,4 @@ void Bitboard::Clear()
 		m_board0x88[val] = val;
 	}
 }
+

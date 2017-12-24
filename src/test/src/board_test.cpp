@@ -280,5 +280,16 @@ TEST_F(BoardFixture, CheckMate_White)
 	EXPECT_TRUE(board.Check(WHITE));
 }
 
+TEST_F(BoardFixture, CapturePromote)
+{
+	GambitEngine::Board board;
+
+	board.PlacePiece(BLACK, BISHOP, 'f', 8);
+	board.PlacePiece(WHITE, PAWN, 'e', 7);
+	EXPECT_TRUE(board.MakeMove('e',7,'f',8,'q'));
+	EXPECT_EQ(0x0, board.GetValue('e', 7));
+	EXPECT_EQ(0x05, board.GetValue('f', 8));
+
+}
 ////////////////////////////////////////////////////////////////
 }

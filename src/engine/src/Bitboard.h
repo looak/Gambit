@@ -34,7 +34,8 @@ public:
 
 	~Bitboard();
 		
-	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);	
+	bool PlacePiece(SET set, PIECE piece, byte file, byte rank);
+	bool PlacePiece(SET set, PIECE piece, byte tSqr);
 	bool CapturePiece(SET set, PIECE piece, byte tSqr);
 	bool MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr);
 	bool Promote(SET set, PIECE toPiece, byte sqr);

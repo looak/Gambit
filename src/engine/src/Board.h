@@ -116,5 +116,7 @@ public:
 	const std::vector<Piece> GetPieces(SET set) const { return m_material[set].GetMaterial(); };
 	void SetCastlingRights(byte castlingByte) { m_castleState = castlingByte; };
 
+	bool Legal();
+
 };
 }	

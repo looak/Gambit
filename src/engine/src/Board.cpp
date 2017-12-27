@@ -202,7 +202,6 @@ Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
 	m_board[m_boardLookup[tRookSqr]] = m_board[m_boardLookup[sRookSqr]];
 	m_board[m_boardLookup[sRookSqr]] = 0x00;
 
-	prevCastleState ^= 128; // set bit to notifiy that we're castling
 	RegisterMove(sRookSqr, set, ROOK, tRookSqr, prevCastleState);
 	return true;
 }
@@ -371,6 +370,8 @@ Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 	if (isCapture)
 		CapturePiece((SET)!(int)pieceSet, (PIECE)targetPiece, tSqr, state);
 
+	// store previous castling state
+	state |= m_castleState;
 	bool castled = Castling(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
 
 	m_bitboard.MakeMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
@@ -413,7 +414,7 @@ bool Board::UnmakeMove()
 	byte tSqr120 = m_boardLookup[mv->fromSqr];
 	byte sSqr120 = m_boardLookup[mv->toSqr];
 
-	// reset pieces
+	// reset promoted piece
 	if(m_lastNode->getState() & PROMOTION)
 	{
 		byte newBoardByte = 0x01;
@@ -442,11 +443,11 @@ bool Board::UnmakeMove()
 	auto prevLast = m_lastNode;
 	m_lastNode = m_lastNode->getParent();
 
+	m_castleState = prevLast->getState() & 15;
+
 	// TODO() change this to something more generic.
 	if (prevLast->getState() == 128) // 128 is flag for castling
 		UnmakeMove();
-	else if (prevLast->getState() & 128) // check if we set castling flag.
-		m_castleState = prevLast->getState() & 15;
 	else if (prevLast->getState() & CAPTURE)
 	{
 		byte piece = prevLast->getState() & 7;
@@ -479,5 +480,13 @@ bool Board::RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state,
 	}
 
 	return true;
+}
+
+bool Board::Legal()
+{
+	if(Check(BLACK))
+		return false;
+
+	return !Check(WHITE);
 }
 

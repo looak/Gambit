@@ -29,10 +29,10 @@ MoveGenerator::FindBestMove(SET set, Board* board, u32& count, short depth)
 }
 
 std::vector<Move>
-MoveGenerator::getMoves(SET set, Board* board, u32& count)
+MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 {
 	std::vector<Move> moves;
-	count = 0;
+	//count = 0;
 	auto pieceArry = board->GetPieces(set);
 	for (unsigned int i = 0; i < pieceArry.size(); i++)
 	{
@@ -46,27 +46,39 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count)
 			u64 mask = UINT64_C(1) << sqr;
 			if (mask & avaMvs)
 			{
+				Move newMove;
+				newMove.fromSqr = piece.Square8x8;
+				newMove.toSqr = sqr;
+
+				byte prom = 0;
+				if (promotion != 0x00)
+					prom = PieceDef::converter(QUEEN);
+				board->MakeMove(piece.Square8x8, sqr, prom);
+				if (!board->Legal() && !ignoreLegality)
+				{
+					board->UnmakeMove();
+					sqr++;
+					avaMvs ^= mask;
+					continue;
+				}
+
 				if (promotion != 0x00)
 				{
 					for (int i = 2; i < KING; i++)
 					{
-						Move newMove;
-						newMove.fromSqr = piece.Square8x8;
-						newMove.toSqr = sqr;
 						newMove.promotion = PieceDef::converter((PIECE)i);
+
 						moves.push_back(newMove);
 						count++;
 					}
 				}
 				else
 				{
-					Move newMove;
-					newMove.fromSqr = piece.Square8x8;
-					newMove.toSqr = sqr;
 					moves.push_back(newMove);
 					count++;
 				}
 
+				board->UnmakeMove();
 				avaMvs ^= mask;
 			}
 

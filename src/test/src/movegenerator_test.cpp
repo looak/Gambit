@@ -24,11 +24,12 @@ TEST_F(MoveGeneratorFixture, Pawns_and_Knight_Available_Moves)
     board.PlacePiece(WHITE, PAWN, 'c', 3);
     board.PlacePiece(WHITE, PAWN, 'd', 2);
 
-    movGen.getMoves(WHITE, &board, count);
+    movGen.getMoves(WHITE, &board, count, true);
     EXPECT_EQ(count, 3);
 
+    count = 0;
     board.PlacePiece(WHITE, KNIGHT, 'c', 1);
-    movGen.getMoves(WHITE, &board, count);
+    movGen.getMoves(WHITE, &board, count, true);
     EXPECT_EQ(count, 7);
 }
 
@@ -39,7 +40,7 @@ TEST_F(MoveGeneratorFixture, Castling)
     EXPECT_EQ(true, board.PlacePiece(BLACK, KING, 'e', 8));
     EXPECT_EQ(true, board.PlacePiece(BLACK, ROOK, 'h', 8));
 
-    movGen.getMoves(BLACK, &board, count);
+    movGen.getMoves(BLACK, &board, count, true);
     EXPECT_EQ(count, 15);
 }
 }

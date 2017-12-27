@@ -189,6 +189,36 @@ namespace GambitTest
 
 		EXPECT_EQ(expectedAvaMv, avaMoves);
 	}
+
+    TEST_F(BitboardFixture, Knight_Available_Moves)
+    {
+        GambitEngine::Bitboard board;
+        board.PlacePiece(BLACK, KNIGHT, 'd', 4);
+
+        u64 expectedAvaMv = ~universe;
+        expectedAvaMv |= INT64_C(1) << INT64_C(42);
+        expectedAvaMv |= INT64_C(1) << INT64_C(44);
+        expectedAvaMv |= INT64_C(1) << INT64_C(33);
+        expectedAvaMv |= INT64_C(1) << INT64_C(37);
+        expectedAvaMv |= INT64_C(1) << INT64_C(17);
+        expectedAvaMv |= INT64_C(1) << INT64_C(21);
+        expectedAvaMv |= INT64_C(1) << INT64_C(10);
+        expectedAvaMv |= INT64_C(1) << INT64_C(12);
+
+        byte prom = 0;
+        u64 avaMoves = board.AvailableMoves(BLACK, KNIGHT, 27, 0, 0, prom);
+        EXPECT_EQ(expectedAvaMv, avaMoves);
+
+        board.PlacePiece(BLACK, PAWN, 44);
+        avaMoves = board.AvailableMoves(BLACK, KNIGHT, 27, 0, 0, prom);
+
+        expectedAvaMv ^= INT64_C(1) << INT64_C(44);
+        EXPECT_EQ(expectedAvaMv, avaMoves);
+
+		board.PlacePiece(WHITE, PAWN, 37);
+		avaMoves = board.AvailableMoves(BLACK, KNIGHT, 27, 0, 0, prom);
+		EXPECT_EQ(expectedAvaMv, avaMoves);
+    }
 ////////////////////////////////////////////////////////////////
 
 }

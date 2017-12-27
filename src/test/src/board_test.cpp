@@ -2,6 +2,7 @@
 ////////////////////////////////////////////////////////////////
 
 #include "../../engine/src/Board.h"
+#include "../../engine/src/FENParser.h"
 ////////////////////////////////////////////////////////////////
 using namespace GambitEngine;
 
@@ -92,6 +93,7 @@ TEST_F(BoardFixture, EnPassant)
 	
 	byte var = 0x00;
 	EXPECT_EQ(var, board.GetValue('e', 4));
+	EXPECT_EQ(var, board.GetValue('f', 4));
 	EXPECT_EQ((byte)0x81, board.GetValue('e', 3));
 }
 
@@ -295,18 +297,34 @@ TEST_F(BoardFixture, CapturePromote)
 TEST_F(BoardFixture, LegalBoard)
 {
 	GambitEngine::Board board;
-
-	board.PlacePiece(BLACK, ROOK, 'e', 8);
+	board.PlacePiece(BLACK, KING, 'e', 8);
+	board.PlacePiece(BLACK, ROOK, 'e', 7);
 	board.PlacePiece(WHITE, KING, 'e', 1);
 
 	EXPECT_FALSE(board.Legal());
+}
+
+TEST_F(BoardFixture, LegalBoard_PosFive)
+{
+	GambitEngine::Board board;
+	char inputFen[] = "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8";
+	FENParser::Deserialize(inputFen, sizeof(inputFen), board, nullptr);
+
+	EXPECT_TRUE(board.Legal());
+
+	board.MakeMove(48, 32, 0);
+	EXPECT_TRUE(board.Legal());
+
+	board.UnmakeMove();
+	EXPECT_TRUE(board.Legal());
 }
 
 TEST_F(BoardFixture, UnleagalMove)
 {
 	GambitEngine::Board board;
 
-	board.PlacePiece(BLACK, ROOK, 'e', 8);
+	board.PlacePiece(BLACK, KING, 'e', 8);
+	board.PlacePiece(BLACK, ROOK, 'e', 7);
 
 	board.PlacePiece(WHITE, KNIGHT, 'e', 3);
 	board.PlacePiece(WHITE, KING, 'e', 1);
@@ -314,6 +332,8 @@ TEST_F(BoardFixture, UnleagalMove)
 	board.MakeMove('e', 3, 'c', 2);
 	EXPECT_FALSE(board.Legal());
 	board.UnmakeMove();
+	EXPECT_EQ(0x02, board.GetValue('e', 3));
+
 	EXPECT_TRUE(board.Legal());
 }
 ////////////////////////////////////////////////////////////////

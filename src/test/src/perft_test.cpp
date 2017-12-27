@@ -13,6 +13,23 @@ namespace GambitTest {
 class PerftFixture : public ::testing::Test
 {
 public:
+    void Foo(Board& board, SET set, int depth, u32& count)
+    {
+        auto mvs = mv.getMoves(set, &board, count);
+
+        for (unsigned int i = 0; i < mvs.size(); i ++)
+        {
+            auto move = mvs[i];
+            board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
+
+            if( depth > 0)
+                Foo(board, (SET)!(int)set, --depth, count);
+
+            board.UnmakeMove();
+        }
+	}
+
+    MoveGenerator mv;
 };
 ////////////////////////////////////////////////////////////////
 TEST_F(PerftFixture, InitialPosition)
@@ -48,31 +65,78 @@ TEST_F(PerftFixture, PositionFive)
     EXPECT_EQ(count, 44); // should be twenty different available moves from the initial board as white.
 }
 
-TEST_F(PerftFixture, PositionFive_Depth_Three)
+TEST_F(PerftFixture, PositionBase)
 {
     GambitEngine::Board board;
-    char inputFen[] = "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8";
+    char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
     GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
 
     u32 count = 0;
     GambitEngine::MoveGenerator movGen;
     auto mvs = movGen.getMoves(WHITE, &board, count);
-    EXPECT_EQ(count, 44);
+    EXPECT_EQ(count, 20);
+	count = 0;
 
-//    short depth = 0;
-    //while(depth < 2)
-    {
+    short depth = 0;
+    /*do
+    {*/
         for (unsigned int i = 0; i < mvs.size(); i ++)
         {
             auto move = mvs[i];
             board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
             movGen.getMoves(BLACK, &board, count);
+
             board.UnmakeMove();
         }
-        EXPECT_EQ(count, 1486);
+        EXPECT_EQ(count, 400);
 
-    }
+        depth ++;
+    //} while (depth < 2);
+}
+/*
+TEST_F(PerftFixture, PositionBase_DepthTwo)
+{
+    GambitEngine::Board board;
+    char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+
+    u32 count = 0;
+    count = 0;
+
+    Foo(board, WHITE, 1, count);
+
+    EXPECT_EQ(400, count);
+}
+*/
+TEST_F(PerftFixture, PositionFive_Depth_Three)
+{
+	GambitEngine::Board board;
+	char inputFen[] = "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8";
+
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+
+	u32 count = 0;
+	GambitEngine::MoveGenerator movGen;
+	auto mvs = movGen.getMoves(WHITE, &board, count);
+	EXPECT_EQ(count, 44);
+
+	count = 0;
+//    short depth = 0;
+	//while(depth < 2)
+	{
+		for (unsigned int i = 0; i < mvs.size(); i++)
+		{
+			auto move = mvs[i];
+			board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
+			
+			movGen.getMoves(BLACK, &board, count);
+
+			board.UnmakeMove();
+		}
+		EXPECT_EQ(count, 1486);
+
+	}
 }
 ////////////////////////////////////////////////////////////////
 }

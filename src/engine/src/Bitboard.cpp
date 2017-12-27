@@ -437,8 +437,10 @@ Bitboard::MarkDirty(SET set)
 	m_materialCombined[set] = ~universe;
 	m_combMaterialDirty[set] = true;
 
-	m_attacked[set] = ~universe;
-	m_attackedDirty[set] = true;
+	m_attacked[WHITE] = ~universe;
+	m_attackedDirty[WHITE] = true;
+	m_attacked[BLACK] = ~universe;
+	m_attackedDirty[BLACK] = true;
 }
 
 void Bitboard::Clear()

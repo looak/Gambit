@@ -63,7 +63,7 @@ private:
 	bool Castling(byte sSqr, SET set, PIECE piece, byte tSqr);
 	bool Promote(byte sqr, SET set, byte promoteTo);
 
-	bool RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state = 0x0, byte enPassantState = 0x0);
+	bool RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state = 0x0, byte enPassantState = 0x0, byte capturedPiece = 0x0);
 
 	Bitboard m_bitboard;
 
@@ -103,8 +103,8 @@ public:
 	// Unmakes last move.
 	bool UnmakeMove();
 
-	void MakeLegalMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promotion = 0x00);
-	void MakeLegalMove(byte sSqr, byte tSqr, byte promote = 0x00);
+	bool MakeLegalMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promotion = 0x00);
+	bool MakeLegalMove(byte sSqr, byte tSqr, byte promote = 0x00);
 	
 	bool Check(SET set);
 	bool CheckMate(SET set);

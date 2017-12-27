@@ -144,6 +144,20 @@ int main()
 			board.UnmakeMove();
 		else if(buffer == "clear")
 			board.ResetBoard();
+		else if (buffer == "attack")
+		{
+			std::string input = "";
+			std::cout << "Input Color:" << std::endl;
+			std::getline(std::cin, input);
+			u64 attked = ~universe;
+
+			if (input == "black")
+				attked = board.GetBitboard().Attacked(BLACK);
+			else
+				attked = board.GetBitboard().Attacked(WHITE);
+			std::cout << std::endl;
+			writeBitboard(attked);
+		}
 		else if(buffer == "fen")
 		{
 			std::string inputFen = "";

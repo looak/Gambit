@@ -23,7 +23,7 @@ public:
 TEST_F(UnmakeFixture, Pawn_One_Move)
 {
 	board.PlacePiece(WHITE, PAWN, 'e', 2);
-	MakeMove("e2e3");
+	EXPECT_TRUE(MakeMove("e2e3"));
 
 	EXPECT_TRUE(board.UnmakeMove());
 	EXPECT_EQ(0x01, board.GetValue('e', 2));
@@ -134,6 +134,15 @@ TEST_F(UnmakeFixture, Capture)
 	EXPECT_EQ(0x02, board.GetValue('e', 2));
 	EXPECT_EQ(0x82, board.GetValue('f', 4));
 
+	auto mat = board.GetPieces(WHITE);
+	EXPECT_EQ(1, mat.size());
+	EXPECT_EQ(KNIGHT, mat[0].Type);
+	EXPECT_EQ(12, mat[0].Square8x8);
+	
+	mat = board.GetPieces(BLACK);
+	EXPECT_EQ(1, mat.size());
+	EXPECT_EQ(29, mat[0].Square8x8);
+	EXPECT_EQ(KNIGHT, mat[0].Type);
 }
 
 TEST_F(UnmakeFixture, CapturePromote)
@@ -210,6 +219,24 @@ TEST_F(UnmakeFixture, EnPassantTake_Unmake)
 	EXPECT_EQ(0x0, board.GetValue('e', 4));
 	EXPECT_EQ(0x81, board.GetValue('e', 3));
 	EXPECT_EQ(0x0, board.GetValue('f', 4));
+}
+
+TEST_F(UnmakeFixture, Caputre_Unmake_Castle)
+{
+	board.SetCastlingRights(0x01);
+	board.PlacePiece(WHITE, KING, 'e', 1);
+	board.PlacePiece(WHITE, ROOK, 'h', 1);
+	board.PlacePiece(WHITE, KNIGHT, 'e', 3);
+	board.PlacePiece(BLACK, KNIGHT, 'd', 5);
+
+	EXPECT_TRUE(MakeMove("e1g1"));
+	board.UnmakeMove();
+
+	EXPECT_TRUE(MakeMove("e3d5"));
+	board.UnmakeMove();
+
+	EXPECT_EQ(0x82, board.GetValue('d',5));
+	EXPECT_TRUE(MakeMove("e1g1"));
 }
 ////////////////////////////////////////////////////////////////
 

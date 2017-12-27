@@ -2,6 +2,7 @@
 #include "Board.h"
 #include "PieceDef.h"
 #include <algorithm>
+#include <iostream>
 
 using namespace GambitEngine;
 
@@ -33,6 +34,7 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 {
 	std::vector<Move> moves;
 	//count = 0;
+	int debugInd = 0;
 	auto pieceArry = board->GetPieces(set);
 	for (unsigned int i = 0; i < pieceArry.size(); i++)
 	{
@@ -53,8 +55,11 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 				byte prom = 0;
 				if (promotion != 0x00)
 					prom = PieceDef::converter(QUEEN);
-				board->MakeMove(piece.Square8x8, sqr, prom);
-				if (!board->Legal() && !ignoreLegality)
+				if(!board->MakeMove(piece.Square8x8, sqr, prom))
+					std::cout << "[    OUTPUT] MoveGen::MakeMove failed at index = " << debugInd << std::endl;
+
+				debugInd++;
+				if (!ignoreLegality && !board->Legal())
 				{
 					board->UnmakeMove();
 					sqr++;

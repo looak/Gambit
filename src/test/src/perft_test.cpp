@@ -109,9 +109,10 @@ TEST_F(PerftFixture, PositionBase_DepthTwo)
     EXPECT_EQ(400, count);
 }
 */
+/*
 TEST_F(PerftFixture, PositionFive_Depth_Three)
 {
-	GambitEngine::Board board;
+ 	GambitEngine::Board board;
 	char inputFen[] = "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8";
 
 	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
@@ -128,7 +129,8 @@ TEST_F(PerftFixture, PositionFive_Depth_Three)
 		for (unsigned int i = 0; i < mvs.size(); i++)
 		{
 			auto move = mvs[i];
-			board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
+			if(!board.MakeMove(move.fromSqr, move.toSqr, move.promotion))
+				std::cout << "[    OUTPUT] MakeMove failed at index = " << i << std::endl;
 			
 			movGen.getMoves(BLACK, &board, count);
 
@@ -137,6 +139,6 @@ TEST_F(PerftFixture, PositionFive_Depth_Three)
 		EXPECT_EQ(count, 1486);
 
 	}
-}
+}*/
 ////////////////////////////////////////////////////////////////
 }

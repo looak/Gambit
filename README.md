@@ -4,8 +4,9 @@
 
 TODO								
 =====
-	[ ] Found a bug were I'm not allowed to Castle when the rook is threatened.
-	[ ] Remove pawn after En Passant Move. <- Check if this is still valid?
+	[ ] Material lists get out of sync at somepoint in time.
+	[x] Found a bug were I'm not allowed to Castle when the rook is threatened.
+	[x] Remove pawn after En Passant Move. <- Check if this is still valid?
 	[x] FIX Pawn Move Issue!
 	[x] fix markup in readme...
 	[ ] move blog?
@@ -17,6 +18,18 @@ TODO
 
 Dev Blog
 =====
+### (2017-12-27)
+#### To many things to keep in sync
+	Loads of things have been happening the past few days in my application. But I haven't felt like updating
+	my blog.
+
+	Currently I'm having issues with the Material becoming out of sync after captures and unmakes. Haven't 
+	found exactly where yet but I'm getting closer.
+
+	Though I could almost forsee this issue when writing my implementation, I have a ton of different ways of
+	basically the same data which is asking for these type of out of sync issues. So, maybe I'll rreconsider 
+	my implementation and redo it at some point in time.
+
 ### (2017-12-21)
 #### Diving into the undo rabbit hole
 	To fix some of the issus I wanted to write more tests. But I felt limited in not being able to undo moves

@@ -342,17 +342,15 @@ bool Board::MakeMove(byte sSqr, byte tSqr, byte promotion)
 	u64 moveMsk = UINT64_C(1) << tSqr;
 
 	if (avaMoves & moveMsk)
-	{
-		MakeLegalMove(sSqr, tSqr, promotion);
-		return true;
-	}
-
+		return MakeLegalMove(sSqr, tSqr, promotion);
+	
 	return false;
 }
-void
+bool
 Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 {
 	byte state = 0x0;
+	byte capturedPiece = 0x0;
 	byte enPassantState = 0x0;
 	byte sSqr120 = m_boardLookup[sSqr];
 	byte tSqr120 = m_boardLookup[tSqr];
@@ -365,17 +363,18 @@ Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 	if ((targetPiece & 0x7) != 0x0)
 		isCapture = true;
 
-	EnPassant(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr, state, enPassantState);
+	EnPassant(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr, capturedPiece, enPassantState);
 
 	if (isCapture)
-		CapturePiece((SET)!(int)pieceSet, (PIECE)targetPiece, tSqr, state);
+		CapturePiece((SET)!(int)pieceSet, (PIECE)targetPiece, tSqr, capturedPiece);
 
 	// store previous castling state
 	state |= m_castleState;
 	bool castled = Castling(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
 
 	m_bitboard.MakeMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
-	m_material[pieceSet].MakeMove(sSqr, (PIECE)pieceByte, tSqr, tSqr120);
+	if (!m_material[pieceSet].MakeMove(sSqr, (PIECE)pieceByte, tSqr, tSqr120))
+		return false;
 
 	if(castled)
 		state = 1 << 7;
@@ -390,15 +389,15 @@ Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 		state |= PROMOTION;
 	}
 
-	RegisterMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr, state, enPassantState);
+	return RegisterMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr, state, enPassantState, capturedPiece);
 }
 
-void 
+bool 
 Board::MakeLegalMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promote)
 {
 	byte sInd64 = GetBoard64Index(sFile, sRank);	
 	byte tInd64 = GetBoard64Index(tFile, tRank);
-	MakeLegalMove(sInd64, tInd64, promote);
+	return MakeLegalMove(sInd64, tInd64, promote);
 }
 
 byte 
@@ -448,9 +447,9 @@ bool Board::UnmakeMove()
 	// TODO() change this to something more generic.
 	if (prevLast->getState() == 128) // 128 is flag for castling
 		UnmakeMove();
-	else if (prevLast->getState() & CAPTURE)
+	else if (prevLast->getCapturedPiece() & CAPTURE)
 	{
-		byte piece = prevLast->getState() & 7;
+		byte piece = prevLast->getCapturedPiece() & 7;
 		PlacePiece((SET)!prevLast->getSet(), (PIECE)piece, mv->toSqr);
 	}
 
@@ -463,7 +462,7 @@ bool Board::UnmakeMove()
 	return true;
 }
 
-bool Board::RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state, byte enPassantState)
+bool Board::RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state, byte enPassantState, byte capturedPiece)
 {
 	Move move;
 	move.fromSqr = sSqr;
@@ -471,12 +470,12 @@ bool Board::RegisterMove(byte sSqr, SET set, PIECE piece, byte tSqr, byte state,
 
 	if(m_rootNode == nullptr)
 	{
-		m_rootNode = new MoveNode(move, nullptr, set, piece, state, enPassantState);
+		m_rootNode = new MoveNode(move, nullptr, set, piece, state, enPassantState, capturedPiece);
 		m_lastNode = m_rootNode;
 	}
 	else
 	{
-		m_lastNode = m_lastNode->AddMoveNode(move, set, piece, state, enPassantState);
+		m_lastNode = m_lastNode->AddMoveNode(move, set, piece, state, enPassantState, capturedPiece);
 	}
 
 	return true;

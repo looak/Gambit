@@ -27,6 +27,7 @@ private:
 	byte m_pieceByte;
 	byte m_setByte;
 	byte m_state;
+	byte m_capturedPiece;
 	byte m_enPassantState;
 	MoveNode* m_parent;
 	MoveNode* m_child;
@@ -35,7 +36,7 @@ public:
 	// TODO() Maybe we could change this to some sort of undo stack?
 	// Generic undo units, but might be that this is something for the GUI.
 
-	MoveNode(Move move, MoveNode* parent, byte set, byte piece, byte state, byte enPassant)
+	MoveNode(Move move, MoveNode* parent, byte set, byte piece, byte state, byte enPassant, byte capturedPiece)
 			: m_move(move)
 			  , m_parent(parent)
 			  , m_child(nullptr)
@@ -44,15 +45,16 @@ public:
 		m_setByte = set;
 		m_state = state;
 		m_enPassantState = enPassant;
+		m_capturedPiece = capturedPiece;
 	}
 
-	MoveNode* AddMoveNode(Move move, byte set, byte piece, byte state, byte enPassant)
+	MoveNode* AddMoveNode(Move move, byte set, byte piece, byte state, byte enPassant, byte capturedPiece)
 	{
 		if(m_child != nullptr) {
 			delete (m_child);
 			m_child = nullptr;
 		}
-		m_child = new MoveNode(move, this, set, piece, state, enPassant);
+		m_child = new MoveNode(move, this, set, piece, state, enPassant, capturedPiece);
 		return m_child;
 	}
 
@@ -62,6 +64,7 @@ public:
 	MoveNode* getParent() 			{ return m_parent; }
 	const byte getState() 			{ return m_state; }
 	const byte getEnPassantState() 	{ return m_enPassantState; }
+	const byte getCapturedPiece() 	{ return m_capturedPiece; }
 };
 
 } // namespace GambitEngine

@@ -291,5 +291,30 @@ TEST_F(BoardFixture, CapturePromote)
 	EXPECT_EQ(0x05, board.GetValue('f', 8));
 
 }
+
+TEST_F(BoardFixture, LegalBoard)
+{
+	GambitEngine::Board board;
+
+	board.PlacePiece(BLACK, ROOK, 'e', 8);
+	board.PlacePiece(WHITE, KING, 'e', 1);
+
+	EXPECT_FALSE(board.Legal());
+}
+
+TEST_F(BoardFixture, UnleagalMove)
+{
+	GambitEngine::Board board;
+
+	board.PlacePiece(BLACK, ROOK, 'e', 8);
+
+	board.PlacePiece(WHITE, KNIGHT, 'e', 3);
+	board.PlacePiece(WHITE, KING, 'e', 1);
+
+	board.MakeMove('e', 3, 'c', 2);
+	EXPECT_FALSE(board.Legal());
+	board.UnmakeMove();
+	EXPECT_TRUE(board.Legal());
+}
 ////////////////////////////////////////////////////////////////
 }

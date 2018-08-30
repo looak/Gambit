@@ -1,4 +1,5 @@
 #include "Material.h"
+#include <ctype.h>
 #include <algorithm>
 
 using namespace GambitEngine;

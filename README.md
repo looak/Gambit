@@ -15,8 +15,7 @@ TODO
 Dev Blog
 =====
 ### (2018-08-30)
-#### To many things to keep in sync
-	Long time since last entry...
+#### Long time since last entry...
 
 	Guess I haven't been motivated to code on this project, that has recently changed. With new computer 
 	purchase and just the urge to do something small isntead of the mastodont projects we have at work.

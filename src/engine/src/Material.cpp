@@ -35,16 +35,10 @@ Material::Material(const Material & _src)
 		m_materialGrid[i] = _src.m_materialGrid[i];
 		m_capturedMaterial[i] = _src.m_capturedMaterial[i];
 	}
-
-
-	for (int i = 0; i < NR_OF_PIECES; i++)
-	{
-		for (Piece mat : m_materialGrid[i])
-		{
-			m_board[mat.Square8x8] = &mat;
-		}
-	}
 	
+	memcpy(m_board, _src.m_board, sizeof(_src.m_board));
+	
+	m_king = _src.m_king;
 }
 
 Piece*
@@ -60,6 +54,30 @@ Material::GetPiece(PIECE pType, byte square)
 		return nullptr;
 	
 	return ret;
+}
+
+bool
+GambitEngine::Material::RemovePiece(const Piece* piece)
+{
+	bool foundPiece = false;
+	unsigned int ind = 0;
+	while (m_materialGrid[piece->Type].size() > ind)
+	{
+		if (m_materialGrid[piece->Type].at(ind).Square8x8 == piece->Square8x8)
+		{
+			foundPiece = true;
+			break;
+		}
+		ind++;
+	}
+
+	if (!foundPiece)
+		return false;
+
+	m_materialGrid[piece->Type].erase(m_materialGrid[piece->Type].begin() + ind);
+	m_board[piece->Square8x8] = nullptr;
+
+	return true;
 }
 
 Piece*
@@ -81,6 +99,11 @@ std::vector<Piece> GambitEngine::Material::GetMaterial() const
 	return retVal;
 }
 
+std::vector<Piece> GambitEngine::Material::GetMaterial(byte type) const
+{
+	return m_materialGrid[type];
+}
+
 bool 
 Material::AddPiece(Piece piece)
 {
@@ -93,13 +116,13 @@ Material::AddPiece(Piece piece)
 }
 
 bool 
-Material::CapturePiece(Piece* piece)
+Material::CapturePiece(Piece piece)
 {
 	bool foundPiece = false;
 	unsigned int ind = 0;
-	while (m_materialGrid[piece->Type].size() > ind)
+	while (m_materialGrid[piece.Type].size() > ind)
 	{
-		if (m_materialGrid[piece->Type].at(ind).Square8x8 == piece->Square8x8)
+		if (m_materialGrid[piece.Type].at(ind).Square8x8 == piece.Square8x8)
 		{
 			foundPiece = true;
 			break;
@@ -110,9 +133,9 @@ Material::CapturePiece(Piece* piece)
 	if (!foundPiece)
 		return false;
 
-	m_materialGrid[piece->Type].erase(m_materialGrid[piece->Type].begin() + ind);
-	m_board[piece->Square8x8] = nullptr;
-	m_capturedMaterial[piece->Type].push_back(*piece);
+	m_materialGrid[piece.Type].erase(m_materialGrid[piece.Type].begin() + ind);
+	m_board[piece.Square8x8] = nullptr;
+	m_capturedMaterial[piece.Type].push_back(piece);
 	return true;
 }
 
@@ -123,8 +146,8 @@ Material::MakeMove(byte sSqr, PIECE pType, byte tSqr, byte tSqr120)
 	if (pP == nullptr)
 		return false;
 
-	m_board[sSqr] = nullptr;
 	m_board[tSqr] = pP;
+	m_board[sSqr] = nullptr;
 	pP->Square8x8 = tSqr;
 	pP->Square10x12 = tSqr120;
 

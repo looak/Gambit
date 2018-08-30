@@ -4,11 +4,7 @@
 
 TODO								
 =====
-	[ ] Material lists get out of sync at somepoint in time.
-	[x] Found a bug were I'm not allowed to Castle when the rook is threatened.
-	[x] Remove pawn after En Passant Move. <- Check if this is still valid?
-	[x] FIX Pawn Move Issue!
-	[x] fix markup in readme...
+	[x] Material lists get out of sync at somepoint in time. - think I have fixed this now?
 	[ ] move blog?
 	[ ] get last error error handling
 	[ ] FEN Unit Tests
@@ -18,6 +14,20 @@ TODO
 
 Dev Blog
 =====
+### (2018-08-30)
+#### To many things to keep in sync
+	Long time since last entry...
+
+	Guess I haven't been motivated to code on this project, that has recently changed. With new computer 
+	purchase and just the urge to do something small isntead of the mastodont projects we have at work.
+
+	Anyway, fixed an issue with my material grid got out of sync after promotion. Actually fixed two issues;
+	One where I was writing to the a pointer which had moved since it was pointing to an array. And another
+	where I never removed my pawns or added the promoted piece during a promotion.
+
+	There are still issues though, quite clearly when running the Perft Tests and Move Generation, something
+	to look into this weekend!
+
 ### (2017-12-27)
 #### To many things to keep in sync
 	Loads of things have been happening the past few days in my application. But I haven't felt like updating

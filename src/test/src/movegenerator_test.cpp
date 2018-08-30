@@ -43,5 +43,17 @@ TEST_F(MoveGeneratorFixture, Castling)
     movGen.getMoves(BLACK, &board, count, true);
     EXPECT_EQ(count, 15);
 }
+
+TEST_F(MoveGeneratorFixture, Promotion)
+{
+	EXPECT_EQ(true, board.PlacePiece(WHITE, PAWN, 'd', 7));
+	
+	auto mvs = movGen.getMoves(WHITE, &board, count, true);
+	EXPECT_EQ(count, 4);
+
+	EXPECT_EQ(true, board.PlacePiece(BLACK, BISHOP, 'c', 8));
+	mvs = movGen.getMoves(WHITE, &board, count, true);
+	EXPECT_EQ(count, 8);
+}
 }
 

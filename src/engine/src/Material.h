@@ -25,7 +25,6 @@ private:
 	MaterialGrid m_capturedMaterial;
 
 	Piece* m_king;
-
 	Piece* m_board[64];
 
 public:
@@ -33,14 +32,16 @@ public:
 	~Material();
 	Material (const Material& _src);
 
+	bool RemovePiece(const Piece* piece);
 	Piece* GetPiece(byte square);
 	Piece* GetPiece(PIECE pType, byte square);
 	Piece* GetKing() { return m_king; };
 
 	std::vector<Piece> GetMaterial() const;
+	std::vector<Piece> GetMaterial(byte type) const;
 
 	bool AddPiece(Piece piece);
-	bool CapturePiece(Piece* piece);
+	bool CapturePiece(Piece piece);
 	bool MakeMove(byte sSqr, PIECE pType, byte tSqr, byte tSqr120);
 };
 }

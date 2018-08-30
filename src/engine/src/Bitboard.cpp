@@ -125,7 +125,7 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 		mvMod = -1; // inverse move if we're White.
 	}
 
-	byte curSqr = square;
+	byte curSqr = (byte)square;
 
 	if (piece == PAWN)
 	{

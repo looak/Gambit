@@ -6,6 +6,7 @@ intermediate/
 output/
 build/
 .vs/
+.vscode/
 .idea/
 cmake-build-debug/
 

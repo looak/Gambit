@@ -1,6 +1,8 @@
 #include <ctype.h>
 #include <cstring>
+#include <iostream>
 #include "Board.h"
+#include "Log.h"
 #include "PieceDef.h"
 
 using namespace GambitEngine;
@@ -209,14 +211,17 @@ Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
 bool 
 Board::Promote(byte sqr, SET set, byte promoteTo)
 {
-	auto pP = m_material[set].GetPiece(PAWN, sqr);
-	pP->Type = PieceDef::converter(promoteTo);
+	// copy target because we want to reuse it.
+	auto pP = *m_material[set].GetPiece(PAWN, sqr);
+	m_material[set].RemovePiece(&pP);
 
-	m_bitboard.Promote(set, (PIECE)pP->Type, sqr);
-
-	byte newBoardByte = pP->Type;
+	pP.Type = PieceDef::converter(promoteTo);
+	m_bitboard.Promote(set, (PIECE)pP.Type, sqr);
+	byte newBoardByte = pP.Type;
 	newBoardByte |= set << 7;
 	m_board[m_boardLookup[sqr]] = newBoardByte;
+	
+	m_material[set].AddPiece(pP);
 	return true;
 }
 
@@ -316,7 +321,7 @@ Board::CapturePiece(SET set, PIECE piece, byte tSqr, byte& state)
 	state |= p->Type;
 
 	m_board[m_boardLookup[tSqr]] = 0x00;
-	m_material[set].CapturePiece(p);
+	m_material[set].CapturePiece(*p);
 	m_bitboard.CapturePiece(set, piece, tSqr);
 	return true;
 }
@@ -374,7 +379,10 @@ Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 
 	m_bitboard.MakeMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
 	if (!m_material[pieceSet].MakeMove(sSqr, (PIECE)pieceByte, tSqr, tSqr120))
+	{
+		std::cout << "[    OUTPUT] Board::MakeLegalMove failed moving " << Log::tooChar(m_board[sSqr120]) << " from sSqr:" << (int)sSqr << " to:" << (int)tSqr << std::endl;
 		return false;
+	}
 
 	if(castled)
 		state = 1 << 7;
@@ -422,7 +430,7 @@ bool Board::UnmakeMove()
 		m_board[sSqr120] = newBoardByte;
 
 		auto pP = m_material[m_lastNode->getSet()].GetPiece(mv->toSqr);
-		m_material[m_lastNode->getSet()].CapturePiece(pP);
+		m_material[m_lastNode->getSet()].CapturePiece(*pP);
 		pP->Type = PAWN;
 		m_material[m_lastNode->getSet()].AddPiece(*pP);
 

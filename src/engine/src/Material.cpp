@@ -36,10 +36,21 @@ Material::Material(const Material & _src)
 		m_materialGrid[i] = _src.m_materialGrid[i];
 		m_capturedMaterial[i] = _src.m_capturedMaterial[i];
 	}
-	
-	memcpy(m_board, _src.m_board, sizeof(_src.m_board));
-	
-	m_king = _src.m_king;
+
+	m_king = nullptr;
+	for (int i = 0; i < 64; i++)
+		m_board[i] = nullptr;
+
+	for (int i = 0; i < NR_OF_PIECES; i++)
+	{
+		for(int p = 0; p < m_materialGrid[i].size(); p ++)
+		{
+			m_board[m_materialGrid[i].at(p).Square8x8] = &m_materialGrid[i].at(p);
+			
+			if (i == KING)
+				m_king = &m_materialGrid[i].at(0); // there can only ever be one king.... as of now.
+		}		
+	}
 }
 
 Piece*

@@ -5,6 +5,7 @@
 TODO								
 =====
 	[x] Material lists get out of sync at somepoint in time. - think I have fixed this now?
+	[ ] fix memcpy issues when building with clang & gcc, why only in material but not in board?
 	[ ] move blog?
 	[ ] get last error error handling
 	[ ] FEN Unit Tests

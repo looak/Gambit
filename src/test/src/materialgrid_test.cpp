@@ -2,7 +2,7 @@
 ////////////////////////////////////////////////////////////////
 #include "../../engine/src/Board.h"
 #include "../../engine/src/Material.h"
-#include "../../engine/src/MoveGEnerator.h"
+#include "../../engine/src/MoveGenerator.h"
 ////////////////////////////////////////////////////////////////
 using namespace GambitEngine;
 

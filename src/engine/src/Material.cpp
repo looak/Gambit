@@ -68,6 +68,26 @@ Material::GetPiece(PIECE pType, byte square)
 	return ret;
 }
 
+Piece*
+Material::GetPiece(byte square)
+{
+	auto ret = m_board[square];
+	if (ret == nullptr)
+		return ret;
+
+	return ret;
+}
+
+const Piece*
+Material::GetPiece(byte square) const
+{
+	auto ret = m_board[square];
+	if (ret == nullptr)
+		return ret;
+
+	return ret;
+}
+
 bool
 GambitEngine::Material::RemovePiece(const Piece* piece)
 {
@@ -91,18 +111,8 @@ GambitEngine::Material::RemovePiece(const Piece* piece)
 
 	return true;
 }
-
-Piece*
-Material::GetPiece(byte square)
-{
-	auto ret = m_board[square];
-	if (ret == nullptr)
-		return ret;
-
-	return ret;
-}
-
-std::vector<Piece> GambitEngine::Material::GetMaterial() const
+std::vector<Piece> 
+GambitEngine::Material::GetMaterial() const
 {
 	std::vector<Piece> retVal;
 	for (int i = 0; i < NR_OF_PIECES; i++)
@@ -111,7 +121,19 @@ std::vector<Piece> GambitEngine::Material::GetMaterial() const
 	return retVal;
 }
 
-std::vector<Piece> GambitEngine::Material::GetMaterial(byte type) const
+std::vector<Piece> 
+GambitEngine::Material::GetCaptured() const
+{
+	std::vector<Piece> retVal;
+	for (int i = 0; i < NR_OF_PIECES; i++)
+		retVal.insert(retVal.end(), m_capturedMaterial[i].begin(), m_capturedMaterial[i].end());
+
+	return retVal;
+}
+
+
+std::vector<Piece> 
+GambitEngine::Material::GetMaterial(byte type) const
 {
 	return m_materialGrid[type];
 }
@@ -145,8 +167,8 @@ Material::CapturePiece(Piece piece)
 	if (!foundPiece)
 		return false;
 
-	m_materialGrid[piece.Type].erase(m_materialGrid[piece.Type].begin() + ind);
 	m_board[piece.Square8x8] = nullptr;
+	m_materialGrid[piece.Type].erase(m_materialGrid[piece.Type].begin() + ind);
 	m_capturedMaterial[piece.Type].push_back(piece);
 	return true;
 }

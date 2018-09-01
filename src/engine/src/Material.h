@@ -34,11 +34,14 @@ public:
 
 	bool RemovePiece(const Piece* piece);
 	Piece* GetPiece(byte square);
+	const Piece* GetPiece(byte square) const;
 	Piece* GetPiece(PIECE pType, byte square);
 	Piece* GetKing() { return m_king; };
+	const Piece* GetKing() const { return m_king; };
 
 	std::vector<Piece> GetMaterial() const;
 	std::vector<Piece> GetMaterial(byte type) const;
+	std::vector<Piece> GetCaptured() const;
 
 	bool AddPiece(Piece piece);
 	bool CapturePiece(Piece piece);

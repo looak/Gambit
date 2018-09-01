@@ -4,8 +4,9 @@
 
 TODO								
 =====
-	[x] Material lists get out of sync at somepoint in time. - think I have fixed this now?
-	[ ] fix memcpy issues when building with clang & gcc, why only in material but not in board?
+	[ ] Material lists get out of sync at somepoint in time. - think I have fixed this now?
+		[ ] Material list unmake doesn't remove captured pieces
+	[x] fix memcpy issues when building with clang & gcc, why only in material but not in board?
 	[ ] move blog?
 	[ ] get last error error handling
 	[ ] FEN Unit Tests
@@ -15,6 +16,11 @@ TODO
 
 Dev Blog
 =====
+### (2018-08-30)
+#### Well that is obvious!
+	I can't change the order of my list, my pointers into it will beomce invalid. So I should probably store
+	my material some otherway.
+
 ### (2018-08-30)
 #### Long time since last entry...
 

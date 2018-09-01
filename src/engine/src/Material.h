@@ -12,20 +12,27 @@ namespace GambitEngine
 
 struct Piece
 {
-	byte	Type;
-	byte	Square10x12;
-	byte	Square8x8;
+	byte	Type = 0;
+	byte	Square10x12 = 0;
+	byte	Square8x8 = 0;
+	bool	Captured = false;
 };
 
 class Material
 {
 private:
-	typedef std::array<std::vector<Piece>,NR_OF_PIECES> MaterialGrid;
+
+	typedef std::array<std::vector<Piece*>,NR_OF_PIECES> MaterialGrid;
 	MaterialGrid m_materialGrid;
-	MaterialGrid m_capturedMaterial;
+	MaterialGrid m_capturedMaterialGrid;
+
+	std::vector<Piece> m_material;
 
 	Piece* m_king;
 	Piece* m_board[64];
+
+	Piece* GetPiece(PIECE pType, byte square);
+	bool ChangeTypeOfPiece(PIECE sType, PIECE tType, byte sqr);
 
 public:
 	Material();
@@ -33,18 +40,21 @@ public:
 	Material (const Material& _src);
 
 	bool RemovePiece(const Piece* piece);
-	Piece* GetPiece(byte square);
 	const Piece* GetPiece(byte square) const;
-	Piece* GetPiece(PIECE pType, byte square);
-	Piece* GetKing() { return m_king; };
+	const Piece* GetPiece(PIECE pType, byte square) const;
 	const Piece* GetKing() const { return m_king; };
 
-	std::vector<Piece> GetMaterial() const;
-	std::vector<Piece> GetMaterial(byte type) const;
-	std::vector<Piece> GetCaptured() const;
+	const std::vector<const Piece*> GetMaterial() const;
+	const std::vector<const Piece*> GetMaterial(byte type) const;
+	const std::vector<const Piece*> GetCaptured() const;
 
 	bool AddPiece(Piece piece);
-	bool CapturePiece(Piece piece);
+	bool CapturePiece(PIECE pType, byte tSqr);
+	bool UncapturePiece(PIECE pType, byte tSqr);
 	bool MakeMove(byte sSqr, PIECE pType, byte tSqr, byte tSqr120);
+	bool DemotePiece(PIECE pType, byte tSqr);
+	bool PromotePiece(PIECE pType, byte tSqr);
+	
+
 };
 }

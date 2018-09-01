@@ -40,7 +40,7 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 	{
 		auto piece = pieceArry.at(i);
 		byte promotion = 0x00;
-		u64 avaMvs = board->AvailableMoves(set, (PIECE)piece.Type, piece.Square8x8, promotion);
+		u64 avaMvs = board->AvailableMoves(set, (PIECE)piece->Type, piece->Square8x8, promotion);
 
 		byte sqr = 0;
 		while (avaMvs != ~universe)
@@ -49,13 +49,13 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 			if (mask & avaMvs)
 			{
 				Move newMove;
-				newMove.fromSqr = piece.Square8x8;
+				newMove.fromSqr = piece->Square8x8;
 				newMove.toSqr = sqr;
 
 				byte prom = 0;
 				if (promotion != 0x00)
 					prom = PieceDef::converter(QUEEN);
-				if(!board->MakeMove(piece.Square8x8, sqr, prom))
+				if(!board->MakeMove(piece->Square8x8, sqr, prom))
 					std::cout << "[    OUTPUT] MoveGen::MakeMove failed at index = " << debugInd << std::endl;
 
 				debugInd++;

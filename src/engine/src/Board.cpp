@@ -211,17 +211,12 @@ Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
 bool 
 Board::Promote(byte sqr, SET set, byte promoteTo)
 {
-	// copy target because we want to reuse it.
-	auto pP = *m_material[set].GetPiece(PAWN, sqr);
-	m_material[set].RemovePiece(&pP);
-
-	pP.Type = PieceDef::converter(promoteTo);
-	m_bitboard.Promote(set, (PIECE)pP.Type, sqr);
-	byte newBoardByte = pP.Type;
+	PIECE pType = PieceDef::converter(promoteTo);
+	m_material[set].PromotePiece(pType, sqr);
+	m_bitboard.Promote(set, pType, sqr);
+	byte newBoardByte = pType;
 	newBoardByte |= set << 7;
 	m_board[m_boardLookup[sqr]] = newBoardByte;
-	
-	m_material[set].AddPiece(pP);
 	return true;
 }
 
@@ -264,11 +259,11 @@ Board::CheckMate(SET set)
 	for (u32 i = 0; i < material.size(); i++)
 	{
 		byte promotion = 0;
-		Piece pP = material.at(i);
-		if(pP.Type == 6)
+		const Piece* pP = material.at(i);
+		if(pP->Type == 6)
 			continue;
 
-		moves = m_bitboard.AvailableMoves(set, (PIECE)pP.Type, pP.Square8x8, m_enPassant64, m_castleState, promotion);
+		moves = m_bitboard.AvailableMoves(set, (PIECE)pP->Type, pP->Square8x8, m_enPassant64, m_castleState, promotion);
 			
 		avaMoves = attkedDiagnoals & moves;
 		if (avaMoves > 0)
@@ -310,19 +305,14 @@ bool Board::PlacePiece(SET set, PIECE piece, byte square)
 }
 
 bool 
-Board::CapturePiece(SET set, PIECE piece, byte tSqr, byte& state)
+Board::CapturePiece(SET set, PIECE pType, byte tSqr, byte& state)
 {
-	state |= CAPTURE;
-	Piece *p = m_material[set].GetPiece(piece, tSqr);
-
-	if (p == nullptr)
-		return false;
-
-	state |= p->Type;
+	state |= CAPTURE;	
+	state |= pType;
 
 	m_board[m_boardLookup[tSqr]] = 0x00;
-	m_material[set].CapturePiece(*p);
-	m_bitboard.CapturePiece(set, piece, tSqr);
+	m_material[set].CapturePiece(pType, tSqr);
+	m_bitboard.CapturePiece(set, pType, tSqr);
 	return true;
 }
 
@@ -428,12 +418,8 @@ bool Board::UnmakeMove()
 		newBoardByte |= (m_lastNode->getSet() << 7);
 
 		m_board[sSqr120] = newBoardByte;
-
-		auto pP = m_material[m_lastNode->getSet()].GetPiece(mv->toSqr);
-		m_material[m_lastNode->getSet()].CapturePiece(*pP);
-		pP->Type = PAWN;
-		m_material[m_lastNode->getSet()].AddPiece(*pP);
-
+		const Piece* pP = m_material[m_lastNode->getSet()].GetPiece(mv->toSqr);
+		m_material[m_lastNode->getSet()].DemotePiece((PIECE)pP->Type, mv->toSqr);
 		m_bitboard.Demote(m_lastNode->getSet(), mv->toSqr);
 	}
 
@@ -458,7 +444,9 @@ bool Board::UnmakeMove()
 	else if (prevLast->getCapturedPiece() & CAPTURE)
 	{
 		byte piece = prevLast->getCapturedPiece() & 7;
-		PlacePiece((SET)!prevLast->getSet(), (PIECE)piece, mv->toSqr);
+		SET opSet = (SET)!prevLast->getSet();
+		m_material[opSet].UncapturePiece((PIECE)piece, mv->toSqr);
+		PlacePiece(opSet, (PIECE)piece, mv->toSqr);
 	}
 
 	// should always set enPassantSqr if there was one

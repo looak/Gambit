@@ -31,8 +31,8 @@ TEST_F(UnmakeFixture, Pawn_One_Move)
 	EXPECT_TRUE(board.GetBitboard().IsSquareAttacked(WHITE, 21));
 	auto mat = board.GetPieces(WHITE);
 	EXPECT_EQ(1, mat.size());
-	EXPECT_EQ(12, mat[0].Square8x8);
-	EXPECT_EQ(PAWN, mat[0].Type);
+	EXPECT_EQ(12, mat[0]->Square8x8);
+	EXPECT_EQ(PAWN, mat[0]->Type);
 }
 
 TEST_F(UnmakeFixture, Pawn_Three_Moves)
@@ -47,8 +47,8 @@ TEST_F(UnmakeFixture, Pawn_Three_Moves)
 	EXPECT_TRUE(board.GetBitboard().IsSquareAttacked(WHITE, 29));
 	auto mat = board.GetPieces(WHITE);
 	EXPECT_EQ(1, mat.size());
-	EXPECT_EQ(20, mat[0].Square8x8);
-	EXPECT_EQ(PAWN, mat[0].Type);
+	EXPECT_EQ(20, mat[0]->Square8x8);
+	EXPECT_EQ(PAWN, mat[0]->Type);
 
 	EXPECT_TRUE(board.UnmakeMove());
 	EXPECT_EQ(0x01, board.GetValue('e', 2));
@@ -56,8 +56,8 @@ TEST_F(UnmakeFixture, Pawn_Three_Moves)
 	EXPECT_TRUE(board.GetBitboard().IsSquareAttacked(WHITE, 21));
 	mat = board.GetPieces(WHITE);
 	EXPECT_EQ(1, mat.size());
-	EXPECT_EQ(12, mat[0].Square8x8);
-	EXPECT_EQ(PAWN, mat[0].Type);
+	EXPECT_EQ(12, mat[0]->Square8x8);
+	EXPECT_EQ(PAWN, mat[0]->Type);
 
 	EXPECT_TRUE(MakeMove("e2e3"));
 	EXPECT_EQ(0x01, board.GetValue('e', 3));
@@ -136,13 +136,13 @@ TEST_F(UnmakeFixture, Capture)
 
 	auto mat = board.GetPieces(WHITE);
 	EXPECT_EQ(1, mat.size());
-	EXPECT_EQ(KNIGHT, mat[0].Type);
-	EXPECT_EQ(12, mat[0].Square8x8);
+	EXPECT_EQ(KNIGHT, mat[0]->Type);
+	EXPECT_EQ(12, mat[0]->Square8x8);
 	
 	mat = board.GetPieces(BLACK);
 	EXPECT_EQ(1, mat.size());
-	EXPECT_EQ(29, mat[0].Square8x8);
-	EXPECT_EQ(KNIGHT, mat[0].Type);
+	EXPECT_EQ(29, mat[0]->Square8x8);
+	EXPECT_EQ(KNIGHT, mat[0]->Type);
 }
 
 TEST_F(UnmakeFixture, CapturePromote)

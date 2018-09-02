@@ -5,6 +5,7 @@ set(PROJECT_NAME GambitEngine)
 project(${PROJECT_NAME} C CXX)
 
 set(GambitEngine_SRC
+		src/AlgebraicNotation.cpp
         src/Bitboard.cpp
         src/GambitEngine.cpp
         src/MoveGenerator.cpp
@@ -15,6 +16,7 @@ set(GambitEngine_SRC
 		src/PieceDef.cpp)
 
 set(GambitEngine_INC
+		src/AlgebraicNotation.h
         src/Bitboard.h
         src/BitMath.h
         src/Board.h

@@ -11,7 +11,8 @@ set(SOURCE_FILES
         src/perft_test.cpp
         src/movegenerator_test.cpp 
 		src/unmake_test.cpp
-		src/materialgrid_test.cpp)
+		src/materialgrid_test.cpp
+		src/notation_test.cpp)
 
 project(${PROJECT_NAME})
 

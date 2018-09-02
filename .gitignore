@@ -10,6 +10,9 @@ build/
 .idea/
 cmake-build-debug/
 
+#specific files
+test_detail.xml
+
 # Compiled Object files
 *.slo
 *.lo

@@ -172,11 +172,15 @@ Material::AddPiece(Piece piece)
 	std::vector<Piece>::iterator itr = m_material.begin();
 	while (itr != m_material.end())
 	{
-		if (itr->Type == piece.Type && itr->Square8x8 == 0 && itr->Square10x12 == 0)
+		if (itr->Type == piece.Type && ((itr->Square8x8 == 0 && itr->Square10x12 == 0) || itr->Captured == true))
 			break;
 		itr++;
 	}
 
+	if (itr == m_material.end())
+		return false;
+
+	itr->Captured = false;
 	itr->Square8x8 = piece.Square8x8;
 	itr->Square10x12 = piece.Square10x12;
 	
@@ -261,7 +265,7 @@ bool GambitEngine::Material::ChangeTypeOfPiece(PIECE sType, PIECE tType, byte sq
 {
 	std::vector<Piece*>::iterator itr = m_materialGrid[sType].begin();
 	u32 index = 0;
-	while (itr == m_materialGrid[sType].end())
+	while (itr != m_materialGrid[sType].end())
 	{
 		if (m_materialGrid[sType].at(index)->Square8x8 == sqr)
 			break;

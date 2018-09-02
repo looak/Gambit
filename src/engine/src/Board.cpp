@@ -370,7 +370,7 @@ Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 	m_bitboard.MakeMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
 	if (!m_material[pieceSet].MakeMove(sSqr, (PIECE)pieceByte, tSqr, tSqr120))
 	{
-		std::cout << "[    OUTPUT] Board::MakeLegalMove failed moving " << Log::tooChar(m_board[sSqr120]) << " from sSqr:" << (int)sSqr << " to:" << (int)tSqr << std::endl;
+		std::cout << "[    OUTPUT] Board::MakeLegalMove failed moving " << Log::tooChar(m_board[sSqr120]) << " from:" << (int)sSqr << " to:" << (int)tSqr << std::endl;
 		return false;
 	}
 

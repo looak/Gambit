@@ -153,7 +153,7 @@ namespace GambitTest {
 
 		EXPECT_TRUE(board.UnmakeMove());
 		auto blackMat = board.GetMaterial(BLACK);
-		EXPECT_TRUE(blackMat->GetCaptured().size() == (size_t)0);
+		EXPECT_EQ(blackMat->GetCaptured().size(), (size_t)0);
 
 		board.MakeMove(byteSqr("c4"), f7);
 

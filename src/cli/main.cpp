@@ -165,6 +165,10 @@ int main()
 			std::getline(std::cin, buffer);
 			FENParser::Deserialize(buffer.c_str(), buffer.length(), board, nullptr);
 		}
+		else if (buffer == "legal")
+		{
+			std::cout << "Legal moves for White:" << std::endl;
+		}
 		else
 		{
 			promotion = buffer[4] == 0 ? 0 : buffer[4];

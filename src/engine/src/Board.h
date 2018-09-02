@@ -54,7 +54,7 @@ friend class FENBoardWriter;
 private:
 	bool Occupied(byte indx);
 
-	byte GetBoard120Index(const byte file, const byte rank) const;
+	byte GetBoard120Index(byte file, byte rank) const;
 	byte GetBoard64Index(byte file, byte rank) const;
 
 	// handles setting en passant, removing en passant square
@@ -111,7 +111,8 @@ public:
 
 	u64 AvailableMoves(SET set, PIECE piece, u32 square, byte& promotion) { return m_bitboard.AvailableMoves(set, piece, square, m_enPassant64, m_castleState, promotion); };
 
-	byte GetValue(const byte file, const byte rank) const;
+	byte GetValue(byte file, byte rank) const;
+	byte GetValue(byte sqr) const;
 	Bitboard GetBitboard() const { return m_bitboard; }
 	const Material* GetMaterial(SET set) const { return &m_material[set]; }
 	const std::vector<const Piece*> GetPieces(SET set) const { return m_material[set].GetMaterial(); };

@@ -78,7 +78,7 @@ bool Board::Occupied(byte indx)
 	return m_board[indx] & 0x00;
 }
 
-byte Board::GetBoard120Index(const byte file, const byte rank) const
+byte Board::GetBoard120Index(byte file, byte rank) const
 {
 	byte corrFile = tolower(file) - 'a';
 	byte corrRank = rank - 1;
@@ -399,10 +399,17 @@ Board::MakeLegalMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promot
 }
 
 byte 
-Board::GetValue(const byte file, const byte rank) const
+Board::GetValue(byte file, byte rank) const
 {
 	byte bIndx = GetBoard120Index(file, rank);
 	return  m_board[bIndx];	
+}
+
+byte
+Board::GetValue(byte sqr) const
+{
+	byte bIndx = m_boardLookup[sqr];
+	return  m_board[bIndx];
 }
 
 bool Board::UnmakeMove()

@@ -121,5 +121,7 @@ public:
 	bool Legal();
 	bool Legal(SET perspective);
 
+	const MoveNode* GetLastMove();
+
 };
 }	

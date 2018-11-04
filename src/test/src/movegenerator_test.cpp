@@ -40,8 +40,9 @@ TEST_F(MoveGeneratorFixture, Castling)
     EXPECT_EQ(true, board.PlacePiece(BLACK, KING, 'e', 8));
     EXPECT_EQ(true, board.PlacePiece(BLACK, ROOK, 'h', 8));
 
-    movGen.getMoves(BLACK, &board, count, true);
+    auto mvs = movGen.getMoves(BLACK, &board, count, true); 
     EXPECT_EQ(count, 15);
+    EXPECT_EQ(movGen.countCastles(mvs), 1);
 }
 
 TEST_F(MoveGeneratorFixture, Promotion)
@@ -50,11 +51,14 @@ TEST_F(MoveGeneratorFixture, Promotion)
 	
 	auto mvs = movGen.getMoves(WHITE, &board, count, true);
 	EXPECT_EQ(count, 4);
+    EXPECT_EQ(movGen.countPromotions(mvs), 4);
 
 	EXPECT_EQ(true, board.PlacePiece(BLACK, BISHOP, 'c', 8));
 	count = 0;
 	mvs = movGen.getMoves(WHITE, &board, count, true);
 	EXPECT_EQ(count, 8);
+    EXPECT_EQ(movGen.countPromotions(mvs), 8);    
+    EXPECT_EQ(movGen.countCaptures(mvs), 4);
 }
 
 TEST_F(MoveGeneratorFixture, MovePawnIntoChess)
@@ -65,6 +69,7 @@ TEST_F(MoveGeneratorFixture, MovePawnIntoChess)
     
     auto mvs = movGen.getMoves(WHITE, &board, count, false);
     EXPECT_EQ(count, 7);
+    EXPECT_EQ(movGen.countChecks(mvs), 1);
 }
 
 }

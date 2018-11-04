@@ -67,13 +67,13 @@ public:
 		return m_child;
 	}
 
-	const Move* getMove() 			{ return &m_move; }
+	const Move* getMove() const		{ return &m_move; }
 	const SET getSet() 				{ return (SET)m_setByte; }
-	const PIECE getPiece() 			{ return (PIECE)m_pieceByte; }
-	MoveNode* getParent() 			{ return m_parent; }
-	const byte getState() 			{ return m_state; }
-	const byte getEnPassantState() 	{ return m_enPassantState; }
-	const byte getCapturedPiece() 	{ return m_capturedPiece; }
+	const PIECE getPiece() const	{ return (PIECE)m_pieceByte; }
+	MoveNode* getParent() const 	{ return m_parent; }
+	const byte getState() const 	{ return m_state; }
+	const byte getEnPassantState() const { return m_enPassantState; }
+	const byte getCapturedPiece()  const { return m_capturedPiece; }
 };
 
 } // namespace GambitEngine

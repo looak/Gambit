@@ -227,6 +227,9 @@ Board::Check(SET set)
 	auto pKing = m_material[set].GetKing();
 	SET opSet = (SET)!(int)set;
 
+	if(pKing == nullptr)
+		return false;
+
 	return m_bitboard.IsSquareAttacked(opSet, pKing->Square8x8);
 }
 
@@ -500,3 +503,8 @@ bool Board::Legal(SET perspective)
 	return true;
 }
 
+const MoveNode*
+Board::GetLastMove()
+{
+	return m_lastNode;
+}

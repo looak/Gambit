@@ -113,7 +113,7 @@ TEST_F(PerftFixture, PositionBase_DepthThree)
     EXPECT_EQ(9322, count);
 }
 
-TEST_F(PerftFixture, PositionBase_DepthFour)
+/*TEST_F(PerftFixture, PositionBase_DepthFour)
 {
     GambitEngine::Board board;
     char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -124,7 +124,7 @@ TEST_F(PerftFixture, PositionBase_DepthFour)
     GenerateMoves(board, WHITE, 4, count);
 
     EXPECT_EQ(206603, count);
-}
+}*/
 
 /*
 Position Two Expected Results
@@ -180,17 +180,22 @@ TEST_F(PerftFixture, Position_Three)
     GambitEngine::MoveGenerator movGen;
     auto mvs = movGen.getMoves(WHITE, &board, count);
     EXPECT_EQ(count, 14);
+	EXPECT_EQ(movGen.countCaptures(mvs), 1);
+	EXPECT_EQ(movGen.countChecks(mvs), 2);
 	count = 0;
 
+	MoveGenerator::Counter counter;
     for (unsigned int i = 0; i < mvs.size(); i ++)
     {
         auto move = mvs[i];
         board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
-        movGen.getMoves(BLACK, &board, count);
-
+        auto tmpMvs = movGen.getMoves(BLACK, &board, count);
+		movGen.CountMoves(tmpMvs, counter);
         board.UnmakeMove();
     }
     EXPECT_EQ(count, 191);
+	EXPECT_EQ(counter.Captures, 14);
+	EXPECT_EQ(counter.Checks, 10);
 }
 
 TEST_F(PerftFixture, Position_Three_Depth_Three)

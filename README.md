@@ -5,6 +5,7 @@
 TODO								
 =====
 	[ ] Check move counter for more perftests.
+		[ ] Castle counting isn't correct. it's checking state, and state also changes when king moves.
 	[/] MoveGenerator, count move types
 		[x] promotions
 		[x] captures

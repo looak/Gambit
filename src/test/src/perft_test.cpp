@@ -230,15 +230,20 @@ TEST_F(PerftFixture, Position_Four)
     EXPECT_EQ(count, 6);
 	count = 0;
 
+	MoveGenerator::Counter counter;
     for (unsigned int i = 0; i < mvs.size(); i ++)
     {
         auto move = mvs[i];
         board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
-        movGen.getMoves(BLACK, &board, count);
-
+        auto tmpMvs = movGen.getMoves(BLACK, &board, count);
+		movGen.CountMoves(tmpMvs, counter);
         board.UnmakeMove();
     }
     EXPECT_EQ(count, 264);
+	EXPECT_EQ(counter.Promotions, 48);
+	EXPECT_EQ(counter.Checks, 10);
+	//EXPECT_EQ(counter.Castles, 6);
+	EXPECT_EQ(counter.Captures, 87);
 }
 
 /* Position Five Expected Results

@@ -4,12 +4,13 @@
 
 TODO								
 =====
-	[ ] MoveGenerator, count move types
-		[ ] promotions
-		[ ] captures
-		[ ] en passants
-		[ ] check
-		[ ] mates
+	[ ] Check move counter for more perftests.
+	[/] MoveGenerator, count move types
+		[x] promotions
+		[x] captures
+		[ ] en passants // missing tests
+		[x] check
+		[ ] mates // missing tests
 	[x] Material lists get out of sync at somepoint in time. - think I have fixed this now?
 		[x] Material list unmake doesn't remove captured pieces
 	[x] fix memcpy issues when building with clang & gcc, why only in material but not in board?

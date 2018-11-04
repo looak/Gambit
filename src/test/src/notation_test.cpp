@@ -30,7 +30,7 @@ namespace GambitTest
 		auto notation = Notation::ConvertMoves(mvs, board);
 
 		bool found = false;
-		for (int i = 0; i < notation.size(); i++)
+		for (u32 i = 0; i < notation.size(); i++)
 		{
 			if (notation[i] == "Kd1")
 				found = true;
@@ -48,7 +48,7 @@ namespace GambitTest
 		auto notation = Notation::ConvertMoves(mvs, board);
 
 		bool found = false;
-		for (int i = 0; i < notation.size(); i++)
+		for (u32 i = 0; i < notation.size(); i++)
 		{
 			if (notation[i] == "e3")
 				found = true;

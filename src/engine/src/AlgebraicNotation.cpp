@@ -17,6 +17,8 @@ char valueToPiece(byte value)
 		return 'Q';
 	case KING:
 		return 'K';
+	default:
+		return 'X';	
 	}
 }
 

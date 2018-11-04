@@ -215,7 +215,6 @@ namespace GambitTest {
 
 	TEST_F(MaterialFixture, Promotion)
 	{
-		u32 count = 0;
 		EXPECT_EQ(true, board.PlacePiece(WHITE, PAWN, 'd', 7));
 
 		board.MakeMove(byteSqr("d7"), byteSqr("d8"), 'q');

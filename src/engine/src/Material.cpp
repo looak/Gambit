@@ -221,8 +221,8 @@ Material::CapturePiece(PIECE pType, byte tSqr)
 
 bool GambitEngine::Material::UncapturePiece(PIECE pType, byte tSqr)
 {
-	int i = 0;
-	for (i; i < m_capturedMaterialGrid.at(pType).size(); i++)
+	u32 i = 0;
+	for (;i < m_capturedMaterialGrid.at(pType).size(); i++)
 	{
 		if (m_capturedMaterialGrid.at(pType).at(i)->Square8x8 == tSqr)
 			break;

@@ -119,6 +119,7 @@ public:
 	void SetCastlingRights(byte castlingByte) { m_castleState = castlingByte; };
 
 	bool Legal();
+	bool Legal(SET perspective);
 
 };
 }	

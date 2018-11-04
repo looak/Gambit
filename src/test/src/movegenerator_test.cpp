@@ -56,5 +56,16 @@ TEST_F(MoveGeneratorFixture, Promotion)
 	mvs = movGen.getMoves(WHITE, &board, count, true);
 	EXPECT_EQ(count, 8);
 }
+
+TEST_F(MoveGeneratorFixture, MovePawnIntoChess)
+{
+    char inputFen[] = "8/8/8/8/K4p1k/8/6P1/8 w - -";
+    
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+    
+    auto mvs = movGen.getMoves(WHITE, &board, count, false);
+    EXPECT_EQ(count, 7);
+}
+
 }
 

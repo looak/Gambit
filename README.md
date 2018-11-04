@@ -4,8 +4,14 @@
 
 TODO								
 =====
-	[ ] Material lists get out of sync at somepoint in time. - think I have fixed this now?
-		[ ] Material list unmake doesn't remove captured pieces
+	[ ] MoveGenerator, count move types
+		[ ] promotions
+		[ ] captures
+		[ ] en passants
+		[ ] check
+		[ ] mates
+	[x] Material lists get out of sync at somepoint in time. - think I have fixed this now?
+		[x] Material list unmake doesn't remove captured pieces
 	[x] fix memcpy issues when building with clang & gcc, why only in material but not in board?
 	[ ] move blog?
 	[ ] get last error error handling
@@ -16,6 +22,28 @@ TODO
 
 Dev Blog
 =====
+### (2018-11-04)
+#### A chess engine ignoring chess.
+	For some reason I had flaged a board where there was chess to be illegal, what kind of chess engine
+	is avoiding putting the opponent into chess? Oh well...
+
+	Fixed that and some depth issues I had with my recursive move method.
+	Cleaned up my perft test and gave the names corresponding to the source.
+	
+### (2018-09-03)
+#### More Perft Tests!
+	To figure out why my initial perft tests don't pass I added more of them. And I found one pretty strait
+	forward that doesn't pass. It's a odd position which has a bunch of promotion in it. So maybe it is my
+	promotion code which is wrong afterall. I thought it was bomber with all my tests.
+
+	Also read a good quote today:
+	
+		*"Some people say, How can you live without knowing?
+		I do not know what they mean. I always live without knowing. That is easy. 
+		How you get to know is what I want to know."*
+				- Richard Feynman
+	
+
 ### (2018-08-30)
 #### Well that is obvious!
 	I can't change the order of my list, my pointers into it will beomce invalid. So I should probably store

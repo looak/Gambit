@@ -59,7 +59,7 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 					std::cout << "[    OUTPUT] MoveGen::MakeMove failed at index = " << debugInd << std::endl;
 
 				debugInd++;
-				if (!ignoreLegality && !board->Legal())
+				if (!ignoreLegality && !board->Legal(set))
 				{
 					board->UnmakeMove();
 					sqr++;

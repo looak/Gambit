@@ -19,8 +19,9 @@ public:
 	void FindBestMove(SET set, Board* board, u32& count, short depth);
 
 	std::vector<Move> getMoves(SET set, Board* board, u32& count, bool ignoreLegality = false);
-	
+
+	int getPromotions(std::vector<Move> moves);
+	int getCaptures(std::vector<Move> moves);	
 };
 
 }
-

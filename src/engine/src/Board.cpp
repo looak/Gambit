@@ -492,3 +492,11 @@ bool Board::Legal()
 	return !Check(WHITE);
 }
 
+bool Board::Legal(SET perspective)
+{
+	if(Check(perspective))
+		return false;
+
+	return true;
+}
+

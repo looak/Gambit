@@ -18,6 +18,15 @@ struct Move
 	byte toSqr = 0x00;
 
 	byte promotion = 0x00;
+	
+	/* capture = 1,
+	*  promotion = 2,
+	*  en passant 4,
+	*  castle = 8,
+	*  check = 64,	
+	*  checmate = 128
+	*/
+	byte flags = 0x00;
 };
 
 class MoveNode

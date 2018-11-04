@@ -221,6 +221,19 @@ TEST_F(UnmakeFixture, EnPassantTake_Unmake)
 	EXPECT_EQ(0x0, board.GetValue('f', 4));
 }
 
+TEST_F(UnmakeFixture, EnPassantTake_Unmake_Normal)
+{
+	board.PlacePiece(WHITE, PAWN, 'e', 2);
+	board.PlacePiece(BLACK, PAWN, 'f', 4);
+	MakeMove("e2e4"); // triggers enPassant;
+
+	board.UnmakeMove();
+	EXPECT_TRUE(MakeMove("e2e3"));
+
+	EXPECT_EQ(0x0, board.GetValue('e', 4));
+	EXPECT_EQ(0x01, board.GetValue('e', 3));
+}
+
 TEST_F(UnmakeFixture, Caputre_Unmake_Castle)
 {
 	board.SetCastlingRights(0x01);

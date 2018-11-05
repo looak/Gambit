@@ -92,11 +92,11 @@ FENBoardWriter::WriteCastlingState(char* states, int length, Board & board)
 			break;
 
 		case 'k':
-			board.m_castleState |= 0x02;
+			board.m_castleState |= 0x04;
 			break;
 
 		case 'q':
-			board.m_castleState |= 0x02;
+			board.m_castleState |= 0x08;
 			break;
 
 		case'-':

@@ -15,6 +15,15 @@ class MoveGenerator
 public:
 	struct Counter
 	{
+		void operator += (const Counter& rhs)
+		{
+			this->Captures 		+= rhs.Captures;
+			this->Promotions 	+= rhs.Promotions;
+			this->EnPassants 	+= rhs.EnPassants;
+			this->Castles 		+= rhs.Castles;
+			this->Checks 		+= rhs.Checks;
+			this->CheckMates 	+= rhs.CheckMates;
+		}
 		int Captures = 0;
 		int Promotions = 0;
 		int EnPassants = 0;

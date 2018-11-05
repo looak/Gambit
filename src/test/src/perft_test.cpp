@@ -18,9 +18,12 @@ namespace GambitTest {
 class PerftFixture : public ::testing::Test
 {
 public:
-    void GenerateMoves(Board& board, SET set, int depth, u32& count)
+    MoveGenerator::Counter
+    GenerateMoves(Board& board, SET set, int depth, u32& count)
     {
+        MoveGenerator::Counter retValue;
         auto mvs = mv.getMoves(set, &board, count);
+        mv.CountMoves(mvs, retValue);
 
 		if (depth > 0)
 		{
@@ -29,10 +32,11 @@ public:
 				auto move = mvs[i];
 				board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
 
-				GenerateMoves(board, (SET)!(int)set, depth-1, count);
+				retValue += GenerateMoves(board, (SET)!(int)set, depth-1, count);
 				board.UnmakeMove();
 			}
 		}
+        return retValue;
 	}
 
     MoveGenerator mv;
@@ -137,27 +141,46 @@ depth	nodes			totalnodes
 5		193,690,690		19,78,76,242
 6		8,031,647,685	8,229,523,927
 */
+/*
+Depth	Nodes	    Captures	E.p.	Castles	    Promotions	Checks	    Checkmates
+1	    48      	8	        0	    2	        0	        0	        0
+2	    2039	    351	        1	    91      	0	        3       	0
+3	    97862	    17102	    45	    3162	    0	        993     	1
+4	    4085603	    757163	    1929	128013	    15172	    25523	    43
+5	    193690690	35043416	73365	4993637	    8392	    3309887	    30171
+*/
+
 
 TEST_F(PerftFixture, PositionTwo)
 {
 	GambitEngine::Board board;
+    MoveGenerator::Counter counter;
 	char inputFen[] = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
 	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
 
 	u32 count = 0;
-	GenerateMoves(board, WHITE, 0, count);
+	counter = GenerateMoves(board, WHITE, 0, count);
 	EXPECT_EQ(48, count);
+	EXPECT_EQ(counter.Captures, 8);
+    EXPECT_EQ(counter.Promotions, 0);
+	EXPECT_EQ(counter.Checks, 0);
+    EXPECT_EQ(counter.Castles, 2);
 }
 
 TEST_F(PerftFixture, PositionTwo_DepthTwo)
 {
 	GambitEngine::Board board;
+    MoveGenerator::Counter counter;
 	char inputFen[] = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
 	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
 
 	u32 count = 0;
-	GenerateMoves(board, WHITE, 1, count);
+    counter = GenerateMoves(board, WHITE, 0, count);
 	EXPECT_EQ(2087, count);
+	EXPECT_EQ(counter.Captures, 351);
+    EXPECT_EQ(counter.Promotions, 0);
+	EXPECT_EQ(counter.Checks, 3);
+    EXPECT_EQ(counter.Castles, 0);
 }
 
 /*
@@ -242,7 +265,7 @@ TEST_F(PerftFixture, Position_Four)
     EXPECT_EQ(count, 264);
 	EXPECT_EQ(counter.Promotions, 48);
 	EXPECT_EQ(counter.Checks, 10);
-	//EXPECT_EQ(counter.Castles, 6);
+	EXPECT_EQ(counter.Castles, 6);
 	EXPECT_EQ(counter.Captures, 87);
 }
 

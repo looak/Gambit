@@ -67,11 +67,11 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 				if (board->Check(opSet))
 					newMove.flags |= 64;
 				if (board->CheckMate(opSet))
-					newMove.flags |= 128;
+					newMove.flags |= 128;					
+				if (mvNode->getState() & MoveFlags::CASTLING)
+					newMove.flags |= 8;
 				if(mvNode->getParent() != nullptr)
 				{
-					if (mvNode->getParent()->getState() != mvNode->getState())
-						newMove.flags |= 8;
 					if (mvNode->getParent()->getEnPassantState() != 0x0 && mvNode->getCapturedPiece() != 0x0)
 						newMove.flags |= 4;
 				}

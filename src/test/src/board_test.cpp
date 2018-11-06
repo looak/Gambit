@@ -172,9 +172,19 @@ TEST_F(BoardFixture, Castling_Black_KingSide_Threatened)
     EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'h', 1));
     EXPECT_TRUE(board.PlacePiece(BLACK, ROOK, 'h', 8));
 
-
-
     EXPECT_TRUE(board.MakeMove('e', 8, 'g', 8));
+}
+
+TEST_F(BoardFixture, Castling_Black_KingSide_NotThreatened)
+{
+    GambitEngine::Board board;
+    board.SetCastlingRights(15); // all available
+
+    EXPECT_TRUE(board.PlacePiece(BLACK, KING, 'e', 8));
+    EXPECT_TRUE(board.PlacePiece(WHITE, PAWN, 'a', 7));
+    EXPECT_TRUE(board.PlacePiece(BLACK, ROOK, 'a', 8));
+
+    EXPECT_TRUE(board.MakeMove('e', 8, 'c', 8));
 }
 
 TEST_F(BoardFixture, Castling_Black_QueenSide)

@@ -72,5 +72,19 @@ TEST_F(MoveGeneratorFixture, MovePawnIntoChess)
     EXPECT_EQ(movGen.countChecks(mvs), 1);
 }
 
+TEST_F(MoveGeneratorFixture, EnPassant)
+{
+    char inputFen[] = "4k3/8/8/8/1p6/8/P7/4K3 w - - 0 1";    
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+    board.MakeMove('a',2,'a',4);
+    
+    auto mvs = movGen.getMoves(BLACK, &board, count, false);
+    EXPECT_EQ(count, 7);
+    MoveGenerator::Counter counter;
+    movGen.CountMoves(mvs, counter);
+    EXPECT_EQ(counter.Captures, 1);
+    EXPECT_EQ(counter.EnPassants, 1);
+}
+
 }
 

@@ -70,9 +70,9 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 					newMove.flags |= 128;					
 				if (mvNode->getState() & MoveFlags::CASTLING)
 					newMove.flags |= 8;
-				if(mvNode->getParent() != nullptr)
+				//if(mvNode->getParent() != nullptr)
 				{
-					if (mvNode->getParent()->getEnPassantState() != 0x0 && mvNode->getCapturedPiece() != 0x0)
+					if (mvNode->getEnPassantState() == mvNode->getMove()->toSqr)
 						newMove.flags |= 4;
 				}
 

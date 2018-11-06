@@ -4,6 +4,9 @@
 
 TODO								
 =====
+	[ ] MoveGenerator legality validation without by make/unmake?
+	[ ] Why are we getting out of sync in our bitboard
+		[ ] how come it is giving us invalid moves when they are perfectly valid?
 	[ ] Check move counter for more perftests.
 		[ ] Castle counting isn't correct. it's checking state, and state also changes when king moves.
 	[/] MoveGenerator, count move types
@@ -24,6 +27,18 @@ TODO
 
 Dev Blog
 =====
+### (2018-11-07)
+#### Good news today!
+	Maybe I'll share it at some later point, exciting stuff though! :)
+
+	Regarding the chess engine progress, I've hardened enPassant and think I've fixed all kinks, still
+	might be some issue with it regarding the bitboard. For some reason, pos_three can't move the rook
+	to e4 after I've unmade a EnPassant move to that square, but my specific unit test for it passes so
+	it might be something else.
+
+	I need to harden make / unmake, the MoveGenerator has to make the move to check if it is valid,
+	maybe I can do that some other way?
+
 ### (2018-11-04)
 #### A chess engine ignoring chess.
 	For some reason I had flaged a board where there was chess to be illegal, what kind of chess engine

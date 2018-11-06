@@ -64,6 +64,28 @@ TEST_F(BoardFixture, Move_Pawn)
 	EXPECT_TRUE(board.MakeMove('e', 4, 'e', 5));
 }
 
+TEST_F(BoardFixture, Move_PawnAcrossBoard)
+{
+	GambitEngine::Board board;
+
+	EXPECT_TRUE(board.PlacePiece(WHITE, PAWN, 'e', 2));
+	EXPECT_TRUE(board.PlacePiece(BLACK, PAWN, 'f', 7));
+	EXPECT_TRUE(board.MakeMove('e', 2, 'e', 4));
+	EXPECT_TRUE(board.MakeMove('f', 7, 'f', 5));
+
+	EXPECT_TRUE(board.MakeMove('e', 4, 'e', 5));
+	EXPECT_TRUE(board.MakeMove('f', 5, 'f', 4));
+
+	EXPECT_TRUE(board.MakeMove('e', 5, 'e', 6));
+	EXPECT_TRUE(board.MakeMove('f', 4, 'f', 3));
+	
+	EXPECT_TRUE(board.MakeMove('e', 6, 'e', 7));
+	EXPECT_TRUE(board.MakeMove('f', 3, 'f', 2));
+
+	EXPECT_TRUE(board.MakeMove('e', 7, 'e', 8, 'q'));
+	EXPECT_TRUE(board.MakeMove('f', 2, 'f', 1, 'q'));
+}
+
 TEST_F(BoardFixture, Move_Promotion)
 {
 	GambitEngine::Board board;
@@ -95,6 +117,23 @@ TEST_F(BoardFixture, EnPassant)
 	EXPECT_EQ(var, board.GetValue('e', 4));
 	EXPECT_EQ(var, board.GetValue('f', 4));
 	EXPECT_EQ((byte)0x81, board.GetValue('e', 3));
+}
+
+TEST_F(BoardFixture, EnPassant_MoveBetween)
+{
+	GambitEngine::Board board;
+
+	EXPECT_TRUE(board.PlacePiece(WHITE, PAWN, 'e', 2));
+	EXPECT_TRUE(board.PlacePiece(WHITE, PAWN, 'f', 2));
+	EXPECT_TRUE(board.PlacePiece(BLACK, PAWN, 'f', 4));
+	EXPECT_TRUE(board.PlacePiece(BLACK, PAWN, 'e', 7));
+	EXPECT_TRUE(board.MakeMove('e', 2, 'e', 4));
+	EXPECT_TRUE(board.MakeMove('e', 7, 'e', 6));
+	EXPECT_TRUE(board.MakeMove('f', 2, 'f', 3));
+	EXPECT_FALSE(board.MakeMove('f', 4, 'e', 3));
+
+	EXPECT_EQ(0x01, board.GetValue('e', 4));
+	EXPECT_EQ(0x81, board.GetValue('f', 4));
 }
 
 TEST_F(BoardFixture, Castling_White_KingSide)

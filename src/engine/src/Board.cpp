@@ -106,22 +106,23 @@ byte Board::GetBoard64Index(byte file, byte rank) const
 
 bool Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr, byte& state, byte& enPassantState)
 {
+	byte prevTarget = m_enPassantTargetSqr64;
+	byte prevPassant = m_enPassant64;
+	// reset en passant since our move didn't add one.
+	m_enPassant64 = 0;
+	m_enPassantTargetSqr64 = 0;
 	if (piece != PAWN)
-	{
-		// reset en passant since our move didn't add one.
-		m_enPassant64 = 0;
-		m_enPassantTargetSqr64 = 0;
 		return false;
-	}
+
 	short enPassant = (short)tSqr - (short)sSqr;
 	short absPass = abs(enPassant);
 
-	if (m_enPassant64 != 0)
+	if (prevPassant != 0)
 	{
-		if (tSqr == m_enPassant64)
+		if (tSqr == prevPassant)
 		{
 			int captSet = !int(set);
-			CapturePiece((SET)captSet, PAWN, m_enPassantTargetSqr64, state);
+			CapturePiece((SET)captSet, PAWN, prevTarget, state);
 			m_enPassantTargetSqr64 = 0;
 			m_enPassant64 = 0;
 			enPassantState |= 128;
@@ -458,10 +459,15 @@ bool Board::UnmakeMove()
 	}
 
 	// should always set enPassantSqr if there was one
-	if(prevLast->getEnPassantState() != 0x0)
+	if(m_lastNode != nullptr)
 	{	
-		m_enPassantTargetSqr64 = m_lastNode == nullptr ? 0 : m_lastNode->getMove()->toSqr;
-		m_enPassant64 = m_lastNode == nullptr ? 0 : m_lastNode->getEnPassantState();
+		m_enPassantTargetSqr64 = m_lastNode->getMove()->toSqr;
+		m_enPassant64 = m_lastNode->getEnPassantState();
+	}
+	else
+	{
+		m_enPassant64 = 0;
+		m_enPassantTargetSqr64 = 0;
 	}
 	return true;
 }

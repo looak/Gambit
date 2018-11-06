@@ -302,6 +302,20 @@ TEST_F(UnmakeFixture, Caputre_Unmake_Castle)
 	EXPECT_EQ(0x82, board.GetValue('d',5));
 	EXPECT_TRUE(MakeMove("e1g1"));
 }
+
+TEST_F(UnmakeFixture, EnPassant_Unmake_MoveRook)
+{
+	EXPECT_TRUE(board.PlacePiece(WHITE, PAWN, 'e', 2));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'b', 4));
+	EXPECT_TRUE(board.PlacePiece(WHITE, PAWN, 'c', 6));
+	EXPECT_TRUE(board.MakeMove('e', 2, 'e', 4));
+	board.UnmakeMove();
+	EXPECT_TRUE(board.MakeMove('c', 6, 'c', 7));
+	board.UnmakeMove();
+	EXPECT_TRUE(board.MakeMove('b', 4, 'c', 4));
+	board.UnmakeMove();
+	EXPECT_TRUE(board.MakeMove('b', 4, 'e', 4));
+}
 ////////////////////////////////////////////////////////////////
 
 }

@@ -4,6 +4,9 @@
 #include "../../engine/src/Board.h"
 #include "../../engine/src/GambitEngine.h"
 #include "../../engine/src/MoveGenerator.h"
+#include "../../engine/src/AlgebraicNotation.h"
+
+#include <map>
 ////////////////////////////////////////////////////////////////
 using namespace GambitEngine;
 
@@ -33,6 +36,29 @@ public:
 				board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
 
 				retValue += GenerateMoves(board, (SET)!(int)set, depth-1, count);
+				board.UnmakeMove();
+			}
+		}
+        return retValue;
+	}
+
+    std::map<Move, int>
+    GenerateMovesDivide(Board& board, SET set, int depth)
+    {
+        std::map<Move, int> retValue;
+        u32 count = 0;        
+        auto mvs = mv.getMoves(set, &board, count);
+
+		if (depth > 0)
+		{
+			for (unsigned int i = 0; i < mvs.size(); i++)
+			{
+                count = 0;
+				auto move = mvs[i];
+				board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
+                Notation::ConvertMove(move);
+		        GenerateMoves(board, (SET)!(int)set, depth-1, count);
+                retValue[move] = count;
 				board.UnmakeMove();
 			}
 		}
@@ -177,12 +203,18 @@ TEST_F(PerftFixture, PositionTwo_DepthTwo)
 
 	u32 count = 0;
     counter = GenerateMoves(board, WHITE, 1, count);
+    auto division = GenerateMovesDivide(board, WHITE, 1);
 	EXPECT_EQ(2087, count);
 	EXPECT_EQ(counter.Captures, 359);
     EXPECT_EQ(counter.Promotions, 0);
 	EXPECT_EQ(counter.Checks, 3);
     EXPECT_EQ(counter.Castles, 93);
     EXPECT_EQ(counter.EnPassants, 1);
+
+    for(std::map<Move, int>::iterator it = division.begin(); it != division.end(); ++it)
+    {
+        std::cerr << "[          ] " << it->first.str << " " << it->second << std::endl;
+    }
 }
 
 /*

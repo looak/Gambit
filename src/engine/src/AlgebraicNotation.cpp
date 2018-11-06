@@ -23,13 +23,20 @@ char valueToPiece(byte value)
 }
 
 void
-sqrToNotation(byte sqr, char* out)
+Notation::sqrToNotation(byte sqr, char* out)
 {
 	byte file = sqr % 8;
 	byte rank = sqr / 8;
 
 	out[0] = file + 'a';
 	out[1] = rank + '1';	
+}
+
+void
+Notation::ConvertMove(Move& move)
+{
+	sqrToNotation(move.fromSqr, &move.str[0]);
+	sqrToNotation(move.toSqr, &move.str[2]);
 }
 
 std::vector<std::string> 

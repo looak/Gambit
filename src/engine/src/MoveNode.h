@@ -12,6 +12,7 @@ enum MoveFlags
 	PROMOTION = 0x40,
 	CAPTURE = 0x20,
 };
+
 struct Move
 {
 	byte fromSqr = 0x00;
@@ -27,6 +28,20 @@ struct Move
 	*  checmate = 128
 	*/
 	byte flags = 0x00;
+	char str[4];
+
+	bool const operator == (const Move &rhs) const
+	{
+        return fromSqr == rhs.fromSqr 
+			&& toSqr == rhs.toSqr
+			&& promotion == rhs.promotion
+			&& flags == rhs.flags;
+    }
+
+    bool const operator < (const Move &rhs) const
+	{
+        return fromSqr < rhs.fromSqr || (fromSqr == rhs.fromSqr && toSqr < rhs.toSqr);
+    }
 };
 
 class MoveNode

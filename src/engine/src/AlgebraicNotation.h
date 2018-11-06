@@ -13,6 +13,10 @@ namespace GambitEngine
 class Notation
 {
 public:
+	static void ConvertMove(Move& move);
 	static std::vector<std::string> ConvertMoves(std::vector<Move> moves, const Board& boardRef);
+private:
+	static void sqrToNotation(byte sqr, char* out);
+
 };
 }

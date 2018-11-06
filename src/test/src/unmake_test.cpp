@@ -221,6 +221,57 @@ TEST_F(UnmakeFixture, EnPassantTake_Unmake)
 	EXPECT_EQ(0x0, board.GetValue('f', 4));
 }
 
+TEST_F(UnmakeFixture, EnPassant_TwoInARow_Unmake_Take_Black)
+{
+	board.PlacePiece(WHITE, PAWN, 'e', 2);
+	board.PlacePiece(WHITE, PAWN, 'd', 5);
+	board.PlacePiece(BLACK, PAWN, 'e', 7);
+	board.PlacePiece(BLACK, PAWN, 'f', 4);
+	MakeMove("e7e5"); // triggers enPassant;
+	MakeMove("e2e4");
+	board.UnmakeMove();
+	
+	EXPECT_TRUE(MakeMove("d5e6"));
+
+	EXPECT_EQ(0x0, board.GetValue('e', 7));
+	EXPECT_EQ(0x01, board.GetValue('e', 6));
+	EXPECT_EQ(0x0, board.GetValue('d', 5));
+}
+
+TEST_F(UnmakeFixture, EnPassant_TwoInARow_Unmake_Take)
+{
+	board.PlacePiece(WHITE, PAWN, 'e', 2);
+	board.PlacePiece(WHITE, PAWN, 'd', 2);
+	board.PlacePiece(BLACK, PAWN, 'e', 7);
+	board.PlacePiece(BLACK, PAWN, 'f', 4);
+	MakeMove("e2e4"); // triggers enPassant;
+	MakeMove("e7e5");
+	board.UnmakeMove();
+	
+	EXPECT_TRUE(MakeMove("f4e3"));
+
+	EXPECT_EQ(0x0, board.GetValue('e', 4));
+	EXPECT_EQ(0x81, board.GetValue('e', 3));
+	EXPECT_EQ(0x0, board.GetValue('f', 4));
+}
+
+TEST_F(UnmakeFixture, EnPassant_Move_Unmake_Take)
+{
+	board.PlacePiece(WHITE, PAWN, 'e', 2);
+	board.PlacePiece(WHITE, PAWN, 'd', 2);
+	board.PlacePiece(BLACK, PAWN, 'e', 7);
+	board.PlacePiece(BLACK, PAWN, 'f', 4);
+	MakeMove("e2e4"); // triggers enPassant;
+	MakeMove("e7e6");
+	board.UnmakeMove();
+	
+	EXPECT_TRUE(MakeMove("f4e3"));
+
+	EXPECT_EQ(0x0, board.GetValue('e', 4));
+	EXPECT_EQ(0x81, board.GetValue('e', 3));
+	EXPECT_EQ(0x0, board.GetValue('f', 4));
+}
+
 TEST_F(UnmakeFixture, EnPassantTake_Unmake_Normal)
 {
 	board.PlacePiece(WHITE, PAWN, 'e', 2);

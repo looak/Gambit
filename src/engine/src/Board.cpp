@@ -124,8 +124,7 @@ bool Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr, byte& state, b
 			CapturePiece((SET)captSet, PAWN, m_enPassantTargetSqr64, state);
 			m_enPassantTargetSqr64 = 0;
 			m_enPassant64 = 0;
-			enPassantState = 128;
-			enPassantState = tSqr;
+			enPassantState |= 128;
 			return true;
 		}
 	}
@@ -136,8 +135,7 @@ bool Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr, byte& state, b
 		m_enPassant64 = sSqr + enPassant;
 		// to be able to solve capture
 		m_enPassantTargetSqr64 = tSqr;
-		enPassantState = 128;
-		enPassantState = tSqr;
+		enPassantState = m_enPassant64;
 		return true;
 	}
 
@@ -461,9 +459,9 @@ bool Board::UnmakeMove()
 
 	// should always set enPassantSqr if there was one
 	if(prevLast->getEnPassantState() != 0x0)
-	{
-		m_enPassantTargetSqr64 = mv->toSqr;
-		m_enPassant64 = prevLast->getEnPassantState() & 64;
+	{	
+		m_enPassantTargetSqr64 = m_lastNode == nullptr ? 0 : m_lastNode->getMove()->toSqr;
+		m_enPassant64 = m_lastNode == nullptr ? 0 : m_lastNode->getEnPassantState();
 	}
 	return true;
 }

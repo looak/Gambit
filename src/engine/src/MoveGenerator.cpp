@@ -57,8 +57,11 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 				byte prom = 0;
 				if (promotion != 0x00)
 					prom = PieceDef::converter(QUEEN);
-				if(!board->MakeMove(piece->Square8x8, sqr, prom))
+				if (!board->MakeMove(piece->Square8x8, sqr, prom))
+				{
 					std::cout << "[    OUTPUT] MoveGen::MakeMove failed at index = " << debugInd << std::endl;
+					break;
+				}
 
 				// populate Move flags
 				auto mvNode = board->GetLastMove();
@@ -72,7 +75,7 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 					newMove.flags |= 8;
 				//if(mvNode->getParent() != nullptr)
 				{
-					if (mvNode->getEnPassantState() == mvNode->getMove()->toSqr)
+					if (mvNode->getEnPassantState() & 128)
 						newMove.flags |= 4;
 				}
 

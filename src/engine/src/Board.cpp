@@ -197,7 +197,7 @@ Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
 	byte tRookSqr = tFile + (sRank * 8);
 	
 	// make moves
-	m_bitboard.MakeMove(tRookSqr, set, ROOK, tRookSqr);
+	m_bitboard.MakeMove(sRookSqr, set, ROOK, tRookSqr);
 	m_material[set].MakeMove(sRookSqr, ROOK, tRookSqr, m_boardLookup[tRookSqr]);
 	
 	m_board[m_boardLookup[tRookSqr]] = m_board[m_boardLookup[sRookSqr]];

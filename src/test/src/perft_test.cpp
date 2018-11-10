@@ -213,7 +213,7 @@ TEST_F(PerftFixture, PositionTwo_DepthTwo)
 
     for(std::map<Move, int>::iterator it = division.begin(); it != division.end(); ++it)
     {
-        std::cerr << "[          ] " << it->first.str << " " << it->second << std::endl;
+        std::cerr << "[          ] " << std::string(&it->first.str[0], 4) << " " << it->second << std::endl;
     }
 }
 

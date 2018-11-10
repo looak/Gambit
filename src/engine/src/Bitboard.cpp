@@ -1,5 +1,6 @@
 #include "Bitboard.h"
 #include "PieceDef.h"
+#include <iostream>
 
 using namespace GambitEngine;
 
@@ -46,11 +47,10 @@ Bitboard::PlacePiece(SET set, PIECE piece, byte file, byte rank)
 
 bool Bitboard::PlacePiece(SET set, PIECE piece, byte tSqr)
 {
-	m_material[set][piece] |= INT64_C(1) << tSqr;
-
-	m_materialCombined[set] = ~universe;
-	m_combMaterialDirty[set] = true;
-	m_attackedDirty[set] = true;
+	u64 mask = UINT64_C(1) << tSqr;
+	m_material[set][piece] |= mask;
+	
+	MarkDirty(set);
 	return true;
 }
 
@@ -58,6 +58,9 @@ bool
 Bitboard::CapturePiece(SET set, PIECE piece, byte tSqr)
 {
 	u64 mask = UINT64_C(1) << tSqr;
+
+	if((m_material[set][piece] & mask) == 0)
+		std::cout << "[    OUTPUT] Bitboard::CapturePiece failed to capture at: " << tSqr << std::endl;
 	m_material[set][piece] ^= mask;
 
 	MarkDirty(set);
@@ -69,6 +72,9 @@ Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
 {
 	u64 sMask = UINT64_C(1) << sSqr;
 	u64 tMask = UINT64_C(1) << tSqr;
+	
+	if ((m_material[set][piece] & sMask) == 0)
+		std::cout << "[    OUTPUT] Bitboard::MakeMove failed to make move from: " << sSqr << std::endl;
 
 	m_material[set][piece] ^= sMask;
 	m_material[set][piece] |= tMask;
@@ -81,6 +87,9 @@ bool
 Bitboard::Promote(SET set, PIECE toPiece, byte sqr)
 {
 	u64 mask = UINT64_C(1) << sqr;
+	if ((m_material[set][PAWN] & mask) == 0)
+		std::cout << "[    OUTPUT] Bitboard::Promote failed to promote pawn at: " << sqr << std::endl;
+
 	m_material[set][PAWN] ^= mask;
 	m_material[set][toPiece] |= mask;
 
@@ -92,7 +101,10 @@ bool
 Bitboard::Demote(SET set, byte sqr)
 {
 	u64 mask = UINT64_C(1) << sqr;
-	m_material[set][PAWN] ^= mask;
+	if ((m_material[set][PAWN] & mask) == 0)
+		std::cout << "[    OUTPUT] Bitboard::Demote failed to undo promotion at: " << sqr << std::endl;
+
+	m_material[set][PAWN] |= mask;
 
 	for (int i = QUEEN; i > PAWN; i--)
 	{

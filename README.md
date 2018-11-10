@@ -5,8 +5,6 @@
 TODO								
 =====
 	[ ] MoveGenerator legality validation without by make/unmake?
-	[ ] Why are we getting out of sync in our bitboard
-		[ ] how come it is giving us invalid moves when they are perfectly valid?
 	[ ] Check move counter for more perftests.
 		[ ] Castle counting isn't correct. it's checking state, and state also changes when king moves.
 	[/] MoveGenerator, count move types
@@ -27,6 +25,19 @@ TODO
 
 Dev Blog
 =====
+### (2018-11-10)
+#### How could I have missed this?
+	[x] Why are we getting out of sync in our bitboard
+		[x] how come it is giving us invalid moves when they are perfectly valid?
+
+	Well I figured out why it "gets out of sync", it really doesn't. I put it out of sync by not undoing
+	EnPassant Take correctly. I've found that I'm not placing back the pawn on the correct square after
+	being taken by enPassant.
+
+	I thought I had tests for this but apparently not. Now I do though and it is failing, finally.
+
+	Now how to fix this...
+
 ### (2018-11-07)
 #### Good news today!
 	Maybe I'll share it at some later point, exciting stuff though! :)

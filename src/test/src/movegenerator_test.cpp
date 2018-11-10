@@ -86,5 +86,41 @@ TEST_F(MoveGeneratorFixture, EnPassant)
     EXPECT_EQ(counter.EnPassants, 1);
 }
 
+TEST_F(MoveGeneratorFixture, EnPassant_Horse_GetMoves)
+{
+	char inputFen[] = "4k3/8/8/8/1p6/8/PN6/4K3 w - -";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+	auto mvs = movGen.getMoves(WHITE, &board, count, false);
+	EXPECT_EQ(count, 11);
+
+	board.MakeMove('a', 2, 'a', 4);
+
+	count = 0;
+	mvs = movGen.getMoves(BLACK, &board, count, false);
+	EXPECT_EQ(count, 7);
+	MoveGenerator::Counter counter;
+	movGen.CountMoves(mvs, counter);
+	EXPECT_EQ(counter.Captures, 1);
+	EXPECT_EQ(counter.EnPassants, 1);
+}
+
+
+TEST_F(MoveGeneratorFixture, EnPassant_GetMoves)
+{
+	char inputFen[] = "4k3/8/8/8/1p6/8/PN6/4K3 w - -";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+	auto mvs = movGen.getMoves(WHITE, &board, count, false);
+	EXPECT_EQ(count, 11);
+
+	for (unsigned int i = 0; i < mvs.size(); i++)
+	{
+		auto move = mvs[i];
+		board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
+
+		u32 scndCount = 0;
+		movGen.getMoves(BLACK, &board, scndCount);
+		board.UnmakeMove();
+	}
+}
 }
 

@@ -104,13 +104,37 @@ TEST_F(MoveGeneratorFixture, EnPassant_Horse_GetMoves)
 	EXPECT_EQ(counter.EnPassants, 1);
 }
 
-
 TEST_F(MoveGeneratorFixture, EnPassant_GetMoves)
 {
 	char inputFen[] = "4k3/8/8/8/1p6/8/PN6/4K3 w - -";
 	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
 	auto mvs = movGen.getMoves(WHITE, &board, count, false);
 	EXPECT_EQ(count, 11);
+
+	for (unsigned int i = 0; i < mvs.size(); i++)
+	{
+		auto move = mvs[i];
+		board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
+
+		u32 scndCount = 0;
+		movGen.getMoves(BLACK, &board, scndCount);
+		board.UnmakeMove();
+	}
+}
+
+TEST_F(MoveGeneratorFixture, Castling_Moves)
+{
+	char inputFen[] = "r3k2r/8/8/8/8/8/8/R3K2R w KQkq -";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+	auto mvs = movGen.getMoves(WHITE, &board, count, false);
+	
+	MoveGenerator::Counter counter;
+	movGen.CountMoves(mvs, counter);
+
+	EXPECT_EQ(count, 26);
+	EXPECT_EQ(counter.Checks, 2);
+	EXPECT_EQ(counter.Castles, 2);
+	EXPECT_EQ(counter.Captures, 2);
 
 	for (unsigned int i = 0; i < mvs.size(); i++)
 	{

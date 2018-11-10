@@ -428,8 +428,9 @@ bool Board::UnmakeMove()
 
 		m_board[sSqr120] = newBoardByte;
 		const Piece* pP = m_material[m_lastNode->getSet()].GetPiece(mv->toSqr);
+		byte pieceType = pP->Type;
 		m_material[m_lastNode->getSet()].DemotePiece((PIECE)pP->Type, mv->toSqr);
-		m_bitboard.Demote(m_lastNode->getSet(), mv->toSqr);
+		m_bitboard.Demote(m_lastNode->getSet(), (PIECE)pieceType, mv->toSqr);
 	}
 
 	m_bitboard.MakeMove(mv->toSqr, m_lastNode->getSet(), m_lastNode->getPiece(), mv->fromSqr);
@@ -452,10 +453,14 @@ bool Board::UnmakeMove()
 		UnmakeMove();
 	else if (prevLast->getCapturedPiece() & CAPTURE)
 	{
+		byte sqrToPlace = mv->toSqr;
+		if(prevLast->getEnPassantState() & 128)
+			sqrToPlace = m_lastNode->getMove()->toSqr;
+
 		byte piece = prevLast->getCapturedPiece() & 7;
 		SET opSet = (SET)!prevLast->getSet();
-		m_material[opSet].UncapturePiece((PIECE)piece, mv->toSqr);
-		PlacePiece(opSet, (PIECE)piece, mv->toSqr);
+		m_material[opSet].UncapturePiece((PIECE)piece, sqrToPlace);
+		PlacePiece(opSet, (PIECE)piece, sqrToPlace);
 	}
 
 	// should always set enPassantSqr if there was one

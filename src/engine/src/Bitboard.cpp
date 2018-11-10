@@ -98,22 +98,14 @@ Bitboard::Promote(SET set, PIECE toPiece, byte sqr)
 }
 
 bool
-Bitboard::Demote(SET set, byte sqr)
+Bitboard::Demote(SET set, PIECE fromPiece, byte sqr)
 {
 	u64 mask = UINT64_C(1) << sqr;
-	if ((m_material[set][PAWN] & mask) == 0)
+	if ((m_material[set][fromPiece] & mask) == 0)
 		std::cout << "[    OUTPUT] Bitboard::Demote failed to undo promotion at: " << sqr << std::endl;
 
+	m_material[set][fromPiece] ^= mask;
 	m_material[set][PAWN] |= mask;
-
-	for (int i = QUEEN; i > PAWN; i--)
-	{
-		if(m_material[set][i] & mask)
-		{
-			m_material[set][i] ^= mask;
-			break;
-		}
-	}
 
 	MarkDirty(set);
 	return true;

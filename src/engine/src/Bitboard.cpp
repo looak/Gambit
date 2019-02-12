@@ -166,19 +166,19 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 	if (piece == KING && !(sqbb & Attacked((SET)seti)))
 		retVal |= AvailableCastling(set, castling);
 
-	retVal |= AvailableMovesSimple(set, piece, square, mvMod, enPassant);
+	retVal |= AvailableMovesSimple(set, piece, static_cast<byte>(square), static_cast<byte>(mvMod), enPassant);
 
 	if (piece == PAWN)
 	{
 		// white promotion
 		u64 mask = 0xff00000000000000;
 		if (retVal & mask)
-			promotion = square;
+			promotion = static_cast<byte>(square);
 
 		// black promotion
 		mask = 0xff;
 		if (retVal & mask)
-			promotion = square;
+			promotion = static_cast<byte>(square);
 	}
 
 	return retVal;

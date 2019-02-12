@@ -54,7 +54,7 @@ Material::Material(const Material & _src)
 		m_capturedMaterialGrid[i] = _src.m_capturedMaterialGrid[i];
 	}
 
-	for (int i = 0; i < _src.m_material.size(); i++)
+	for (size_t i = 0; i < _src.m_material.size(); i++)
 		m_material.push_back(_src.m_material.at(i));
 
 	m_king = nullptr;

@@ -1,6 +1,5 @@
 #include "AlgebraicNotation.h"
 
-
 using namespace GambitEngine;
 
 char valueToPiece(byte value)

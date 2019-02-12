@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 ////////////////////////////////////////////////////////////////
-#include "../../engine/src/Board.h"
-#include "../../engine/src/Material.h"
-#include "../../engine/src/MoveGenerator.h"
+#include "Board.h"
+#include "Material.h"
+#include "MoveGenerator.h"
 ////////////////////////////////////////////////////////////////
 using namespace GambitEngine;
 

@@ -8,6 +8,8 @@ project(${PROJECT_NAME} C CXX)
 set(GambitCLI_SCR
         main.cpp)
 
+
+include_directories(../engine/inc/)
 add_executable(${PROJECT_NAME} ${GambitCLI_SCR})
 target_link_libraries(${PROJECT_NAME} GambitEngine)
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)

@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 ////////////////////////////////////////////////////////////////
 
-#include "../../engine/src/Board.h"
-#include "../../engine/src/GambitEngine.h"
+#include "Board.h"
+#include "GambitEngine.h"
 ////////////////////////////////////////////////////////////////
 
 namespace GambitTest

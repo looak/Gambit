@@ -19,6 +19,7 @@ project(${PROJECT_NAME})
 add_subdirectory(lib/googletest)
 
 include_directories(lib/googletest/googletest/include)
+include_directories(../engine/inc)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} GambitEngine gtest gtest_main)

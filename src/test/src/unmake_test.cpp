@@ -149,6 +149,10 @@ TEST_F(UnmakeFixture, CapturePromote)
 {
 	board.PlacePiece(BLACK, BISHOP, 'f', 8);
 	board.PlacePiece(WHITE, PAWN, 'e', 7);
+
+	EXPECT_EQ(0x01, board.GetValue('e', 7));
+	EXPECT_EQ(0x83, board.GetValue('f', 8));
+
 	EXPECT_TRUE(MakeMove("e7f8q"));
 	EXPECT_EQ(0x0, board.GetValue('e', 7));
 	EXPECT_EQ(0x05, board.GetValue('f', 8));
@@ -157,6 +161,64 @@ TEST_F(UnmakeFixture, CapturePromote)
 
 	EXPECT_EQ(0x01, board.GetValue('e', 7));
 	EXPECT_EQ(0x83, board.GetValue('f', 8));
+}
+
+TEST_F(UnmakeFixture, CapturePromote_Black)
+{
+	board.PlacePiece(BLACK, PAWN, 'b', 2);
+	board.PlacePiece(WHITE, ROOK, 'a', 1);
+
+	EXPECT_EQ(0x04, board.GetValue('a', 1));
+	EXPECT_EQ(0x81, board.GetValue('b', 2));
+	
+	EXPECT_TRUE(MakeMove("b2a1q"));
+
+	EXPECT_EQ(0x0, board.GetValue('b', 2));
+	EXPECT_EQ(0x85, board.GetValue('a', 1));
+
+	EXPECT_TRUE(board.UnmakeMove());
+
+	EXPECT_EQ(0x04, board.GetValue('a', 1));
+	EXPECT_EQ(0x81, board.GetValue('b', 2));
+	
+	EXPECT_TRUE(MakeMove("a1d1"));
+	EXPECT_TRUE(MakeMove("b2b1q"));
+	EXPECT_TRUE(MakeMove("d1b1"));
+
+	EXPECT_TRUE(board.UnmakeMove());
+	EXPECT_TRUE(board.UnmakeMove());
+	EXPECT_TRUE(board.UnmakeMove());
+	
+	EXPECT_TRUE(MakeMove("b2a1q"));
+	
+	EXPECT_EQ(0x0, board.GetValue('b', 2));
+	EXPECT_EQ(0x85, board.GetValue('a', 1));
+
+	EXPECT_TRUE(board.UnmakeMove());
+	EXPECT_EQ(0x04, board.GetValue('a', 1));
+	EXPECT_EQ(0x81, board.GetValue('b', 2));	
+}
+
+TEST_F(UnmakeFixture, CapturePromote_Black_Caputre_Unmake)
+{
+	board.PlacePiece(BLACK, PAWN, 'b', 2);
+	board.PlacePiece(WHITE, ROOK, 'a', 1);
+	board.PlacePiece(WHITE, ROOK, 'f', 1);
+	
+	EXPECT_TRUE(MakeMove("b2a1q"));
+	EXPECT_TRUE(MakeMove("f1a1"));
+
+	EXPECT_EQ(0x0, board.GetValue('b', 2));
+	EXPECT_EQ(0x04, board.GetValue('a', 1));
+
+	EXPECT_TRUE(board.UnmakeMove());
+	EXPECT_TRUE(board.UnmakeMove());
+	
+	EXPECT_EQ(0x04, board.GetValue('a', 1));
+	EXPECT_EQ(0x04, board.GetValue('f', 1));
+	EXPECT_EQ(0x81, board.GetValue('b', 2));
+	
+	EXPECT_TRUE(MakeMove("a1d1"));
 }
 
 TEST_F(UnmakeFixture, EnPassant)

@@ -150,22 +150,15 @@ Board::Castling(byte sSqr, SET set, PIECE piece, byte tSqr)
 	byte prevCastleState = m_castleState;
 
 	if (piece == ROOK)
-	{
-		// fetch rook square;
-		byte rookByte = m_board[m_boardLookup[sSqr]];
-		if (!(rookByte & 64))
-		{
-			rookByte |= 64; // set has moved;
-			byte sFile = sSqr % 8;
-			if(sFile == 7) // king side;
-				m_castleState ^= 1 + (set * 3);
-			else // assume we're moving queen side rook
-				m_castleState ^= 2 + (set * 6);
-
-			m_board[m_boardLookup[sSqr]] = rookByte;
-		}
+	{ 
+		// remove castling ability if we move the rook out of origin
+		byte sFile = sSqr % 8;
+		if(sFile == 7)  // king side;
+			m_castleState &= ~(1 + (set * 3));
+		else if(sFile == 0) // queen side 
+			m_castleState &= ~(2 + (set * 6));
 	}
-	// was our piece a king?
+
 	if (piece != KING)
 		return false;
 	

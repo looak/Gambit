@@ -87,7 +87,9 @@ Bitboard::MakeMove(Move move, SET set, PIECE piece)
 bool 
 Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
 {
-	Move move{ sSqr, tSqr };
+	Move move;
+	move.fromSqr = sSqr;
+	move.toSqr = tSqr;
 	return MakeMove(move, set, piece);
 }
 

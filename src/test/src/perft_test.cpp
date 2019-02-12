@@ -42,8 +42,30 @@ public:
         return retValue;
 	}
 
+    MoveGenerator::Counter
+	GenerateMovesTwo(Board& board, SET set, int depth, u32& count)
+    {
+        MoveGenerator::Counter retValue;
+        auto mvs = mv.getMoves(set, &board, count);
+        mv.CountMoves(mvs, retValue);
+
+		count = 0;
+		if (depth > 0)
+		{
+			for (unsigned int i = 0; i < mvs.size(); i++)
+			{
+				auto move = mvs[i];
+				board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
+
+				retValue += GenerateMoves(board, (SET)!(int)set, depth-1, count);
+				board.UnmakeMove();
+			}
+		}
+        return retValue;
+	}
+
     std::map<Move, int>
-    GenerateMovesDivide(Board& board, SET set, int depth)
+    GenerateMovesDivide(Board& board, SET set, int depth, int splitDepth)
     {
         std::map<Move, int> retValue;
         u32 count = 0;        
@@ -57,7 +79,7 @@ public:
 				auto move = mvs[i];
 				board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
                 Notation::ConvertMove(move);
-		        GenerateMoves(board, (SET)!(int)set, depth-1, count);
+		        GenerateMovesTwo(board, (SET)!(int)set, splitDepth, count);
                 retValue[move] = count;
 				board.UnmakeMove();
 			}
@@ -203,18 +225,18 @@ TEST_F(PerftFixture, PositionTwo_DepthTwo)
 
 	u32 count = 0;
     counter = GenerateMoves(board, WHITE, 1, count);
-    auto division = GenerateMovesDivide(board, WHITE, 1);
+   // auto division = GenerateMovesDivide(board, WHITE, 1, 1);
 	EXPECT_EQ(2087, count);
 	EXPECT_EQ(counter.Captures, 359);
     EXPECT_EQ(counter.Promotions, 0);
 	EXPECT_EQ(counter.Checks, 3);
     EXPECT_EQ(counter.Castles, 93);
     EXPECT_EQ(counter.EnPassants, 1);
-
+/*
     for(std::map<Move, int>::iterator it = division.begin(); it != division.end(); ++it)
     {
         std::cerr << "[          ] " << std::string(&it->first.str[0], 4) << " " << it->second << std::endl;
-    }
+    }*/
 }
 
 TEST_F(PerftFixture, PositionTwo_DepthThree)
@@ -345,6 +367,40 @@ TEST_F(PerftFixture, Position_Four)
 	EXPECT_EQ(counter.Captures, 87);
 }
 
+TEST_F(PerftFixture, Position_Four_Test)
+{
+	GambitEngine::Board board;
+	char inputFen[] = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+    GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+
+    u32 count = 0;
+    GambitEngine::MoveGenerator movGen;
+    auto mvs = movGen.getMoves(WHITE, &board, count);
+    EXPECT_EQ(count, 6);
+	count = 0;
+
+	MoveGenerator::Counter counter;
+    for (unsigned int i = 0; i < mvs.size(); i ++)
+    {
+        auto move = mvs[i];
+        board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
+        auto tmpMvs = movGen.getMoves(BLACK, &board, count);
+		movGen.CountMoves(tmpMvs, counter);
+        board.UnmakeMove();
+    }
+    EXPECT_EQ(count, 264);
+	EXPECT_EQ(counter.Promotions, 48);
+	EXPECT_EQ(counter.Checks, 10);
+	EXPECT_EQ(counter.Castles, 6);
+	EXPECT_EQ(counter.Captures, 87);
+
+	board.MakeMove(5,13);
+	count = 0;
+	GenerateMoves(board, BLACK, 1, count);
+
+	std::cout << count;	
+}
+
 TEST_F(PerftFixture, Position_Four_DepthThree)
 {
 	GambitEngine::Board board;
@@ -360,6 +416,19 @@ TEST_F(PerftFixture, Position_Four_DepthThree)
 	EXPECT_EQ(counter.Checks, 48);
 	EXPECT_EQ(counter.CheckMates, 22);
 	EXPECT_EQ(9737, count);
+}
+
+TEST_F(PerftFixture, Position_Four_DepthThree_Divide)
+{
+	GambitEngine::Board board;
+	char inputFen[] = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+	
+    auto division = GenerateMovesDivide(board, WHITE, 1, 1);
+	for(std::map<Move, int>::iterator it = division.begin(); it != division.end(); ++it)
+    {
+        std::cerr << "[          ] " << std::string(&it->first.str[0], 4) << " " << it->second << std::endl;
+    }
 }
 
 TEST_F(PerftFixture, Position_Four_DepthFour)

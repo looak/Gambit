@@ -133,6 +133,8 @@ MoveGenerator::CountMoves(const std::vector<Move> moves, MoveGenerator::Counter&
 		if (moves[i].flags & 128)
 			out.CheckMates++;
 	}
+	
+	out.Moves = moves.size();
 }
 
 int 

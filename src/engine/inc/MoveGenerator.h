@@ -23,6 +23,7 @@ public:
 			this->Castles 		+= rhs.Castles;
 			this->Checks 		+= rhs.Checks;
 			this->CheckMates 	+= rhs.CheckMates;
+			this->Moves 		+= rhs.Moves;
 		}
 		int Captures = 0;
 		int Promotions = 0;
@@ -30,6 +31,7 @@ public:
 		int Castles = 0;
 		int Checks = 0;
 		int CheckMates = 0;
+		int Moves = 0;
 	};
 	
 	MoveGenerator();

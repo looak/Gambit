@@ -63,6 +63,26 @@ TEST_F(UnmakeFixture, Pawn_Three_Moves)
 	EXPECT_EQ(0x01, board.GetValue('e', 3));
 }
 
+TEST_F(UnmakeFixture, Black_InCheck)
+{
+	board.PlacePiece(BLACK, KING, 'e', 8);
+	board.PlacePiece(BLACK, ROOK, 'd', 7);
+	board.PlacePiece(WHITE, ROOK, 'd', 2);
+	board.PlacePiece(WHITE, KING, 'e', 1);
+
+	EXPECT_FALSE(board.Check(WHITE));
+	EXPECT_FALSE(board.Check(BLACK));
+
+	MakeMove("d2e2");
+	EXPECT_TRUE(board.Check(BLACK));
+
+	MakeMove("d7e7");
+	EXPECT_FALSE(board.Check(BLACK));
+
+	board.UnmakeMove();
+	EXPECT_TRUE(board.Check(BLACK));
+}
+
 TEST_F(UnmakeFixture, Castling)
 {
 	board.SetCastlingRights(15); // all available

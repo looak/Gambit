@@ -1,9 +1,12 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #include "GambitEngine.h"
 #include "FENParser.h"
 #include "MoveGenerator.h"
+
+#include "commands.h"
 
 using namespace GambitEngine;
 
@@ -100,57 +103,50 @@ void writeBitboard(const u64 board)
 	}
 }
 
-/*
-std::map<Move, int>
-GenerateMovesDivide(Board& board, SET set, int depth)
-{
-	std::map<Move, int> retValue;
-	u32 count = 0;
-	auto mvs = mv.getMoves(set, &board, count);
-
-	if (depth > 0)
-	{
-		for (unsigned int i = 0; i < mvs.size(); i++)
-		{
-			count = 0;
-			auto move = mvs[i];
-			board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
-			Notation::ConvertMove(move);
-			GenerateMoves(board, (SET)!(int)set, depth - 1, count);
-			retValue[move] = count;
-			board.UnmakeMove();
-		}
-	}
-	return retValue;
-}*/
 
 int main()
-{
-	//char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-	//char inputFen[] = "8/8/8/8/4N3/8/8/3kKN2 w - - 0 1";
-	//char inputFen[] = "Q7/3R4/4B3/8/6N1/8/2K5/8 w - - 0 1";
-	//char inputFen[] = "8/8/8/8/8/8/8/4K3 w - - 0 1";
-	//char inputFen[] = "8/8/8/8/1R3r2/8/8/8 w - - 0 1";
-	//char inputFen[] = "8/8/8/8/1Q6/8/8/8 w - - 0 1";
-	//char inputFen[] = "8/8/8/8/8/8/8/R3K2R w KQ -";
-	//char inputFen[] = "8/8/8/4Pp2/8/8/8/8 w KQ f6 0 1";
-	//char inputFen[] = "8/1P6/8/8/8/8/8/8 w KQ f6 0 1";
-//	char inputFen[] = "4k2r/8/8/8/8/8/8/8 w kq - 0 1";
-	//char inputFen[] = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"; // position five
-//	uint8_t length = sizeof(inputFen);
-	
+{	
 	GambitEngine::Board board;
 	GambitEngine::MoveGenerator mvGen;
 
-//	GambitEngine::FENParser::Deserialize(inputFen, length, board, nullptr);
 
 	while (1)
-	{		
+	{	
 		writeBoard(board);
 
-		std::cout << std::endl;
+		std::cout << std::endl << " Gambit:" << std::endl << " ";
+		std::string buffer = "";
+		std::getline(std::cin, buffer);
+		std::istringstream command(buffer);
+		std::vector<std::string> tokens;
+		std::string token;
 
-		auto pieces = board.GetPieces(BLACK);
+		while(std::getline(command, token, ':'))
+		{
+			tokens.push_back(token);
+		}
+		
+		if(options.find(tokens.front()) != options.end())
+		{
+			if(tokens.back() == tokens.front())
+				options.at(tokens.front()).first("", board);
+			else
+				options.at(tokens.front()).first(tokens.back(), board);
+		}
+		else
+		{
+			std::cout << " > Invalid command: " << tokens.front() << std::endl;
+			options.at("help").first("", board);
+		}
+		
+
+	}
+
+    return 0;
+}
+
+/*
+auto pieces = board.GetPieces(BLACK);
 		//u64 avaMoves = ~universe;
 		byte promotion = 0x00;
 		/*for (int i = pieces.size() - 1; i >= 0; --i)
@@ -160,7 +156,7 @@ int main()
 
 			std::cout << std::endl;
 		//	writeBitboard(avaMoves);
-		}*/
+		}* /
 
 		std::string buffer = "";
 		std::getline(std::cin, buffer);
@@ -203,8 +199,4 @@ int main()
 			promotion = buffer[4] == 0 ? 0 : buffer[4];
 			board.MakeMove(buffer[0], buffer[1]-'0', buffer[2], buffer[3]-'0', promotion);
 		}
-	}
-
-    return 0;
-}
-
+*/

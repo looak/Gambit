@@ -6,7 +6,9 @@ set(PROJECT_NAME GambitCLI)
 project(${PROJECT_NAME} C CXX)
 
 set(GambitCLI_SCR
-        main.cpp)
+        main.cpp
+        commands.h
+        commands.cpp)
 
 
 include_directories(../engine/inc/)

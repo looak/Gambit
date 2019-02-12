@@ -9,6 +9,8 @@
 namespace GambitEngine
 {
 
+struct Move;
+
 // reference: https://en.wikipedia.org/wiki/Algebraic_notation_(chess)
 class Notation
 {

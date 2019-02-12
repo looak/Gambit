@@ -1,6 +1,7 @@
 #pragma once
 #include "typedef.h"
 #include "Material.h"
+#include "MoveNode.h"
 
 namespace GambitEngine
 {
@@ -38,6 +39,7 @@ public:
 	bool PlacePiece(SET set, PIECE piece, byte tSqr);
 	bool CapturePiece(SET set, PIECE piece, byte tSqr);
 	bool MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr);
+	bool MakeMove(Move move, SET set, PIECE piece);
 	bool Promote(SET set, PIECE toPiece, byte sqr);
 	bool Demote(SET set, PIECE fromPiece, byte sqr);
 

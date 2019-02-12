@@ -42,6 +42,19 @@ struct Move
 	{
         return fromSqr < rhs.fromSqr || (fromSqr == rhs.fromSqr && toSqr < rhs.toSqr);
     }
+
+	std::string toString()
+	{
+		byte sFile = fromSqr % 8;
+		byte sRank = fromSqr / 8;
+		str[0] = sFile + 'a';
+		str[1] = sRank + '1';
+		byte tFile = toSqr % 8;
+		byte tRank = toSqr / 8;
+		str[2] = tFile + 'a';
+		str[3] = tRank + '1';
+		return std::string(str);
+	}
 };
 
 class MoveNode

@@ -272,6 +272,24 @@ TEST_F(PerftFixture, Position_Three_Depth_Three)
     EXPECT_EQ(counter.EnPassants, 2);
 }
 
+TEST_F(PerftFixture, Position_Three_Depth_Four)
+{
+	GambitEngine::Board board;
+	MoveGenerator::Counter counter;
+	char inputFen[] = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+
+	u32 count = 0;
+	counter = GenerateMoves(board, WHITE, 3, count);
+	EXPECT_EQ(46255, count);
+	EXPECT_EQ(counter.Captures, 3572);
+	EXPECT_EQ(counter.Promotions, 0);
+	EXPECT_EQ(counter.Checks, 1959);
+	EXPECT_EQ(counter.CheckMates, 17);
+	EXPECT_EQ(counter.Castles, 0);
+	EXPECT_EQ(counter.EnPassants, 125);
+}
+
 /*
 Depth	Nodes		Captures	E.p.	Castles		Promotions	Checks		Checkmates
 1		6			0			0		0			0			0			0
@@ -315,23 +333,34 @@ TEST_F(PerftFixture, Position_Four_DepthThree)
 	char inputFen[] = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
 	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
 
+	MoveGenerator::Counter counter;
 	u32 count = 0;
-	GenerateMoves(board, WHITE, 2, count);
-
+	counter = GenerateMoves(board, WHITE, 2, count);
+	EXPECT_EQ(counter.Captures, 1108);
+	EXPECT_EQ(counter.Castles, 6);
+	EXPECT_EQ(counter.Promotions, 168);
+	EXPECT_EQ(counter.Checks, 48);
+	EXPECT_EQ(counter.CheckMates, 22);
 	EXPECT_EQ(9737, count);
 }
-/*
+
 TEST_F(PerftFixture, Position_Four_DepthFour)
 {
 	GambitEngine::Board board;
 	char inputFen[] = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
 	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
 
+	MoveGenerator::Counter counter;
 	u32 count = 0;
-	GenerateMoves(board, WHITE, 3, count);
+	counter = GenerateMoves(board, WHITE, 3, count);
 
+	EXPECT_EQ(counter.Captures, 132501);
+	EXPECT_EQ(counter.Castles, 7801);
+	EXPECT_EQ(counter.Promotions, 60200);
+	EXPECT_EQ(counter.Checks, 15540);
+	EXPECT_EQ(counter.CheckMates, 27);
 	EXPECT_EQ(432070, count);
-}*/
+}
 
 /* Position Five Expected Results
  * Depth Nodes
@@ -441,6 +470,30 @@ TEST_F(PerftFixture, PositionFifteen_DepthTwo)
 	GenerateMoves(board, WHITE, 1, count);
 	EXPECT_EQ(520, count);
 }
+
+TEST_F(PerftFixture, PositionBishopRookKing_DepthFive)
+{
+	GambitEngine::Board board;
+	char inputFen[] = "3b1k2/5r2/8/8/8/8/2R5/4BK2 w - -";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+
+	u32 count = 0;
+	GenerateMoves(board, WHITE, 1, count);
+	EXPECT_EQ(116, count); 
+	
+	count = 0;
+	GenerateMoves(board, WHITE, 2, count);
+	EXPECT_EQ(2254, count);
+
+	count = 0;
+	GenerateMoves(board, WHITE, 3, count);
+	EXPECT_EQ(47566, count);
+	/*
+	count = 0;
+	GenerateMoves(board, WHITE, 4, count);
+	EXPECT_EQ(1000647, count);*/
+}
+
 
 ////////////////////////////////////////////////////////////////
 }

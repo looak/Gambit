@@ -44,6 +44,7 @@ void writeBoard(const GambitEngine::Board& board)
 {
 	for (byte rank = 8; rank >= 1; rank--)
 	{
+		std::cout << " " << (int)rank << "  ";
 		for (byte file = 'a'; file <= 'h'; file++)
 		{
 			auto tmp = board.GetValue(file, rank);
@@ -52,6 +53,8 @@ void writeBoard(const GambitEngine::Board& board)
 		}
 		std::cout << std::endl;
 	}
+	std::cout << std::endl;
+	std::cout << "     A  B  C  D  E  F  G  H";
 }
 
 void writeMoves(std::vector<GambitEngine::Move> moves)
@@ -97,7 +100,29 @@ void writeBitboard(const u64 board)
 	}
 }
 
+/*
+std::map<Move, int>
+GenerateMovesDivide(Board& board, SET set, int depth)
+{
+	std::map<Move, int> retValue;
+	u32 count = 0;
+	auto mvs = mv.getMoves(set, &board, count);
 
+	if (depth > 0)
+	{
+		for (unsigned int i = 0; i < mvs.size(); i++)
+		{
+			count = 0;
+			auto move = mvs[i];
+			board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
+			Notation::ConvertMove(move);
+			GenerateMoves(board, (SET)!(int)set, depth - 1, count);
+			retValue[move] = count;
+			board.UnmakeMove();
+		}
+	}
+	return retValue;
+}*/
 
 int main()
 {
@@ -168,6 +193,10 @@ int main()
 		else if (buffer == "legal")
 		{
 			std::cout << "Legal moves for White:" << std::endl;
+		}
+		else if (buffer == "divide")
+		{
+
 		}
 		else
 		{

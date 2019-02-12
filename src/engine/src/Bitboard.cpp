@@ -1,6 +1,7 @@
 #include "Bitboard.h"
 #include "PieceDef.h"
 #include <iostream>
+#include "MoveNode.h"
 
 using namespace GambitEngine;
 
@@ -68,19 +69,26 @@ Bitboard::CapturePiece(SET set, PIECE piece, byte tSqr)
 }
 
 bool 
-Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
+Bitboard::MakeMove(Move move, SET set, PIECE piece)
 {
-	u64 sMask = UINT64_C(1) << sSqr;
-	u64 tMask = UINT64_C(1) << tSqr;
-	
+	u64 sMask = UINT64_C(1) << move.fromSqr;
+	u64 tMask = UINT64_C(1) << move.toSqr;
+
 	if ((m_material[set][piece] & sMask) == 0)
-		std::cout << "[    OUTPUT] Bitboard::MakeMove failed to make move from: " << sSqr << std::endl;
+		std::cout << "[    OUTPUT] Bitboard::MakeMove failed to move " << PieceDef::converter(piece) << ": " << move.toString().c_str() << std::endl;
 
 	m_material[set][piece] ^= sMask;
 	m_material[set][piece] |= tMask;
 
 	MarkDirty(set);
 	return true;
+}
+
+bool 
+Bitboard::MakeMove(byte sSqr, SET set, PIECE piece, byte tSqr)
+{
+	Move move{ sSqr, tSqr };
+	return MakeMove(move, set, piece);
 }
 
 bool 

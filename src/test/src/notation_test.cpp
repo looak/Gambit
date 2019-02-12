@@ -1,9 +1,9 @@
 #include "gtest/gtest.h"
 ////////////////////////////////////////////////////////////////
 
-#include "../../engine/src/Board.h"
-#include "../../engine/src/AlgebraicNotation.h"
-#include "../../engine/src/MoveGenerator.h"
+#include "Board.h"
+#include "AlgebraicNotation.h"
+#include "MoveGenerator.h"
 ////////////////////////////////////////////////////////////////
 using namespace GambitEngine;
 

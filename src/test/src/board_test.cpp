@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 ////////////////////////////////////////////////////////////////
 
-#include "../../engine/src/Board.h"
-#include "../../engine/src/FENParser.h"
+#include "Board.h"
+#include "FENParser.h"
 ////////////////////////////////////////////////////////////////
 using namespace GambitEngine;
 

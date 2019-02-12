@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
 ////////////////////////////////////////////////////////////////
 
-#include "../../engine/src/Board.h"
-#include "../../engine/src/GambitEngine.h"
-#include "../../engine/src/MoveGenerator.h"
-#include "../../engine/src/AlgebraicNotation.h"
+#include "Board.h"
+#include "GambitEngine.h"
+#include "MoveGenerator.h"
+#include "AlgebraicNotation.h"
 
 #include <map>
 ////////////////////////////////////////////////////////////////

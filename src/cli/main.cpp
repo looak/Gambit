@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
 
-#include "../engine/src/GambitEngine.h"
-#include "../engine/src/FENParser.h"
-#include "../engine/src/MoveGenerator.h"
+#include "GambitEngine.h"
+#include "FENParser.h"
+#include "MoveGenerator.h"
 
 using namespace GambitEngine;
 

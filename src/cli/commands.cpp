@@ -129,9 +129,18 @@ void HelpHelpCommand(int option, const std::string command)
 bool HelpCommand(std::string input, Board& board)
 {
     if(input.empty() == false)
-    {
-        options.at(input).second(1, input);
-        std::cout << std::endl;
+    {        
+	    if(input.size() > 0 && options.find(input) != options.end())
+        {
+            options.at(input).second(1, input);
+            std::cout << std::endl;
+        }
+        else
+        {
+            std::string invalidInput = input.length() > 0 ? input : "Not a Value!";
+            std::cout << " > Invalid command: " << invalidInput << ", help for all commands!" <<std::endl;
+            HelpCommand("", board);
+        }
     }
     else
     {

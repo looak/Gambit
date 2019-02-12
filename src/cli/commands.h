@@ -31,7 +31,8 @@ bool ExitCommand(std::string input, Board& board);
 void ExitHelpCommand(int option, const std::string command);
 
 static CommandsMap aliases = {
-    {"h", { HelpCommand, HelpHelpCommand } },
+    {"h", { HelpCommand, HelpHelpCommand } },    
+    {"m", { MoveCommand, MoveHelpCommand } },
 };
 
 static CommandsMap options = {

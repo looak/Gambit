@@ -8,7 +8,10 @@ project(${PROJECT_NAME} C CXX)
 set(GambitCLI_SCR
         main.cpp
         commands.h
-        commands.cpp)
+        commands.cpp
+        printCommand.h
+        printCommand.cpp
+        commandsUtils.h)
 
 
 include_directories(../engine/inc/)

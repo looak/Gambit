@@ -10,16 +10,25 @@
 
 using namespace GambitEngine;
 
-typedef std::map<std::string, std::pair<std::function<void(std::string, Board&)>, std::function<void(int,const std::string)>>> CommandsMap;
+typedef std::map<std::string, std::pair<std::function<bool(std::string, Board&)>, std::function<void(int,const std::string)>>> CommandsMap;
 
-void FenCommand(std::string input, Board& board);
+bool FenCommand(std::string input, Board& board);
 void FenHelpCommand(int option, const std::string command);
 
-void ClearCommand(std::string input, Board& board);
+bool ClearCommand(std::string input, Board& board);
 void ClearHelpCommand(int option, const std::string command);
 
-void HelpCommand(std::string input, Board& board);
+bool HelpCommand(std::string input, Board& board);
 void HelpHelpCommand(int option, const std::string command);
+
+bool PrintCommand(std::string input, Board& board);
+void PrintHelpCommand(int option, const std::string command);
+
+bool MoveCommand(std::string input, Board& board);
+void MoveHelpCommand(int option, const std::string command);
+
+bool ExitCommand(std::string input, Board& board);
+void ExitHelpCommand(int option, const std::string command);
 
 static CommandsMap aliases = {
     {"h", { HelpCommand, HelpHelpCommand } },
@@ -29,4 +38,8 @@ static CommandsMap options = {
     {"fen", { FenCommand, FenHelpCommand } },
     {"clear", { ClearCommand, ClearHelpCommand } },
     {"help", { HelpCommand, HelpHelpCommand } },
+    {"print", { PrintCommand, PrintHelpCommand } },
+    {"move", { MoveCommand, MoveHelpCommand } },
+    {"exit", { ExitCommand, ExitHelpCommand } },
+
 };

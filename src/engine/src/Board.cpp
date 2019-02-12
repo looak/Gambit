@@ -324,6 +324,9 @@ Board::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promote)
 	byte sInd64 = GetBoard64Index(sFile, sRank);
 	byte tInd64 = GetBoard64Index(tFile, tRank);
 
+	if(sInd64 > 64 || tInd64 > 64)
+		return false;
+
 	return MakeMove(sInd64, tInd64, promote);
 }
 

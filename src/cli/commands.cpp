@@ -1,28 +1,90 @@
 #include "commands.h"
+#include <string>
 #include <sstream>
+#include "commandsUtils.h"
 
-static const std::string whitespace = " > ......................... ";
-static const int lineLength = 24;
-std::string AddLineDivider(std::string command, std::string helpText)
+#include "printCommand.h"
+
+
+bool MoveCommand(std::string input, Board& board)
 {
-    int lengthLeft = lineLength - command.length();
-    _ASSERT(lengthLeft >= 0);
-
-    std::stringstream output;
-    output << " > " << command << ' ';
-    while (lengthLeft > 0)
+    if(input.size() == 0)
+        MoveHelpCommand(1, "move");
+    else if(input.length() >= 4)
     {
-        output << '.';
-        --lengthLeft;
+        byte promotion = input[4] == 0 ? 0 : input[4];
+        return board.MakeMove(input[0], input[1]-'0', input[2], input[3]-'0', promotion);    
     }
-    output << " " << helpText;
-    return output.str();            
+
+    return false;
+}
+void MoveHelpCommand(int option, const std::string command)
+{
+    std::ostringstream ssCommand;
+    ssCommand << command << ":<AN>";
+
+    std::string helpText("Move piece on board according to Algebraic Notation");
+    if(option == 0)
+    {
+        std::cout << AddLineDivider(ssCommand.str(), helpText);
+    }
+    else
+    {        
+        std::cout << AddLineDivider(ssCommand.str(), helpText) << std::endl;
+        std::cout << whitespace << "By default any input will be attempted to be executed as a Move." << std::endl;
+        std::cout << whitespace << "Algebraic Notation(AN) standard definition can be found https://en.wikipedia.org/wiki/Algebraic_notation_(chess)" << std::endl;
+        std::cout << whitespace << "Example: e2e4 or  Nf3 (if non ambiguous)" << std::endl;
+    }
+}
+
+bool PrintCommand(std::string input, Board& board)
+{		
+    std::vector<std::string> tokens;
+    std::string token;
+    std::istringstream iss;
+    iss.str(input);
+
+    while(std::getline(iss, token, ' '))
+    {
+        tokens.push_back(token);
+    }
+    if(tokens.size() == 0)
+    {
+        PrintCommands::printOptions.at("board").first(&board, "");
+    }
+    else
+    if(PrintCommands::printOptions.find(tokens.front()) == PrintCommands::printOptions.end())
+    {
+        std::string invalidInput = tokens.size() > 0 ? tokens.front() : "Not a Value!";
+        std::cout << " > Invalid command: " << invalidInput << ", help for all commands!" <<std::endl;
+    }
+    else
+    {        
+        PrintCommands::printOptions.at(tokens.front()).first(&board, tokens.back());
+    }
+
+    return true;
+}
+
+void PrintHelpCommand(int option, const std::string command)
+{
+    if(option == 0)
+    {
+        std::ostringstream ssCommand;
+        ssCommand << command << ":<command> or print";
+        std::string helpText("Default prints board or Prints a command.");
+        std::cout << AddLineDivider(ssCommand.str(), helpText);
+    }
+    else
+    {        
+        PrintCommands::printOptions.at("help").first(nullptr, "");
+    }
 }
 
 void FenHelpCommand(int option, const std::string command)
 {
     std::ostringstream ssCommand;
-    ssCommand << command << ":<input FEN>";
+    ssCommand << command << ":<FEN>";
 
     std::string helpText("Sets the board to given FEN");
     if(option == 0)
@@ -37,9 +99,9 @@ void FenHelpCommand(int option, const std::string command)
     }
 }
 
-void FenCommand(std::string input, Board& board)
+bool FenCommand(std::string input, Board& board)
 {
-    FENParser::Deserialize(input.c_str(), input.length(), board, nullptr);         
+    return FENParser::Deserialize(input.c_str(), input.length(), board, nullptr);         
 }
 
 void ClearHelpCommand(int option, const std::string command)
@@ -48,9 +110,10 @@ void ClearHelpCommand(int option, const std::string command)
     std::cout << AddLineDivider(command, helpText);    
 }
 
-void ClearCommand(std::string input, Board& board)
+bool ClearCommand(std::string input, Board& board)
 {
     board.ResetBoard();
+    return true;
 }
 
 void HelpHelpCommand(int option, const std::string command)
@@ -63,7 +126,7 @@ void HelpHelpCommand(int option, const std::string command)
     std::cout << AddLineDivider(ssCommand.str(), helpText);
 }
 
-void HelpCommand(std::string input, Board& board)
+bool HelpCommand(std::string input, Board& board)
 {
     if(input.empty() == false)
     {
@@ -78,5 +141,18 @@ void HelpCommand(std::string input, Board& board)
             options.at(iter->first).second(0, iter->first);
             std::cout << std::endl;
         }        
-    }    
+    }
+
+    return true;
+}
+
+bool ExitCommand(std::string input, Board& board)
+{
+    std::exit(0);
+    return true;
+}
+void ExitHelpCommand(int option, const std::string command)
+{
+    std::string helpText("Shutsdown Gambit.");
+    std::cout << AddLineDivider(command, helpText);    
 }

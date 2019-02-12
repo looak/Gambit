@@ -334,7 +334,8 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp)
 		signed short atk = 1;
 		if (piece == PAWN && set == WHITE)
 			atk = -1; // inverse attack if we're black.
-
+		
+		// get attacking direction
 		atk *= PieceDef::Attacks0x88(piece, a);
 		bool sliding = PieceDef::Slides(piece);
 		auto curSqr = (byte)square;
@@ -343,22 +344,33 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp)
 		{
 			byte sq0x88 = 0x00;
 			byte sq8x8 = 0x00;
+			// convert current square to 0x88 format
 			sq0x88 = curSqr + (curSqr & (byte)~7);
 			
 			sq0x88 += atk;
 
+			// convert back to sq8x8
 			sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> (byte)1;
 			u64 sqbb = UINT64_C(1) << sq8x8;
 			
-			if (sq0x88 & 0x88 || matComb & sqbb)
-				sliding = false;
-			else if (matCombedOp & sqbb)
+			bool validSqr = !(sq0x88 & 0x88);
+			if (validSqr)
 			{
-				sliding = false;
-				m_attacked[set] |= sqbb;
+				if(matComb & sqbb)
+				{
+					sliding = false;				
+					m_attacked[set] |= sqbb;
+				}			
+				else if (matCombedOp & sqbb)
+				{
+					sliding = false;
+					m_attacked[set] |= sqbb;
+				}
+				else
+					m_attacked[set] |= sqbb;
 			}
 			else
-				m_attacked[set] |= sqbb;
+				sliding = false;
 
 			curSqr = sq8x8;
 

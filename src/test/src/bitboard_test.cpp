@@ -118,6 +118,8 @@ namespace GambitTest
         attked |= INT64_C(1) << INT64_C(28);
         // g4 should be attacked
         attked |= INT64_C(1) << INT64_C(30);
+         // f3 should be guarded
+        attked |= INT64_C(1) << INT64_C(21);
 
         auto result = board.Attacked(WHITE);
         EXPECT_EQ(~universe, result ^ attked);

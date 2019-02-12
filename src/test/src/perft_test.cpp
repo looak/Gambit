@@ -217,6 +217,24 @@ TEST_F(PerftFixture, PositionTwo_DepthTwo)
     }
 }
 
+TEST_F(PerftFixture, PositionTwo_DepthThree)
+{
+	GambitEngine::Board board;
+    MoveGenerator::Counter counter;
+	char inputFen[] = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+
+	u32 count = 0;
+    counter = GenerateMoves(board, WHITE, 2, count);
+	EXPECT_EQ(99949, count);
+	EXPECT_EQ(counter.Captures, 17461);
+    EXPECT_EQ(counter.Promotions, 0);
+	EXPECT_EQ(counter.Checks, 996);	
+	EXPECT_EQ(counter.CheckMates, 1);
+    EXPECT_EQ(counter.Castles, 3255);
+    EXPECT_EQ(counter.EnPassants, 46);
+}
+
 /*
 Depth	Nodes		Captures	E.p.	Castles		Promotions		Checks		Checkmates
 1		14			1			0		0			0				2			0

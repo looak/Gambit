@@ -331,6 +331,20 @@ TEST_F(BoardFixture, CheckMate_White)
 	EXPECT_TRUE(board.Check(WHITE));
 }
 
+TEST_F(BoardFixture, GuardedPiece_CheckMate)
+{
+	GambitEngine::Board board;
+	board.SetCastlingRights(0);
+	
+	std::string fen = "k7/5b2/8/8/8/8/r6p/1K6 b - -";
+	FENParser::Deserialize(fen.c_str(), fen.length(), board, nullptr);
+
+	EXPECT_FALSE(board.CheckMate(WHITE));
+
+	board.MakeLegalMove('h', 2, 'h', 1, 'q');
+	EXPECT_TRUE(board.CheckMate(WHITE));
+}
+
 TEST_F(BoardFixture, CapturePromote)
 {
 	GambitEngine::Board board;

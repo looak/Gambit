@@ -1,3 +1,4 @@
+#include "version.h"
 #include "commands.h"
 #include <string>
 #include <sstream>
@@ -55,7 +56,7 @@ AvailableMovesCommand(std::string input, Board& board)
 void 
 AvailableMovesHelpCommand(int option, const std::string command)
 {        
-    std::string helpText("Outputs available move for current ply.");
+    std::string helpText("Outputs available move for current ply");
     std::cout << AddLineDivider(command, helpText);    
 }
 
@@ -128,7 +129,7 @@ bool FenCommand(std::string input, Board& board)
 
 void ClearHelpCommand(int option, const std::string command)
 {        
-    std::string helpText("Resets the GameBoard");
+    std::string helpText("Resets the Game Board");
     std::cout << AddLineDivider(command, helpText);    
 }
 
@@ -143,7 +144,7 @@ void HelpHelpCommand(int option, const std::string command)
     std::ostringstream ssCommand;
     ssCommand << command << ":<command> or help";
 
-    std::string helpText("Outputs this help message or more detailed message about command.");
+    std::string helpText("Outputs this help message or more detailed message about command");
 
     std::cout << AddLineDivider(ssCommand.str(), helpText);
 }
@@ -177,6 +178,21 @@ bool HelpCommand(std::string input, Board& board)
     return true;
 }
 
+bool AboutCommand(std::string input, Board& board)
+{
+    std::cout << " Gambit CLI Open Source Chess Engine 2017-2019" << std::endl    
+			  << " Version: " << getVersion() << std::endl
+			  << " Source: https://github.com/looak/Gambit" << std::endl 
+			  << " Contributor(s): Alexander Loodin Ek" << std::endl;
+
+    return true;
+}
+void AboutHelpCommand(int option, const std::string command)
+{
+    std::string helpText("About Gambit");
+    std::cout << AddLineDivider(command, helpText);
+}
+
 bool ExitCommand(std::string input, Board& board)
 {
     std::exit(0);
@@ -184,6 +200,6 @@ bool ExitCommand(std::string input, Board& board)
 }
 void ExitHelpCommand(int option, const std::string command)
 {
-    std::string helpText("Shutsdown Gambit.");
-    std::cout << AddLineDivider(command, helpText);    
+    std::string helpText("Shutsdown Gambit");
+    std::cout << AddLineDivider(command, helpText);
 }

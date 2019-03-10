@@ -70,13 +70,13 @@ void HelpCommand(const GambitEngine::Board* board, const std::string input)
 }
 void HelpHelpCommand(int option, const std::string command)
 {
-    std::string helpText("Outputs this help message.");
+    std::string helpText("Outputs this help message");
     std::cout << AddLineDivider(command, helpText);
 }
 
 void BoardHelp(int option, const std::string command)
 {
-    std::string helpText("Prints the board.");
+    std::string helpText("Prints the board");
     std::cout << AddLineDivider(command, helpText);    
 }
 
@@ -113,7 +113,7 @@ void AttackHelp(int option, const std::string command)
 {
     std::ostringstream ssCommand;
     ssCommand << command << " <color> or attack";
-    std::string helpText("Draws attacked squares by given color, by default white.");
+    std::string helpText("Draws attacked squares by given color, by default white");
     std::cout << AddLineDivider(command, helpText);
 }
 

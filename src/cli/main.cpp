@@ -1,3 +1,4 @@
+#include "version.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -38,6 +39,9 @@ void writeMoves(std::vector<GambitEngine::Move> moves)
 
 int main()
 {	
+	std::cout << " Gambit Chess Engine 2017-2019" << std::endl			  
+			  << " Version: " << getVersion();
+			  
 	GambitEngine::Board board;
 	GambitEngine::MoveGenerator mvGen;
 

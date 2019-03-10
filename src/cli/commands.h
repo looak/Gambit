@@ -30,6 +30,9 @@ void MoveHelpCommand(int option, const std::string command);
 bool AvailableMovesCommand(std::string input, Board& board);
 void AvailableMovesHelpCommand(int option, const std::string command);
 
+bool AboutCommand(std::string input, Board& board);
+void AboutHelpCommand(int option, const std::string command);
+
 bool ExitCommand(std::string input, Board& board);
 void ExitHelpCommand(int option, const std::string command);
 
@@ -46,5 +49,6 @@ static CommandsMap options = {
     {"move", { MoveCommand, MoveHelpCommand } },    
     {"show", { AvailableMovesCommand, AvailableMovesHelpCommand } },
     {"exit", { ExitCommand, ExitHelpCommand } },
+    {"about", {AboutCommand, AboutHelpCommand } }
 
 };

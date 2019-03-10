@@ -26,16 +26,16 @@ Easiest way to get running in Windows is installing Visual Studio Code and exten
 
 * Create a build directory:
 ```bash
-mkdir build
-cd build
+$ mkdir build
+$ cd build
 ```
 * Call Cmake:
 ```bash
-cmake ..
+$ cmake ..
 ```
-Build:
+* Build:
 ```
-make -j8
+$ make -j8
 ```
 
 ## Running Gambit
@@ -49,13 +49,11 @@ Interfacing with GambitEngine is done through GambitCLI.
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/looak/Gambit/tags). 
 
 ## Authors
 
 * **Alexander Loodin Ek** - *Initial work* - [looak](https://github.com/looak)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## License
 

@@ -2,6 +2,7 @@
 #include "commands.h"
 #include <string>
 #include <sstream>
+#include <algorithm>
 #include "commandsUtils.h"
 #include "printCommand.h"
 #include "MoveGenerator.h"

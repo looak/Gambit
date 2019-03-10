@@ -1,14 +1,21 @@
 language: cpp
+compiler: gcc
 
-compiler:
-  - gcc
-  - clang
+os: linux
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-7
 
 before_script:
   - mkdir build
   - cd build
   - cmake ..
 
-script: 
+script:
+  - export CC=gcc-7
+  - export CXX=g++-7
   - make
   - bin/GambitEngineTest

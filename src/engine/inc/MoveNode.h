@@ -28,7 +28,7 @@ struct Move
 	*  checmate = 128
 	*/
 	byte flags = 0x00;
-	char str[4];
+	char str[5];
 
 	bool const operator == (const Move &rhs) const
 	{
@@ -53,6 +53,7 @@ struct Move
 		byte tRank = toSqr / 8;
 		str[2] = tFile + 'a';
 		str[3] = tRank + '1';
+		str[4] = 0x0;
 		return std::string(str);
 	}
 };

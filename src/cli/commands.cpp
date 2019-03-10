@@ -2,8 +2,8 @@
 #include <string>
 #include <sstream>
 #include "commandsUtils.h"
-
 #include "printCommand.h"
+#include "MoveGenerator.h"
 
 
 bool MoveCommand(std::string input, Board& board)
@@ -18,6 +18,7 @@ bool MoveCommand(std::string input, Board& board)
 
     return false;
 }
+
 void MoveHelpCommand(int option, const std::string command)
 {
     std::ostringstream ssCommand;
@@ -35,6 +36,27 @@ void MoveHelpCommand(int option, const std::string command)
         std::cout << whitespace << "Algebraic Notation(AN) standard definition can be found https://en.wikipedia.org/wiki/Algebraic_notation_(chess)" << std::endl;
         std::cout << whitespace << "Example: e2e4 or  Nf3 (if non ambiguous)" << std::endl;
     }
+}
+
+bool 
+AvailableMovesCommand(std::string input, Board& board)
+{
+    MoveGenerator movGen;
+    u32 count = 0;
+    std::vector<Move> moves = movGen.getMoves(WHITE, &board, count);
+
+    std::cout << " Available moves: \n ";
+    auto print = [](Move& mv) { std::cout << mv.toString() << ", "; };
+    for_each(moves.begin(), moves.end(), print);
+
+    return true;
+}
+
+void 
+AvailableMovesHelpCommand(int option, const std::string command)
+{        
+    std::string helpText("Outputs available move for current ply.");
+    std::cout << AddLineDivider(command, helpText);    
 }
 
 bool PrintCommand(std::string input, Board& board)

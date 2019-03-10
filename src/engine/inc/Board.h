@@ -84,7 +84,7 @@ private:
 
 public:
 	Board();
-	Board(const Board& _src);
+	Board(const Board& _src) = delete;
 
 	~Board();
 

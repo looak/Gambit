@@ -37,7 +37,7 @@ private:
 public:
 	Material();
 	~Material();
-	Material (const Material& _src);
+	Material (const Material& _src) = delete;
 
 	bool RemovePiece(const Piece* piece);
 	const Piece* GetPiece(byte square) const;

@@ -22,6 +22,9 @@ Bitboard::Bitboard(const Bitboard & _src)
 	{
 		m_combMaterialDirty[set] = true;
 		m_attackedDirty[set] = true;
+		
+		m_materialCombined[set] = 0x0;
+		m_attacked[set] = 0x0;
 	}
 
 	for (int val = 0; val < 128; val++)

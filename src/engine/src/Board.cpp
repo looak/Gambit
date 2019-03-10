@@ -30,20 +30,6 @@ Board::Board()
 	ResetBoard();
 }
 
-Board::Board(const Board & _src)
-{
-	memcpy(m_board, _src.m_board, sizeof(_src.m_board));
-	memcpy(m_boardLookup, _src.m_boardLookup, sizeof(_src.m_boardLookup));
-	m_castleState = _src.m_castleState;
-	m_enPassant64 = _src.m_enPassant64;
-	m_enPassantTargetSqr64 = _src.m_enPassantTargetSqr64;
-
-	m_material[0] = _src.m_material[0];
-	m_material[1] = _src.m_material[1];
-	m_bitboard = _src.m_bitboard;
-}
-
-
 Board::~Board()
 {
 }

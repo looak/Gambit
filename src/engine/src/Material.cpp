@@ -46,30 +46,6 @@ Material::~Material()
 	m_king = nullptr;
 }
 
-Material::Material(const Material & _src)
-{
-	for (int i = 0; i < NR_OF_PIECES; i++)
-	{
-		m_materialGrid[i] = _src.m_materialGrid[i];
-		m_capturedMaterialGrid[i] = _src.m_capturedMaterialGrid[i];
-	}
-
-	for (size_t i = 0; i < _src.m_material.size(); i++)
-		m_material.push_back(_src.m_material.at(i));
-
-	m_king = nullptr;
-	for (int i = 0; i < 64; i++)
-		m_board[i] = nullptr;
-
-	std::vector<Piece>::iterator itr = m_material.begin();
-	while (itr != m_material.end())
-	{
-		m_board[itr->Square8x8] = &(*itr);
-		itr++;
-	}
-	
-}
-
 Piece*
 Material::GetPiece(PIECE pType, byte square)
 {

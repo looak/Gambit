@@ -46,30 +46,6 @@ namespace GambitTest {
 		EXPECT_EQ(nullptr, value); 
 	}
 
-	TEST_F(MaterialFixture, CopyMaterial)
-	{
-		GambitEngine::Board board;
-		board.PlacePiece(WHITE, BISHOP, 'c', 4);
-
-		auto cpyOne = *board.GetMaterial(WHITE);
-		auto cpyTwo = *board.GetMaterial(WHITE);
-		auto valueOne = cpyOne.GetPiece(byteSqr("c4"));
-		auto valueTwo = cpyTwo.GetPiece(byteSqr("c4"));
-
-		EXPECT_NE(valueOne, valueTwo);
-		EXPECT_EQ(BISHOP, valueOne->Type);
-		EXPECT_EQ(BISHOP, valueTwo->Type);
-		EXPECT_EQ(26, valueOne->Square8x8);
-		EXPECT_EQ(26, valueTwo->Square8x8);
-
-
-		auto value = cpyOne.GetPiece(byteSqr("c5"));
-		EXPECT_EQ(nullptr, value);
-
-		EXPECT_EQ(nullptr, cpyTwo.GetKing());
-	}
-
-
 	TEST_F(MaterialFixture, AddPieces_More)
 	{
 		GambitEngine::Board board;

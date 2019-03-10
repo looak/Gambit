@@ -16,7 +16,7 @@ MoveGenerator::~MoveGenerator()
 
 void 
 MoveGenerator::FindBestMove(SET set, Board* board, u32& count, short depth)
-{
+{/*
 	auto moves = getMoves(set, board, count);
 
 	for (auto mv : moves)
@@ -26,7 +26,7 @@ MoveGenerator::FindBestMove(SET set, Board* board, u32& count, short depth)
 		
 		if (depth > 0)
 			FindBestMove(set, &testBoard, count, depth--);
-	}
+	}*/
 }
 
 std::vector<Move>

@@ -5,8 +5,8 @@ compiler:
   - clang
 
 before_script:
-  - mkdir output
-  - cd output
+  - mkdir build
+  - cd build
   - cmake ..
 
 script: 

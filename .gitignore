@@ -9,6 +9,7 @@ build/
 .vscode/
 .idea/
 cmake-build-debug/
+proj-cppcheck-build-dir/
 
 #specific files
 test_detail.xml

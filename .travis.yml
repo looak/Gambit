@@ -18,4 +18,4 @@ script:
   - export CC=gcc-7
   - export CXX=g++-7
   - make
-  - bin/GambitEngineTest
+  - bin/GambitEngineTest --gtest_filter=*-PerftFixture*

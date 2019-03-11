@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
 message(STATUS "Enabling testing")
+enable_testing()
 
-include(CTest)
 set(PROJECT_NAME GambitEngineTest)
 set(SOURCE_FILES
         main.cpp
@@ -26,4 +26,4 @@ target_link_libraries(${PROJECT_NAME} GambitEngine gtest gtest_main)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
-add_test(UnitTests ${PROJECT_NAME})
+add_test(GambitEngineTest bin/${PROJECT_NAME})

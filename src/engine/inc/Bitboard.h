@@ -14,7 +14,6 @@ private:
 	void AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp);
 	
 	u64 AvailableCastling(SET set, byte castling);
-	bool AvailablePromotion(SET set);
 
 	void MarkDirty(SET set);
 

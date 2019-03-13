@@ -1,5 +1,6 @@
 #include "Bitboard.h"
 #include "PieceDef.h"
+#include <cassert>
 #include <iostream>
 #include "MoveNode.h"
 
@@ -149,7 +150,9 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 		byte sq0x88 = curSqr + (curSqr & (byte)~7);
 		byte rank = sq0x88 >> 4;
 
-		sq0x88 += (mvMod * PieceDef::Moves0x88(piece, 0));
+		short dir = mvMod * PieceDef::Moves0x88((PIECE)piece, 0);
+		assert(dir > INT8_MAX || dir < INT8_MIN);
+		sq0x88 += (byte)dir;
 		byte sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> 1;
 		u64 sqbb = UINT64_C(1) << sq8x8;
 
@@ -158,7 +161,9 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 			retVal |= sqbb;
 			if (rank == startingRank)
 			{
-				sq0x88 += (mvMod * PieceDef::Moves0x88(piece, 0));
+				dir = mvMod * PieceDef::Moves0x88((PIECE)piece, 0);
+				assert(dir > INT8_MAX || dir < INT8_MIN);
+				sq0x88 += (byte)dir;
 				sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> 1;
 				sqbb = UINT64_C(1) << sq8x8;
 				if (!(matComb & sqbb || matCombOp & sqbb))
@@ -209,14 +214,15 @@ Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square, byte mvMod, by
 	{
 		curSqr = square;
 		bool sliding = PieceDef::Slides(piece);
-		signed short dir = mvMod * PieceDef::Attacks0x88(piece, pI);
+		signed short dir = mvMod * PieceDef::Attacks0x88(piece, pI);		
+		assert(dir > INT8_MAX || dir < INT8_MIN);
 		do
 		{
 			byte sq0x88 = 0x00;
 			byte sq8x8 = 0x00;
 			sq0x88 = curSqr + (curSqr & (byte)~7);
 
-			sq0x88 += dir;
+			sq0x88 += (byte)dir;
 
 			sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> (byte)1;
 			u64 sqbb = UINT64_C(1) << sq8x8;
@@ -334,14 +340,16 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp)
 
 	for (int a = 0; a < PieceDef::MoveCount(piece); a++)
 	{
-		signed short atk = 1;
+		signed short direction = 1;
 		if (piece == PAWN && set == WHITE)
-			atk = -1; // inverse attack if we're black.
+			direction = -1; // inverse attack if we're black.
 		
 		// get attacking direction
-		atk *= PieceDef::Attacks0x88(piece, a);
+		direction *= PieceDef::Attacks0x88(piece, a);
 		bool sliding = PieceDef::Slides(piece);
 		auto curSqr = (byte)square;
+
+		assert(direction > INT8_MAX || direction < INT8_MIN);
 
 		do 
 		{
@@ -350,7 +358,7 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp)
 			// convert current square to 0x88 format
 			sq0x88 = curSqr + (curSqr & (byte)~7);
 			
-			sq0x88 += atk;
+			sq0x88 += (byte)direction;
 
 			// convert back to sq8x8
 			sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> (byte)1;
@@ -454,12 +462,6 @@ Bitboard::AvailableCastling(SET set, byte castling)
 	return retVal;
 }
 
-bool 
-Bitboard::AvailablePromotion(SET set)
-{
-	return false;
-}
-
 void 
 Bitboard::MarkDirty(SET set)
 {
@@ -487,9 +489,8 @@ void Bitboard::Clear()
 		m_attackedDirty[set]	 = true;
 	}
 
-	for (int val = 0; val < 128; val++)
+	for (byte val = 0; val < 128; val++)
 	{
 		m_board0x88[val] = val;
 	}
 }
-

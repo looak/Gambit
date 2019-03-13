@@ -32,7 +32,7 @@ byte convert(byte toConvert)
 
 	if ((toConvert & 128) == 0)
 	{
-		piece = toupper(piece);
+		piece = (byte)toupper(piece);
 	}
 
 	return piece;
@@ -59,7 +59,7 @@ void writeBitboard(const u64 board)
 namespace PrintCommands 
 {
     
-void HelpCommand(const GambitEngine::Board* board, const std::string input)
+void HelpCommand(const GambitEngine::Board*, const std::string input)
 {
     std::cout << " > Gambit CLI print Commands:" << std::endl;
     for(PrintCommandsMap::iterator iter = printOptions.begin(); iter != printOptions.end(); ++iter)
@@ -68,13 +68,13 @@ void HelpCommand(const GambitEngine::Board* board, const std::string input)
         std::cout << std::endl;
     }   
 }
-void HelpHelpCommand(int option, const std::string command)
+void HelpHelpCommand(int, const std::string command)
 {
     std::string helpText("Outputs this help message");
     std::cout << AddLineDivider(command, helpText);
 }
 
-void BoardHelp(int option, const std::string command)
+void BoardHelp(int, const std::string command)
 {
     std::string helpText("Prints the board");
     std::cout << AddLineDivider(command, helpText);    
@@ -109,7 +109,7 @@ void Attack(const GambitEngine::Board* board, const std::string input)
     writeBitboard(attked);
  
 }
-void AttackHelp(int option, const std::string command)
+void AttackHelp(int, const std::string command)
 {
     std::ostringstream ssCommand;
     ssCommand << command << " <color> or attack";

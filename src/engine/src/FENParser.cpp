@@ -9,7 +9,7 @@ FENPieceConverter::Convert(byte aNotation)
 {
 	PieceStruct returnPiece;
 	returnPiece.m_set = islower(aNotation) ?  BLACK : WHITE;
-	byte aNotLow = tolower(aNotation);
+	byte aNotLow = (byte)tolower(aNotation);
 	
 	switch (aNotLow)
 	{

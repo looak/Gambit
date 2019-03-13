@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <cstring>
 #include <iostream>
+#include <cassert>
 #include "Board.h"
 #include "Log.h"
 #include "PieceDef.h"
@@ -66,12 +67,12 @@ bool Board::Occupied(byte indx)
 
 byte Board::GetBoard120Index(byte file, byte rank) const
 {
-	byte corrFile = tolower(file) - 'a';
+	byte corrFile = (byte)(tolower(file) - 'a');
 	byte corrRank = rank - 1;
 
 	// validate placement is inside the board.
 	if (corrFile < 0 || corrFile > 7 || corrRank < 0 || corrRank > 7)
-		return -1;
+		return (byte)-1;
 
 	byte index = corrFile + (corrRank << 3);
 	return m_boardLookup[index];
@@ -79,12 +80,12 @@ byte Board::GetBoard120Index(byte file, byte rank) const
 
 byte Board::GetBoard64Index(byte file, byte rank) const
 {
-	byte corrFile = tolower(file) - 'a';
+	byte corrFile = (byte)(tolower(file) - 'a');
 	byte corrRank = rank - 1;
 
 	// validate placement is inside the board.
 	if (corrFile < 0 || corrFile > 7 || corrRank < 0 || corrRank > 7)
-		return -1;
+		return (byte)-1;
 
 	byte index = corrFile + (corrRank << 3);
 	return index;
@@ -101,7 +102,7 @@ bool Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr, byte& state, b
 		return false;
 
 	short enPassant = (short)tSqr - (short)sSqr;
-	short absPass = abs(enPassant);
+	short absPass = (short)abs(enPassant);
 
 	if (prevPassant != 0)
 	{
@@ -119,7 +120,8 @@ bool Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr, byte& state, b
 	if (absPass == 16)
 	{
 		enPassant /= 2;
-		m_enPassant64 = sSqr + enPassant;
+		assert(enPassant > INT8_MAX || enPassant < INT8_MAX);
+		m_enPassant64 = sSqr + (byte)enPassant;
 		// to be able to solve capture
 		m_enPassantTargetSqr64 = tSqr;
 		enPassantState = m_enPassant64;

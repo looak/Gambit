@@ -15,7 +15,7 @@ MoveGenerator::~MoveGenerator()
 }
 
 void 
-MoveGenerator::FindBestMove(SET set, Board* board, u32& count, short depth)
+MoveGenerator::FindBestMove(SET, Board*, u32&, short)
 {/*
 	auto moves = getMoves(set, board, count);
 
@@ -90,9 +90,9 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 
 				if (promotion != 0x00)
 				{
-					for (int i = 2; i < KING; i++)
+					for (int k = 2; k < KING; ++k)
 					{
-						newMove.promotion = PieceDef::converter((PIECE)i);
+						newMove.promotion = PieceDef::converter((PIECE)k);
 						newMove.flags |= 2;
 
 						moves.push_back(newMove);

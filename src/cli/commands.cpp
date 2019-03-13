@@ -55,7 +55,7 @@ AvailableMovesCommand(std::string input, Board& board)
 }
 
 void 
-AvailableMovesHelpCommand(int option, const std::string command)
+AvailableMovesHelpCommand(int, const std::string command)
 {        
     std::string helpText("Outputs available move for current ply");
     std::cout << AddLineDivider(command, helpText);    
@@ -128,7 +128,7 @@ bool FenCommand(std::string input, Board& board)
     return FENParser::Deserialize(input.c_str(), input.length(), board, nullptr);         
 }
 
-void ClearHelpCommand(int option, const std::string command)
+void ClearHelpCommand(int, const std::string command)
 {        
     std::string helpText("Resets the Game Board");
     std::cout << AddLineDivider(command, helpText);    
@@ -140,7 +140,7 @@ bool ClearCommand(std::string input, Board& board)
     return true;
 }
 
-void HelpHelpCommand(int option, const std::string command)
+void HelpHelpCommand(int, const std::string command)
 {    
     std::ostringstream ssCommand;
     ssCommand << command << ":<command> or help";
@@ -179,7 +179,7 @@ bool HelpCommand(std::string input, Board& board)
     return true;
 }
 
-bool AboutCommand(std::string input, Board& board)
+bool AboutCommand(std::string, Board&)
 {
     std::cout << " Gambit CLI Open Source Chess Engine 2017-2019" << std::endl    
 			  << " Version: " << getVersion() << std::endl
@@ -188,18 +188,18 @@ bool AboutCommand(std::string input, Board& board)
 
     return true;
 }
-void AboutHelpCommand(int option, const std::string command)
+void AboutHelpCommand(int, const std::string command)
 {
     std::string helpText("About Gambit");
     std::cout << AddLineDivider(command, helpText);
 }
 
-bool ExitCommand(std::string input, Board& board)
+bool ExitCommand(std::string, Board&)
 {
     std::exit(0);
     return true;
 }
-void ExitHelpCommand(int option, const std::string command)
+void ExitHelpCommand(int, const std::string command)
 {
     std::string helpText("Shutsdown Gambit");
     std::cout << AddLineDivider(command, helpText);

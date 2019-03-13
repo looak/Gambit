@@ -6,7 +6,7 @@ using namespace GambitEngine;
 
 Material::Material()
 {
-	for (int i = 0; i < NR_OF_PIECES; i++)
+	for (byte i = 0; i < NR_OF_PIECES; i++)
 	{
 		// will probably never have more than eight of each piece.
 		m_materialGrid[i].reserve(8); 
@@ -14,7 +14,7 @@ Material::Material()
 
 		if (i > 0)
 		{
-			for (int mat = 0; mat < 8; mat++)
+			for (byte mat = 0; mat < 8; mat++)
 			{
 				Piece p;
 				p.Type = i;

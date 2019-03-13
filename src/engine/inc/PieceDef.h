@@ -7,7 +7,7 @@ namespace GambitEngine
 {
 ////////////////////////////////////////////////////////////////
 
-enum PIECE
+enum PIECE : byte
 {
 	PAWN = 1,
 	KNIGHT = 2,
@@ -18,7 +18,7 @@ enum PIECE
 	NR_OF_PIECES =7,
 };
 
-enum SET
+enum SET : byte
 {
 	WHITE = 0,
 	BLACK = 1,

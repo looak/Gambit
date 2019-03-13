@@ -31,7 +31,6 @@ namespace GambitTest {
 
 	TEST_F(MaterialFixture, AddPiece_Move)
 	{
-		GambitEngine::Board board;
 		board.PlacePiece(WHITE, KING, 'e', 1);
 		
 		EXPECT_TRUE(MakeMove(&board, "e1e2"));
@@ -48,7 +47,6 @@ namespace GambitTest {
 
 	TEST_F(MaterialFixture, AddPieces_More)
 	{
-		GambitEngine::Board board;
 		board.PlacePiece(WHITE, BISHOP, 'c', 4);
 		board.PlacePiece(WHITE, ROOK, 'h', 1);
 
@@ -91,7 +89,6 @@ namespace GambitTest {
 
 	TEST_F(MaterialFixture, Bishop_Capture_Pawn)
 	{
-		GambitEngine::Board board;
 		board.PlacePiece(WHITE, BISHOP, 'c', 4);
 		board.PlacePiece(WHITE, ROOK, 'h', 1);
 
@@ -115,7 +112,6 @@ namespace GambitTest {
 
 	TEST_F(MaterialFixture, Bishop_Capture_Pawn_Unmake_and_Recapture)
 	{
-		GambitEngine::Board board;
 		board.PlacePiece(WHITE, BISHOP, 'c', 4);
 		board.PlacePiece(WHITE, ROOK, 'h', 1);
 
@@ -144,7 +140,6 @@ namespace GambitTest {
 
 	TEST_F(MaterialFixture, Bishop_Capture_BoardPointerTest)
 	{
-		GambitEngine::Board board;
 		board.PlacePiece(WHITE, BISHOP, 'c', 4);
 		board.PlacePiece(WHITE, ROOK, 'h', 1);
 
@@ -167,7 +162,6 @@ namespace GambitTest {
 
 	TEST_F(MaterialFixture, Bishop_Capture_BoardPointerTest_Unmake)
 	{
-		GambitEngine::Board board;
 		board.PlacePiece(WHITE, BISHOP, 'c', 4);
 		board.PlacePiece(WHITE, ROOK, 'h', 1);
 

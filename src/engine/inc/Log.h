@@ -36,7 +36,7 @@ public:
 
 		if ((pieceByte & 128) == 0)
 		{
-			piece = toupper(piece);
+			piece = (byte)toupper(piece);
 		}
 
 		return piece;

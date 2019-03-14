@@ -40,8 +40,6 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 set(LINK_LIBRARIES_TEST GambitEngine gtest ${CMAKE_THREAD_LIBS_INIT})
 if (CODE_COVERAGE)
-    message("Code Coverage Enabled")
-    target_compile_options(${PROJECT_NAME} PRIVATE --coverage)
     set(LINK_LIBRARIES_TEST ${LINK_LIBRARIES_TEST} --coverage)
 endif()
 

@@ -1,6 +1,6 @@
 #include "Bitboard.h"
 #include "PieceDef.h"
-#include <cassert>
+#include "Log.h"
 #include <iostream>
 #include "MoveNode.h"
 
@@ -151,7 +151,7 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 		byte rank = sq0x88 >> 4;
 
 		short dir = mvMod * PieceDef::Moves0x88((PIECE)piece, 0);
-		assert(dir > INT8_MAX || dir < INT8_MIN);
+		FATAL_ASSERT(dir < INT8_MAX || dir > INT8_MIN, "dir is out of bounds");
 		sq0x88 += (byte)dir;
 		byte sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> 1;
 		u64 sqbb = UINT64_C(1) << sq8x8;
@@ -162,7 +162,7 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 			if (rank == startingRank)
 			{
 				dir = mvMod * PieceDef::Moves0x88((PIECE)piece, 0);
-				assert(dir > INT8_MAX || dir < INT8_MIN);
+				FATAL_ASSERT(dir < INT8_MAX || dir > INT8_MIN, "dir is out of bounds");
 				sq0x88 += (byte)dir;
 				sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> 1;
 				sqbb = UINT64_C(1) << sq8x8;
@@ -215,7 +215,7 @@ Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square, byte mvMod, by
 		curSqr = square;
 		bool sliding = PieceDef::Slides(piece);
 		signed short dir = mvMod * PieceDef::Attacks0x88(piece, pI);		
-		assert(dir > INT8_MAX || dir < INT8_MIN);
+		FATAL_ASSERT(dir < INT8_MAX || dir > INT8_MIN, "dir is out of bounds");
 		do
 		{
 			byte sq0x88 = 0x00;
@@ -349,8 +349,7 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp)
 		bool sliding = PieceDef::Slides(piece);
 		auto curSqr = (byte)square;
 
-		assert(direction > INT8_MAX || direction < INT8_MIN);
-
+		FATAL_ASSERT(direction < INT8_MAX || direction > INT8_MIN, "direction is out of bounds");
 		do 
 		{
 			byte sq0x88 = 0x00;

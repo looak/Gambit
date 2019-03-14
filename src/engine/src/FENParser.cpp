@@ -1,6 +1,24 @@
+// Gambit Chess Engine - a Chess AI
+// Copyright (C) 2019  Alexander Loodin Ek
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #include "FENParser.h"
+#include "Log.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <sstream>
 
 using namespace GambitEngine;
 
@@ -38,7 +56,9 @@ FENPieceConverter::Convert(byte aNotation)
 
 }
 
-FENBoardWriter::FENBoardWriter()
+FENBoardWriter::FENBoardWriter(Board& board) :
+	m_board(board)
+	
 {
 	Reset();
 }
@@ -70,13 +90,13 @@ FENBoardWriter::DownRank()
 }
 
 bool 
-FENBoardWriter::Write(SET set, PIECE piece, Board& board)
+FENBoardWriter::Write(SET set, PIECE piece)
 {
-	return board.PlacePiece(set, piece, m_curFile, m_curRank);
+	return m_board.PlacePiece(set, piece, m_curFile, m_curRank);
 }
 
 bool 
-FENBoardWriter::WriteCastlingState(char* states, int length, Board & board)
+FENBoardWriter::WriteCastlingState(char* states, int length)
 {
 	int ind = 0;
 	while (ind < length)
@@ -84,23 +104,23 @@ FENBoardWriter::WriteCastlingState(char* states, int length, Board & board)
 		switch (states[ind])
 		{
 		case 'K':
-			board.m_castleState |= 0x01;
+			m_board.m_castleState |= 0x01;
 			break;
 
 		case 'Q':
-			board.m_castleState |= 0x02;
+			m_board.m_castleState |= 0x02;
 			break;
 
 		case 'k':
-			board.m_castleState |= 0x04;
+			m_board.m_castleState |= 0x04;
 			break;
 
 		case 'q':
-			board.m_castleState |= 0x08;
+			m_board.m_castleState |= 0x08;
 			break;
 
 		case'-':
-			board.m_castleState = 0x00;
+			m_board.m_castleState = 0x00;
 			break;
 
 		default:
@@ -113,8 +133,16 @@ FENBoardWriter::WriteCastlingState(char* states, int length, Board & board)
 }
 
 bool 
-FENBoardWriter::WriteEnPassant(byte file, byte rank, Board& board)
+FENBoardWriter::WriteEnPassant(byte file, byte rank)
 {
+	if (file < 0 || file > 7 || rank < 0 || rank > 7)
+	{
+		std::ostringstream strStream;
+		strStream << "File(" << file + 'a' << ") and/or rank(" << rank + '0' << ") are out of range.";
+		LOG_ERROR(strStream.str().c_str());
+		return false;
+	}
+
 	byte r = rank;
 	if (r == 5) // black
 	{
@@ -126,8 +154,8 @@ FENBoardWriter::WriteEnPassant(byte file, byte rank, Board& board)
 	}
 	// target square 
 	byte tSqr = file + (r * 8);
-	board.m_enPassantTargetSqr64 = tSqr;
-	board.m_enPassant64 = file + (rank * 8);
+	m_board.m_enPassantTargetSqr64 = tSqr;
+	m_board.m_enPassant64 = file + (rank * 8);
 	return true;
 }
 
@@ -142,11 +170,12 @@ FENParser::~FENParser()
 
 bool FENParser::Deserialize(const char* fen, unsigned int length, Board& outputBoard, GameState* state)
 {
-	FENBoardWriter boardWriter;
+	outputBoard.ResetBoard();
+	FENBoardWriter boardWriter(outputBoard);
 	byte counter = 0;
 	byte index = 0;
 
-	for (byte i = 0; i < length; i++)
+	for (byte i = 0; i < length; ++i)
 	{
 		auto curr = fen[i];
 		if (counter < 64)
@@ -167,13 +196,13 @@ bool FENParser::Deserialize(const char* fen, unsigned int length, Board& outputB
 			}
 			else if (curr == ' ')
 			{
-				printf("Syntax error in FEN string\n");
+				LOG_ERROR("Syntax error in FEN string");
 				return false;
 			}
 			else
 			{
 				auto piece = FENPieceConverter::Convert(curr);
-				boardWriter.Write(piece.m_set, piece.m_piece, outputBoard);
+				boardWriter.Write(piece.m_set, piece.m_piece);
 				counter++;
 
 				boardWriter.NextFile();
@@ -187,7 +216,20 @@ bool FENParser::Deserialize(const char* fen, unsigned int length, Board& outputB
 		}
 	}
 
-	index+=2;
+	// expecting white space
+	do
+	{
+		++index;
+	} while (fen[index] == ' ');
+
+	// write defaults to board since we're just reading a short fen.
+	if (fen[index] == '\0')
+	{ 
+		LOG_INFO("Short FEN detected, writing defaults.");
+		boardWriter.WriteCastlingState("KQkq", 4);
+		return true;
+	}
+
 	// we should be on side to move char.
 	if (state != nullptr)
 	{
@@ -200,23 +242,28 @@ bool FENParser::Deserialize(const char* fen, unsigned int length, Board& outputB
 			state->m_activeSet = BLACK;
 			break;
 		default:
-			printf("Syntax error in FEN string\n");
+			LOG_ERROR("Syntax error in FEN string");
 			return false;
 		}
 	}
-	// move forward two, should now be on Castling;
-	index += 2;
+	// expecting white space
+	// move forward, should now be on Castling;
+	do
+	{
+		++index;
+	} while (fen[index] == ' ');
+
 	char castlState[4];
 	int castlingCounter = 0;
-	while (fen[index] != ' ')
+	while (fen[index] != ' ' && castlingCounter < 4)
 	{
 		castlState[castlingCounter] = fen[index];
 		castlingCounter++;
 		index++;
 	}
-	if (!boardWriter.WriteCastlingState(castlState, castlingCounter, outputBoard))
+	if (!boardWriter.WriteCastlingState(castlState, castlingCounter))
 	{
-		printf("Syntax error in FEN string\n");
+		LOG_ERROR("Syntax error in FEN string");
 		return false;
 	}
 	
@@ -228,7 +275,11 @@ bool FENParser::Deserialize(const char* fen, unsigned int length, Board& outputB
 		index++;
 		byte rank = fen[index] - '1';
 
-		boardWriter.WriteEnPassant(file, rank, outputBoard);
+		if (!boardWriter.WriteEnPassant(file, rank))
+		{
+			LOG_ERROR("Syntax error in FEN string");
+			return false;
+		}
 	}
 
 	index++;

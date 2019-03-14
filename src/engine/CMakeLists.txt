@@ -42,7 +42,8 @@ set(GambitEngine_INC
         inc/typedef.h 
 		inc/MoveNode.h 
 		inc/PieceDef.h
-		inc/Log.h)
+		inc/Log.h
+		inc/version.h)
 
 source_group("src" FILES ${GambitEngine_SRC})
 source_group("inc" FILES ${GambitEngine_INC})

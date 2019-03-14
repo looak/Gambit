@@ -58,6 +58,17 @@ Board::ResetBoard()
 	memset(&m_board[79], 0xff, 2);
 	memset(&m_board[89], 0xff, 2);
 	memset(&m_board[99], 0xff, 21);
+
+	while (m_lastNode != nullptr)
+	{
+		auto tmpPtr = m_lastNode->getParent();
+		delete m_lastNode;
+		m_lastNode = tmpPtr;
+	} 
+
+	m_enPassant64 = 0;
+	m_enPassantTargetSqr64 = 0;
+	m_castleState = 0;
 }
 
 bool Board::Occupied(byte indx)
@@ -120,7 +131,7 @@ bool Board::EnPassant(byte sSqr, SET set, PIECE piece, byte tSqr, byte& state, b
 	if (absPass == 16)
 	{
 		enPassant /= 2;
-		assert(enPassant > INT8_MAX || enPassant < INT8_MAX);
+		assert(enPassant < INT8_MAX || enPassant > INT8_MIN);
 		m_enPassant64 = sSqr + (byte)enPassant;
 		// to be able to solve capture
 		m_enPassantTargetSqr64 = tSqr;

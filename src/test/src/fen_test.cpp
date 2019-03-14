@@ -45,11 +45,50 @@ TEST_F(FenFixture, WhiteKingOnly)
 	EXPECT_EQ(expectedValue, result);
 }
 
+TEST_F(FenFixture, StartingPosition)
+{
+	bool expectedValue = true;
+
+	char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	uint8_t length = sizeof(inputFen);
+	GambitEngine::Board board;
+
+	bool result = GambitEngine::FEN::InputFen(inputFen, length, board);
+
+	EXPECT_EQ(expectedValue, result);
+}
+
+TEST_F(FenFixture, StartingPosition_NoWhiteSpace_fail)
+{
+	bool expectedValue = false;
+
+	char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNRwKQkq-01";
+	uint8_t length = sizeof(inputFen);
+	GambitEngine::Board board;
+
+	bool result = GambitEngine::FEN::InputFen(inputFen, length, board);
+
+	EXPECT_EQ(expectedValue, result);
+}
+
+TEST_F(FenFixture, StartingPosition_ShortFen_succeed)
+{
+	/* should write default castling state, no en passant, ply 1 and white to start */
+	bool expectedValue = true;
+
+	char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+	uint8_t length = sizeof(inputFen);
+	GambitEngine::Board board;
+
+	bool result = GambitEngine::FEN::InputFen(inputFen, length, board);
+	
+	EXPECT_EQ(expectedValue, result);
+}
+
 TEST_F(FenFixture, Castling)
 {
 	bool expectedValue = true;
 
-	// white king on white king starting position.
 	char inputFen[] = "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQ - 0 1";
 	uint8_t length = sizeof(inputFen);
 	GambitEngine::Board board;
@@ -71,7 +110,6 @@ TEST_F(FenFixture, EnPassant_White)
 {
 	bool expectedValue = true;
 
-	// white king on white king starting position.
 	char inputFen[] = "8/8/8/8/4Pp2/8/8/R3K2R w KQ e3 0 1";
 	uint8_t length = sizeof(inputFen);
 	GambitEngine::Board board;
@@ -92,7 +130,6 @@ TEST_F(FenFixture, EnPassant_Black)
 {
 	bool expectedValue = true;
 
-	// white king on white king starting position.
 	char inputFen[] = "8/8/8/4Pp2/8/8/8/R3K2R w KQ f6 0 1";
 	uint8_t length = sizeof(inputFen);
 	GambitEngine::Board board;

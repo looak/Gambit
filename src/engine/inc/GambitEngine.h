@@ -21,6 +21,8 @@ namespace GambitEngine
 	class FEN
 	{
 	public:
+		// Will return true or false if we succeed to parse fen.
+		// if false board will be empty.
 		static bool InputFen(char* fen, uint8_t length, Board& outputBoard);
 
 	};

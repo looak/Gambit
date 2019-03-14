@@ -1,6 +1,7 @@
 # Gambit Chess Engine
 
 [![Build Status](https://travis-ci.org/looak/Gambit.svg?branch=master)](https://travis-ci.org/looak/Gambit)
+[![Coverage Status](https://coveralls.io/repos/github/looak/Gambit/badge.svg)](https://coveralls.io/github/looak/Gambit)
 
 I got frustrated about how bad I was playing chess, so I decided to write myself a chess engine and let the computer do it for me! Not intending to use it against unaware non engine players.
 

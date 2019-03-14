@@ -16,7 +16,7 @@ before_install:
 before_script:
   - mkdir build
   - cd build
-  - cmake .. -DCOVERAGE=1
+  - cmake .. -DCODE_COVERAGE=1
 
 script:
   - export CC=gcc-7

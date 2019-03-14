@@ -24,4 +24,4 @@ script:
   - bin/GambitEngineTest --gtest_filter=*-PerftFixture*
 
 after_success:
-  - coveralls --root .. -e build --gcov-options '\-lp'
+  - coveralls --root .. --gcov-options '\-lp'

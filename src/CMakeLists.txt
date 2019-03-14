@@ -30,6 +30,10 @@ add_definitions(-DVER_ENV=${ver_env})
 # Exporting Compile commands to .json file that I can't find?
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Code Coverage
+set(CODE_COVERAGE OFF CACHE BOOL "Code Coverage")
+option(CODE_COVERAGE "Runs analysis on unit test, checking coverage" OFF)
+
 # set(CMAKE_BUILD_TYPE Release)
 IF(CMAKE_BUILD_TYPE MATCHES Debug)
   message("Debug build.")
@@ -42,11 +46,12 @@ ELSE()
 ENDIF()
 
 if(MSVC)
-  set(CMAKE_CXX_FLAGS_MSVC "/permissive /W4 /w14640")
+  set(CMAKE_CXX_FLAGS_MSVC "/std:c++14 /permissive /W4 /w14640")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CMAKE_CXX_FLAGS_MSVC} /MT")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_MSVC} /MTd")
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wno-long-long -Wunused-variable -Wpedantic")
+  message("GCC")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wno-long-long -Wunused-variable -Wpedantic")
 endif()
 
 set(CMAKE_CXX_STANDARD 14)

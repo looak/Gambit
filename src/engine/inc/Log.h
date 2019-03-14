@@ -16,7 +16,9 @@
 
 #pragma once
 #include <iostream>
+#include <cassert>
 #include <string>
+#include <cstring>
 #include "typedef.h"
 
 #define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
@@ -83,7 +85,7 @@ public:
 		if (expression == 0)
 		{
 			std::cout << "[FATAL ASRT] " << file << ":" << line << " > " << function << " message: " << message << std::endl;
-			throw new std::exception(message);
+			assert(expression);
 		}
 	}
 };

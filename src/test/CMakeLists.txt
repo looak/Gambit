@@ -14,12 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 message(STATUS "Enabling testing")
-enable_testing()
-
-include(GoogleTest)
 set(PROJECT_NAME GambitEngineTest)
+
+enable_testing()
+include(gtest.cmake)
+find_package(Threads)
+
 set(SOURCE_FILES
         main.cpp
         src/bitboard_test.cpp
@@ -33,13 +34,16 @@ set(SOURCE_FILES
 
 project(${PROJECT_NAME})
 
-add_subdirectory(lib/googletest)
-
-include_directories(lib/googletest/googletest/include)
 include_directories(../engine/inc)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME} GambitEngine gtest gtest_main)
 
+set(LINK_LIBRARIES_TEST GambitEngine gtest ${CMAKE_THREAD_LIBS_INIT})
+if (CODE_COVERAGE)
+    message("Code Coverage Enabled")
+    target_compile_options(${PROJECT_NAME} PRIVATE --coverage)
+    set(LINK_LIBRARIES_TEST ${LINK_LIBRARIES_TEST} --coverage)
+endif()
+
+target_link_libraries(${PROJECT_NAME} ${LINK_LIBRARIES_TEST})
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
-gtest_discover_tests(${PROJECT_NAME})

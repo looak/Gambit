@@ -23,6 +23,7 @@ Bitboard::Bitboard(const Bitboard & _src)
 	{
 		m_combMaterialDirty[set] = true;
 		m_attackedDirty[set] = true;
+		m_pinnedDirty[set] = true;
 		
 		m_materialCombined[set] = 0x0;
 		m_attacked[set] = 0x0;
@@ -176,7 +177,18 @@ Bitboard::AvailableMoves(SET set, PIECE piece, u32 square, byte enPassant, byte 
 	if (piece == KING && !(sqbb & Attacked((SET)seti)))
 		retVal |= AvailableCastling(set, castling);
 
-	retVal |= AvailableMovesSimple(set, piece, static_cast<byte>(square), static_cast<byte>(mvMod), enPassant);
+	CalculatePotentialPinns(set);
+
+	u64 potentialMoves = AvailableMovesSimple(set, piece, static_cast<byte>(square), static_cast<byte>(mvMod), enPassant);
+
+	if (sqbb & m_pinned[set] && piece != KING)
+	{
+		retVal |= (potentialMoves & m_pinned[set]);
+	}
+	else
+	{ 
+		retVal |= potentialMoves;
+	}
 
 	if (piece == PAWN)
 	{
@@ -320,6 +332,89 @@ Bitboard::CalculateAttacked(SET set, bool ignoreKing)
 	}
 }
 
+void
+Bitboard::CalculatePotentialPinns(SET set)
+{
+    if(m_pinnedDirty[set] == false)
+        return;
+
+    SET opSet = (SET)!(int)set;
+	u64 matComb = MaterialCombined(set);
+	u64 matCombOp = MaterialCombined(opSet);
+	for (int i = 0; i < 64; i++)
+	{
+		PIECE pc = GetPieceOnSquare(opSet, i);
+		if (pc != NR_OF_PIECES)
+		{
+			// for each sliding pieece
+			// for (u32 pieceIndx = 0; pieceIndx < NR_OF_PIECES; ++pieceIndx)
+			{
+				u32 pieceIndx = pc;
+				// are we a sliding piece?
+				if (!PieceDef::Slides(pieceIndx))
+					continue;
+
+				signed short direction = 1;
+				// get attacking direction
+				for (int a = 0; a < PieceDef::MoveCount(pieceIndx); a++)
+				{
+					byte curSqr = (byte)i;
+				    u64 cachedAttack = 0;
+					direction *= PieceDef::Attacks0x88(pieceIndx, a);
+					bool sliding = true;
+
+					FATAL_ASSERT(direction < INT8_MAX || direction > INT8_MIN, "direction is out of bounds");
+					do
+					{
+						byte sq0x88 = 0x00;
+						byte sq8x8 = 0x00;
+						// convert current square to 0x88 format
+						sq0x88 = curSqr + (curSqr & (byte)~7);
+
+						sq0x88 += (byte)direction;
+
+						// convert back to sq8x8
+						sq8x8 = (sq0x88 + (sq0x88 & (byte)7)) >> (byte)1;
+						u64 sqbb = UINT64_C(1) << sq8x8;
+
+						bool validSqr = !(sq0x88 & 0x88);
+						if (validSqr)
+						{
+							if (matCombOp & sqbb)
+							{
+								sliding = false;
+							}
+                            else if (matComb & sqbb)
+                            {
+								cachedAttack |= sqbb;
+
+                                if(GetPieceOnSquare(set, sq8x8) == KING)
+                                {
+									// minor hack to add origin square to attack
+									// this is so that when we & pinned with possible moves capture is still possible
+									cachedAttack |= UINT64_C(1) << i;
+                                    m_pinned[set] |= cachedAttack;
+                                    sliding = false;
+                                }
+                            }
+							else {
+								cachedAttack |= sqbb;
+							}
+						}
+						else
+							sliding = false;
+
+						curSqr = sq8x8;
+
+					} while (sliding);
+				}
+			}
+		}
+	}
+
+	m_pinnedDirty[set] = false;
+}
+
 PIECE 
 Bitboard::GetPieceOnSquare(SET set, int square)
 {
@@ -370,14 +465,18 @@ Bitboard::AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp)
 				{
 					sliding = false;				
 					m_attacked[set] |= sqbb;
+					m_perPieceAttack[set][piece] |= sqbb;
 				}			
 				else if (matCombedOp & sqbb)
 				{
 					sliding = false;
 					m_attacked[set] |= sqbb;
+					m_perPieceAttack[set][piece] |= sqbb;
 				}
-				else
+				else {
 					m_attacked[set] |= sqbb;
+					m_perPieceAttack[set][piece] |= sqbb;
+				}
 			}
 			else
 				sliding = false;
@@ -466,6 +565,8 @@ Bitboard::MarkDirty(SET set)
 {
 	m_materialCombined[set] = ~universe;
 	m_combMaterialDirty[set] = true;
+	m_pinnedDirty[set] = true;
+	m_pinned[set] = ~universe;
 
 	m_attacked[WHITE] = ~universe;
 	m_attackedDirty[WHITE] = true;
@@ -475,17 +576,22 @@ Bitboard::MarkDirty(SET set)
 
 void Bitboard::Clear()
 {
+    // TODO: use MarkDirty method or some othger generic method, avoid duplication.
 	for (int s = 0; s < NR_OF_SETS; s++)
 		for (int p = 0; p < NR_OF_PIECES; p++)
+		{
 			m_material[s][p] = ~universe;
-
+			m_perPieceAttack[s][p] = ~universe;
+		}
 
 	for (int set = 0; set < NR_OF_SETS; set++)
 	{
 		m_materialCombined[set]  = ~universe;
 		m_attacked[set]			 = ~universe;
+        m_pinned[set]			 = ~universe;
 		m_combMaterialDirty[set] = true;
 		m_attackedDirty[set]	 = true;
+		m_pinnedDirty[set]       = true;
 	}
 
 	for (byte val = 0; val < 128; val++)

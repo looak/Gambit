@@ -221,6 +221,62 @@ namespace GambitTest
 		avaMoves = board.AvailableMoves(BLACK, KNIGHT, 27, 0, 0, prom);
 		EXPECT_EQ(expectedAvaMv, avaMoves);
     }
+
+	TEST_F(BitboardFixture, Knight_Pinned_NoAvaMoves)
+	{
+		GambitEngine::Bitboard board;
+		board.PlacePiece(BLACK, KNIGHT, 'd', 4);
+		board.PlacePiece(BLACK, KING, 'd', 8);
+
+		board.PlacePiece(WHITE, ROOK, 'd', 1);
+
+		u64 expectedAvaMv = ~universe;
+
+		byte prom = 0;
+		u64 avaMoves = board.AvailableMoves(BLACK, KNIGHT, 27, 0, 0, prom);
+		EXPECT_EQ(expectedAvaMv, avaMoves);
+	}
+
+	TEST_F(BitboardFixture, Rook_Pinned_LimitedMoves)
+	{
+		GambitEngine::Bitboard board;
+		board.PlacePiece(BLACK, ROOK, 'd', 4);
+		board.PlacePiece(BLACK, KING, 'd', 8);
+
+		board.PlacePiece(WHITE, ROOK, 'd', 1);
+
+		u64 expectedAvaMv = ~universe;
+		expectedAvaMv |= INT64_C(1) << INT64_C(19);
+		expectedAvaMv |= INT64_C(1) << INT64_C(11);
+		expectedAvaMv |= INT64_C(1) << INT64_C(3);
+		expectedAvaMv |= INT64_C(1) << INT64_C(35);
+		expectedAvaMv |= INT64_C(1) << INT64_C(43);
+		expectedAvaMv |= INT64_C(1) << INT64_C(51);
+
+		byte prom = 0;
+		u64 avaMoves = board.AvailableMoves(BLACK, ROOK, 27, 0, 0, prom);
+		EXPECT_EQ(expectedAvaMv, avaMoves);
+	}
+
+	TEST_F(BitboardFixture, Rook_Pinned_KingCanMove)
+	{
+		GambitEngine::Bitboard board;
+		board.PlacePiece(BLACK, ROOK, 'd', 4);
+		board.PlacePiece(BLACK, KING, 'd', 8);
+
+		board.PlacePiece(WHITE, ROOK, 'd', 1);
+
+		u64 expectedAvaMv = ~universe;
+		expectedAvaMv |= INT64_C(1) << INT64_C(58);
+		expectedAvaMv |= INT64_C(1) << INT64_C(60);
+		expectedAvaMv |= INT64_C(1) << INT64_C(50);
+		expectedAvaMv |= INT64_C(1) << INT64_C(51);
+		expectedAvaMv |= INT64_C(1) << INT64_C(52);
+
+		byte prom = 0;
+		u64 avaMoves = board.AvailableMoves(BLACK, KING, 59, 0, 0, prom);
+		EXPECT_EQ(expectedAvaMv, avaMoves);
+	}
 ////////////////////////////////////////////////////////////////
 
 }

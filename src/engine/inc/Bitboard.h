@@ -10,6 +10,7 @@ class GAMBIT_API Bitboard
 {
 private:
 	void CalculateAttacked(SET set, bool ignoreKing = false);
+	void CalculatePotentialPinns(SET set);
 	PIECE GetPieceOnSquare(SET set, int square);
 	void AddAttackedFrom(SET set, PIECE piece, int square, u64 matCombedOp);
 	
@@ -24,6 +25,9 @@ private:
 
 	u64 m_materialCombined[NR_OF_SETS];
 	u64 m_attacked[NR_OF_SETS];
+	u64 m_pinned[NR_OF_SETS];
+	bool m_pinnedDirty[NR_OF_SETS];
+	u64 m_perPieceAttack[NR_OF_SETS][NR_OF_PIECES];
 
 	byte m_board0x88[128];
 	

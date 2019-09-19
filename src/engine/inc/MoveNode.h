@@ -40,7 +40,7 @@ struct Move
 
     bool const operator < (const Move &rhs) const
 	{
-        return fromSqr < rhs.fromSqr || (fromSqr == rhs.fromSqr && toSqr < rhs.toSqr);
+        return fromSqr < rhs.fromSqr || (fromSqr == rhs.fromSqr && toSqr < rhs.toSqr) || (fromSqr == rhs.fromSqr && toSqr == rhs.toSqr && promotion < rhs.promotion);
     }
 
 	std::string toString()

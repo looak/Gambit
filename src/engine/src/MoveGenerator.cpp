@@ -104,7 +104,7 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 					moves.push_back(newMove);
 					count++;
 				}
-
+// TODO copy & throw away board instead of undo?
 				board->UnmakeMove();
 				avaMvs ^= mask;
 			}

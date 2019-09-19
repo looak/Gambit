@@ -331,6 +331,24 @@ TEST_F(BoardFixture, CheckMate_White)
 	EXPECT_TRUE(board.Check(WHITE));
 }
 
+TEST_F(BoardFixture, PinnedPiece_CheckMate)
+{
+	GambitEngine::Board board;
+	board.SetCastlingRights(0);
+
+	board.PlacePiece(WHITE, KING, 'e', 1);
+	board.PlacePiece(BLACK, KING, 'e', 8);
+
+	board.PlacePiece(BLACK, BISHOP, 'e', 6);
+
+	board.PlacePiece(WHITE, ROOK, 'e', 2);
+	board.PlacePiece(WHITE, ROOK, 'f', 2);
+	board.PlacePiece(WHITE, ROOK, 'a', 7);
+	board.PlacePiece(WHITE, QUEEN, 'c', 8);
+	
+	EXPECT_TRUE(board.CheckMate(BLACK));
+}
+
 TEST_F(BoardFixture, GuardedPiece_CheckMate)
 {
 	GambitEngine::Board board;
@@ -382,7 +400,7 @@ TEST_F(BoardFixture, LegalBoard_PosFive)
 	EXPECT_TRUE(board.Legal());
 }
 
-TEST_F(BoardFixture, UnleagalMove)
+TEST_F(BoardFixture, IllegalMove)
 {
 	GambitEngine::Board board;
 
@@ -392,10 +410,7 @@ TEST_F(BoardFixture, UnleagalMove)
 	board.PlacePiece(WHITE, KNIGHT, 'e', 3);
 	board.PlacePiece(WHITE, KING, 'e', 1);
 
-	board.MakeMove('e', 3, 'c', 2);
-	EXPECT_FALSE(board.Legal());
-	board.UnmakeMove();
-	EXPECT_EQ(0x02, board.GetValue('e', 3));
+	EXPECT_FALSE(board.MakeMove('e', 3, 'c', 2));
 
 	EXPECT_TRUE(board.Legal());
 }

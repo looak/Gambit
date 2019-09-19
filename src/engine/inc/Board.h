@@ -106,7 +106,12 @@ public:
 	bool MakeLegalMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promotion = 0x00);
 	bool MakeLegalMove(byte sSqr, byte tSqr, byte promote = 0x00);
 	
+	/* 
+	* Returns true if position on board for given set is check. */
 	bool Check(SET set);
+
+	/* 
+	* Returns true if position on board for given set is mate.*/
 	bool CheckMate(SET set);
 
 	u64 AvailableMoves(SET set, PIECE piece, u32 square, byte& promotion) { return m_bitboard.AvailableMoves(set, piece, square, m_enPassant64, m_castleState, promotion); };

@@ -3,6 +3,7 @@
 #include "PieceDef.h"
 #include <algorithm>
 #include <iostream>
+#include "AlgebraicNotation.h"
 
 using namespace GambitEngine;
 
@@ -115,6 +116,45 @@ MoveGenerator::getMoves(SET set, Board* board, u32& count, bool ignoreLegality)
 
 	return moves;	
 }
+
+int
+MoveGenerator::InnerDivision(SET set, Board* board, int depth)
+{
+	u32 result = 0;
+	auto mvs = getMoves(set, board, result);
+
+	if (depth <= 0)
+		return result;
+
+	for (auto& move : mvs)
+	{
+		Notation::ConvertMove(move);
+		board->MakeMove(move.fromSqr, move.toSqr, move.promotion);
+		result += InnerDivision((SET)!(int)set, board, depth - 1);
+		board->UnmakeMove();
+	}
+	
+	return result;
+}
+
+MoveGenerator::DivisionResult 
+MoveGenerator::getMovesDivision(SET set, Board* board, int depth)
+{
+	DivisionResult retValue;
+	u32 count = 0;
+	auto mvs = getMoves(set, board, count);
+
+	for (auto& move : mvs)
+	{
+		Notation::ConvertMove(move);
+		board->MakeMove(move.fromSqr, move.toSqr, move.promotion);
+		retValue.emplace_back(move, InnerDivision((SET)!(int)set, board, depth));
+		board->UnmakeMove();
+	}
+
+	return retValue;
+}
+
 void 
 MoveGenerator::CountMoves(const std::vector<Move> moves, MoveGenerator::Counter& out) const
 {

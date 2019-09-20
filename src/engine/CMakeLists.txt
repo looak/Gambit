@@ -49,7 +49,6 @@ source_group("src" FILES ${GambitEngine_SRC})
 source_group("inc" FILES ${GambitEngine_INC})
 include_directories(inc)
 
-
 add_library(${LIBRARY_NAME} SHARED STATIC ${GambitEngine_SRC} ${GambitEngine_INC})
 
 set(LINK_LIBRARIES_TEST)

@@ -46,6 +46,9 @@ void MoveHelpCommand(int option, const std::string command);
 bool AvailableMovesCommand(std::string input, Board& board);
 void AvailableMovesHelpCommand(int option, const std::string command);
 
+bool DivideDepthCommand(std::string input, Board& board);
+void DivideDepthCommandHelp(int option, const std::string command);
+
 bool AboutCommand(std::string input, Board& board);
 void AboutHelpCommand(int option, const std::string command);
 
@@ -63,7 +66,8 @@ static CommandsMap options = {
     {"clear", { ClearCommand, ClearHelpCommand } },
     {"help", { HelpCommand, HelpHelpCommand } },
     {"print", { PrintCommand, PrintHelpCommand } },
-    {"move", { MoveCommand, MoveHelpCommand } },    
+    {"move", { MoveCommand, MoveHelpCommand } },
+	{"divide", {DivideDepthCommand, DivideDepthCommandHelp } },
     {"show", { AvailableMovesCommand, AvailableMovesHelpCommand } },
     {"exit", { ExitCommand, ExitHelpCommand } },
     {"about", {AboutCommand, AboutHelpCommand } }

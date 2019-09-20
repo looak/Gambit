@@ -6,6 +6,7 @@
 #include "commandsUtils.h"
 #include "printCommand.h"
 #include "MoveGenerator.h"
+#include "../engine/src/AlgebraicNotation.cpp"
 
 
 bool MoveCommand(std::string input, Board& board)
@@ -131,7 +132,7 @@ bool FenCommand(std::string input, Board& board)
 void ClearHelpCommand(int, const std::string command)
 {        
     std::string helpText("Resets the Game Board");
-    std::cout << AddLineDivider(command, helpText);    
+    std::cout << AddLineDivider(command, helpText);  
 }
 
 bool ClearCommand(std::string input, Board& board)
@@ -177,6 +178,30 @@ bool HelpCommand(std::string input, Board& board)
     }
 
     return true;
+}
+
+bool DivideDepthCommand(std::string input, Board& board)
+{
+	GambitEngine::MoveGenerator movGen;
+
+	u32 totalCount = 0;
+	auto depth = atoi(input.c_str());
+	auto divisionResult = movGen.getMovesDivision(WHITE, &board, depth);
+	MoveGenerator::DivisionResult::iterator it = divisionResult.begin();
+	for (it; it != divisionResult.end(); ++it)
+	{
+		totalCount += it->second;
+		std::cout << std::string(&it->first.str[0], 4) << " " << it->second << std::endl;
+	}
+	std::cout << "total count: " << totalCount << std::endl;
+	std::cout << "nodes: " << divisionResult.size() << std::endl;
+	return true;
+}
+
+void DivideDepthCommandHelp(int option, const std::string command)
+{
+	std::string helpText(":<Depth> Divide position with given depth");
+	std::cout << AddLineDivider(command, helpText);
 }
 
 bool AboutCommand(std::string, Board&)

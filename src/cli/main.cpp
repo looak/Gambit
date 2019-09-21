@@ -60,6 +60,7 @@ int main()
 			  
 	GambitEngine::Board board;
 	GambitEngine::MoveGenerator mvGen;
+	GambitEngine::GameState state(board);
 
 	while (1)
 	{	
@@ -79,7 +80,7 @@ int main()
 		if(tokens.size() == 1)
 		{
 			// attempt to make move;
-			madeMove = options.at("move").first(tokens[0], board);
+			madeMove = options.at("move").first(tokens[0], state);
 		}
 		
 		if(madeMove == false)
@@ -87,9 +88,9 @@ int main()
 			if(tokens.size() > 0 && options.find(tokens.front()) != options.end())
 			{
 				if(tokens.back() == tokens.front())
-					options.at(tokens.front()).first("", board);
+					options.at(tokens.front()).first("", state);
 				else
-					options.at(tokens.front()).first(tokens.back(), board);
+					options.at(tokens.front()).first(tokens.back(), state);
 			}
 			else
 			{

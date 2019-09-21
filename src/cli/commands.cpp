@@ -9,14 +9,14 @@
 #include "../engine/src/AlgebraicNotation.cpp"
 
 
-bool MoveCommand(std::string input, Board& board)
+bool MoveCommand(std::string input, GameState& state)
 {
     if(input.size() == 0)
         MoveHelpCommand(1, "move");
     else if(input.length() >= 4)
     {
         byte promotion = input[4] == 0 ? 0 : input[4];
-        return board.MakeMove(input[0], input[1]-'0', input[2], input[3]-'0', promotion);    
+        return state.getBoard().MakeMove(input[0], input[1]-'0', input[2], input[3]-'0', promotion);    
     }
 
     return false;
@@ -42,11 +42,11 @@ void MoveHelpCommand(int option, const std::string command)
 }
 
 bool 
-AvailableMovesCommand(std::string input, Board& board)
+AvailableMovesCommand(std::string input, GameState& state)
 {
     MoveGenerator movGen;
     u32 count = 0;
-    std::vector<Move> moves = movGen.getMoves(WHITE, &board, count);
+    std::vector<Move> moves = movGen.getMoves(WHITE, &state.getBoard(), count);
 
     std::cout << " Available moves: \n ";
     auto print = [](Move& mv) { std::cout << mv.toString() << ", "; };
@@ -62,7 +62,7 @@ AvailableMovesHelpCommand(int, const std::string command)
     std::cout << AddLineDivider(command, helpText);    
 }
 
-bool PrintCommand(std::string input, Board& board)
+bool PrintCommand(std::string input, GameState& state)
 {		
     std::vector<std::string> tokens;
     std::string token;
@@ -75,7 +75,7 @@ bool PrintCommand(std::string input, Board& board)
     }
     if(tokens.size() == 0)
     {
-        PrintCommands::printOptions.at("board").first(&board, "");
+        PrintCommands::printOptions.at("board").first(&state.getBoard(), "");
     }
     else
     if(PrintCommands::printOptions.find(tokens.front()) == PrintCommands::printOptions.end())
@@ -85,7 +85,7 @@ bool PrintCommand(std::string input, Board& board)
     }
     else
     {        
-        PrintCommands::printOptions.at(tokens.front()).first(&board, tokens.back());
+        PrintCommands::printOptions.at(tokens.front()).first(&state.getBoard(), tokens.back());
     }
 
     return true;
@@ -124,9 +124,9 @@ void FenHelpCommand(int option, const std::string command)
     }
 }
 
-bool FenCommand(std::string input, Board& board)
+bool FenCommand(std::string input, GameState& state)
 {
-    return FENParser::Deserialize(input.c_str(), input.length(), board, nullptr);         
+    return state.Setup(input.c_str(), input.length());         
 }
 
 void ClearHelpCommand(int, const std::string command)
@@ -135,9 +135,9 @@ void ClearHelpCommand(int, const std::string command)
     std::cout << AddLineDivider(command, helpText);  
 }
 
-bool ClearCommand(std::string input, Board& board)
+bool ClearCommand(std::string input, GameState& state)
 {
-    board.ResetBoard();
+    state.getBoard().ResetBoard();
     return true;
 }
 
@@ -151,7 +151,7 @@ void HelpHelpCommand(int, const std::string command)
     std::cout << AddLineDivider(ssCommand.str(), helpText);
 }
 
-bool HelpCommand(std::string input, Board& board)
+bool HelpCommand(std::string input, GameState& state)
 {
     if(input.empty() == false)
     {        
@@ -164,7 +164,7 @@ bool HelpCommand(std::string input, Board& board)
         {
             std::string invalidInput = input.length() > 0 ? input : "Not a Value!";
             std::cout << " > Invalid command: " << invalidInput << ", help for all commands!" <<std::endl;
-            HelpCommand("", board);
+            HelpCommand("", state);
         }
     }
     else
@@ -180,13 +180,13 @@ bool HelpCommand(std::string input, Board& board)
     return true;
 }
 
-bool DivideDepthCommand(std::string input, Board& board)
+bool DivideDepthCommand(std::string input, GameState& state)
 {
 	GambitEngine::MoveGenerator movGen;
 
 	u32 totalCount = 0;
 	auto depth = atoi(input.c_str());
-	auto divisionResult = movGen.getMovesDivision(WHITE, &board, depth);
+	auto divisionResult = movGen.getMovesDivision(WHITE, &state.getBoard(), depth);
 	MoveGenerator::DivisionResult::iterator it = divisionResult.begin();
 	for (it; it != divisionResult.end(); ++it)
 	{
@@ -204,7 +204,7 @@ void DivideDepthCommandHelp(int option, const std::string command)
 	std::cout << AddLineDivider(command, helpText);
 }
 
-bool AboutCommand(std::string, Board&)
+bool AboutCommand(std::string, GameState&)
 {
     std::cout << " Gambit CLI Open Source Chess Engine 2017-2019" << std::endl    
 			  << " Version: " << getVersion() << std::endl
@@ -219,7 +219,7 @@ void AboutHelpCommand(int, const std::string command)
     std::cout << AddLineDivider(command, helpText);
 }
 
-bool ExitCommand(std::string, Board&)
+bool ExitCommand(std::string, GameState&)
 {
     std::exit(0);
     return true;

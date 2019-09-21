@@ -10,13 +10,15 @@ class GameState
 friend class FENParser;
 
 public:
-	GameState();
+	GameState(Board&);
 	~GameState();
 
-	void Setup(char* fen, int length);
+	bool Setup(const char* fen, int length);
+
+	Board& getBoard() { return m_currentBoard; }
 
 private: 
-	Board m_currentBoard;
+	Board& m_currentBoard;
 
 	// half moves
 	// fifty moves counter since pawn moved

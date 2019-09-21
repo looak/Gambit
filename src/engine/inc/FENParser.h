@@ -17,6 +17,7 @@
 #pragma once
 #include "Board.h"
 #include "GameState.h"
+#include <optional>
 
 namespace GambitEngine
 {
@@ -34,11 +35,33 @@ public:
 
 };
 
+class FENBoardIterator
+{
+public:
+	FENBoardIterator() { Reset(); }
+	~FENBoardIterator() = default;
+	void NextFile();
+	void NextRank();
+
+	byte file() const { return m_curFile; }
+	byte rank() const { return m_curRank; }
+
+	FENBoardIterator& operator++();
+
+	bool end();
+
+private:
+	void Reset();
+
+	byte m_curFile;
+	byte m_curRank;
+};
+
 class FENBoardWriter
 {
 public:
 	FENBoardWriter(Board& board);
-	~FENBoardWriter();
+	~FENBoardWriter() = default;
 
 	bool Write(SET set, PIECE piece);
 	bool WriteCastlingState(char* states, int count);
@@ -56,6 +79,22 @@ private:
 	Board& m_board;
 };
 
+class FENBoardReader
+{
+public:
+	FENBoardReader(const Board& board);
+
+	byte rank() const { return m_itr.rank(); }
+
+	std::optional<char> Read();
+
+	bool end();
+
+private:
+	const Board& m_board;
+	FENBoardIterator m_itr;
+};
+
 class GAMBIT_API FENParser
 {
 public:
@@ -63,6 +102,7 @@ public:
 	~FENParser();
 
 	static bool Deserialize(const char* fen, unsigned int length, Board& outputBoard, GameState* state);
+	static std::optional<std::string> Serialize(const GameState& gameState);
 };
 
 }

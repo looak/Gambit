@@ -16,7 +16,7 @@ bool MoveCommand(std::string input, GameState& state)
     else if(input.length() >= 4)
     {
         byte promotion = input[4] == 0 ? 0 : input[4];
-        return state.getBoard().MakeMove(input[0], input[1]-'0', input[2], input[3]-'0', promotion);    
+        return state.MakeMove(input[0], input[1]-'0', input[2], input[3]-'0', promotion);    
     }
 
     return false;
@@ -186,7 +186,7 @@ bool DivideDepthCommand(std::string input, GameState& state)
 
 	u32 totalCount = 0;
 	auto depth = atoi(input.c_str());
-	auto divisionResult = movGen.getMovesDivision(WHITE, &state.getBoard(), depth);
+	auto divisionResult = movGen.getMovesDivision(state.getActiveSet(), &state.getBoard(), depth);
 	MoveGenerator::DivisionResult::iterator it = divisionResult.begin();
 	for (it; it != divisionResult.end(); ++it)
 	{

@@ -1,5 +1,8 @@
 #include "GambitEngine.h"
+#include "GameState.h"
 #include "FENParser.h"
+#include <optional>
+#include <Log.h>
 
 namespace GambitEngine
 {
@@ -17,6 +20,15 @@ namespace GambitEngine
 			return false;
 		}
 		return true;
+	}
+
+	std::string FEN::OutputFEN(const GameState& state)
+	{
+		auto result = FENParser::Serialize(state);
+		if(!result.has_value())
+			LOG_ERROR("Something went wrong when serializing game state into FEN.");
+
+		return result.value();
 	}
 
 	void Chess::Initialize()

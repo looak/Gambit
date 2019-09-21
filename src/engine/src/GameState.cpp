@@ -9,14 +9,22 @@ GameState::GameState(Board& aBoard) :
 
 }
 
-
-GameState::~GameState()
-{
-
-}
-
 bool 
 GameState::Setup(const char* fen, int length)
 {
-	FENParser::Deserialize(fen, length, m_currentBoard, this);
+	return FENParser::Deserialize(fen, length, m_currentBoard, this);
+}
+
+bool 
+GameState::MakeMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promotion)
+{
+	auto ret = m_currentBoard.MakeMove(sFile, sRank, tFile, tRank, promotion);
+
+	if (ret)
+	{
+		m_plyCounter++;
+		// flip set.
+		m_activeSet = (SET)!(int)m_activeSet;
+	}
+	return ret;
 }

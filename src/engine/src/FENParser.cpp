@@ -56,16 +56,48 @@ FENPieceConverter::Convert(byte aNotation)
 
 }
 
+void
+FENBoardIterator::Reset()
+{
+	// fen strings starts in a8 corner of black.
+	m_curRank = 8;
+	m_curFile = 'a';
+}
+
+void
+FENBoardIterator::NextFile()
+{
+	m_curFile++;
+}
+
+void
+FENBoardIterator::NextRank()
+{
+	m_curRank--;
+	m_curFile = 'a';
+}
+
+FENBoardIterator&
+FENBoardIterator::operator++()
+{
+	NextFile();
+	if (m_curFile > 'h')
+		NextRank();
+
+	return *this;
+}
+
+bool
+FENBoardIterator::end()
+{
+	return m_curFile <= 0;
+}
+
 FENBoardWriter::FENBoardWriter(Board& board) :
 	m_board(board)
 	
 {
 	Reset();
-}
-
-FENBoardWriter::~FENBoardWriter()
-{
-
 }
 
 void
@@ -159,13 +191,63 @@ FENBoardWriter::WriteEnPassant(byte file, byte rank)
 	return true;
 }
 
+FENBoardReader::FENBoardReader(const Board& board) :
+	m_board(board)
+{}
+
+bool
+FENBoardReader::end()
+{
+	return m_itr.end();
+}
+
+std::optional<char>
+FENBoardReader::Read()
+{
+	std::optional<char> ret;
+	byte value = m_board.GetValue(m_itr.file(), m_itr.rank());
+	if (value > 0)
+		ret = value;
+	++m_itr;
+	return ret;
+}
 
 FENParser::FENParser()
 {
 }
 
-FENParser::~FENParser()
+std::optional<std::string>
+FENParser::Serialize(const GameState& gameState)
 {
+	std::optional<std::string> returnValue;
+	FENBoardReader reader(gameState.getBoard());
+	std::stringstream outputFEN;
+
+	while (!reader.end()) {
+		u32 rowCounter = 0;
+		
+		byte rank = reader.rank();
+		auto result = reader.Read();
+		byte newRank = reader.rank();
+
+		if (result.has_value()) {
+			outputFEN << result.value();
+			rowCounter = 0;
+		}
+
+		if (rank != newRank) {
+			if (rowCounter > 0)
+				outputFEN << rowCounter;
+			outputFEN << '/';
+		}
+
+		rowCounter++;
+	}
+
+	if (outputFEN.str().size() > 0)
+		returnValue = outputFEN.str();
+
+	return returnValue;
 }
 
 bool FENParser::Deserialize(const char* fen, unsigned int length, Board& outputBoard, GameState* state)
@@ -224,9 +306,10 @@ bool FENParser::Deserialize(const char* fen, unsigned int length, Board& outputB
 
 	// write defaults to board since we're just reading a short fen.
 	if (fen[index] == '\0')
-	{ 
+	{
 		LOG_INFO("Short FEN detected, writing defaults.");
-		boardWriter.WriteCastlingState("KQkq", 4);
+		char castlingState[4]{ 'K','Q','k','q' };
+		boardWriter.WriteCastlingState(&castlingState[0], 4);
 		return true;
 	}
 

@@ -21,11 +21,13 @@
 #include <vector>
 #include <map>
 #include <functional>
+#include <variant>
 
 #include "FENParser.h"
 
 using namespace GambitEngine;
 
+typedef std::variant<Board, GameState> GameStateBoard;
 typedef std::map<std::string, std::pair<std::function<bool(std::string, GameState&)>, std::function<void(int,const std::string)>>> CommandsMap;
 
 bool FenCommand(std::string input, GameState& state);

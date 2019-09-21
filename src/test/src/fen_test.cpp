@@ -2,7 +2,9 @@
 ////////////////////////////////////////////////////////////////
 
 #include "Board.h"
+#include "GameState.h"
 #include "GambitEngine.h"
+#include <optional>
 ////////////////////////////////////////////////////////////////
 
 namespace GambitTest
@@ -143,6 +145,28 @@ TEST_F(FenFixture, EnPassant_Black)
 	EXPECT_EQ(expectedValue, result);
 	byte var = 0x00;
 	EXPECT_EQ(var, board.GetValue('f', 5));
+}
+
+
+TEST_F(FenFixture, serialize_board_successful)
+{
+	std::string expectedFEN{ "8/8/8/4Pp2/8/8/8/R3K2R" };
+
+	char inputFen[] = "8/8/8/4Pp2/8/8/8/R3K2R w KQ f6 0 1";
+	uint8_t length = sizeof(inputFen);
+
+	// setup board
+	GambitEngine::Board board;
+	GambitEngine::GameState state(board);
+	GambitEngine::FEN::InputFen(inputFen, length, board);
+
+	// serialize back.
+	auto result = GambitEngine::FEN::OutputFEN(state);
+
+	EXPECT_TRUE(result.size() > 0);
+	for (u32 i = 0; i < expectedFEN.size(); ++i) {
+		EXPECT_EQ(result[i], expectedFEN[i]);
+	}
 
 }
 ////////////////////////////////////////////////////////////////

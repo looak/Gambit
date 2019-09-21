@@ -540,7 +540,7 @@ depth	nodes	totalnodes
 TEST_F(PerftFixture, PositionFifteen)
 {
 	GambitEngine::Board board;
-	char inputFen[] = "n1n5/PPPk4/8/8/8/8/4Kppp/5N1N b - - 0 1";
+	char inputFen[] = "n1n5/PPPk4/8/8/8/8/4Kppp/5N1N w - - 0 1";
 	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
 
 	u32 count = 0;
@@ -551,7 +551,7 @@ TEST_F(PerftFixture, PositionFifteen)
 TEST_F(PerftFixture, PositionFifteen_DepthTwo)
 {
 	GambitEngine::Board board;
-	char inputFen[] = "n1n5/PPPk4/8/8/8/8/4Kppp/5N1N b - - 0 1";
+	char inputFen[] = "n1n5/PPPk4/8/8/8/8/4Kppp/5N1N w - - 0 1";
 	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
 
 	u32 count = 0;
@@ -589,9 +589,7 @@ TEST_F(PerftFixture, PositionBishopRookKing_DepthOne_Divide)
 	GambitEngine::Board board;
 	char inputFen[] = "3b1k2/5r2/8/8/8/8/2R5/4BK2 w - -";
 	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
-
-	u32 count = 0;
-
+	
 	auto division = GenerateMovesDivide(board, WHITE, 1, 1);
 	for (std::map<Move, int>::iterator it = division.begin(); it != division.end(); ++it)
 	{

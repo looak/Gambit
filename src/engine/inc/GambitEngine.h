@@ -22,13 +22,11 @@ namespace GambitEngine
 	class FEN
 	{
 	public:
-		/* 
+		/* // TODO(Unify these two methods)
 		* Will return true or false if we succeed to parse fen.
 		* if false board will be empty. */
 		static bool InputFen(char* fen, uint8_t length, Board& outputBoard);
-
-		static bool InputFen(char* fen, uint8_t length, GameState& state);
-
+		static bool InputFen(char* fen, uint8_t length, GameState& state); 
 
 		/*
 		* serializes current given state into FEN string */

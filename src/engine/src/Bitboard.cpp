@@ -360,7 +360,7 @@ Bitboard::CalculatePotentialPinns(SET set)
 				{
 					byte curSqr = (byte)i;
 				    u64 cachedAttack = 0;
-					direction *= PieceDef::Attacks0x88(pieceIndx, a);
+					direction = PieceDef::Attacks0x88(pieceIndx, a);
 					bool sliding = true;
 
 					FATAL_ASSERT(direction < INT8_MAX || direction > INT8_MIN, "direction is out of bounds");

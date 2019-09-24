@@ -146,5 +146,27 @@ TEST_F(MoveGeneratorFixture, Castling_Moves)
 		board.UnmakeMove();
 	}
 }
+
+TEST_F(MoveGeneratorFixture, BishopKnightEndGame)
+{
+    char inputFen[] = "8/3k4/8/8/8/8/5p2/3K1Nb1 w - - 0 1";
+    
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+    
+    auto mvs = movGen.getMoves(WHITE, &board, count, false);
+    EXPECT_EQ(count, 8);
+}
+
+TEST_F(MoveGeneratorFixture, ThisFenFails)
+{
+	// boiled down to this fen: 4k3/8/8/8/8/8/1p6/R5K1 b kq -. 
+    char inputFen[] = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBPNP3/q7/Pp1P2PP/R2Q1RK1 b kq - 1 1";
+    
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+    
+    auto mvs = movGen.getMoves(WHITE, &board, count, false);
+    EXPECT_EQ(count, 1732);
+}
+
 }
 

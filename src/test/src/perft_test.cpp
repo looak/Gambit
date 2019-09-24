@@ -49,7 +49,7 @@ public:
         auto mvs = mv.getMoves(set, &board, count);
         mv.CountMoves(mvs, retValue);
 
-		count = mvs.size();
+		count = (u32)mvs.size();
 		if (depth > 0)
 		{
 			for (unsigned int i = 0; i < mvs.size(); i++)

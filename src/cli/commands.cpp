@@ -126,13 +126,19 @@ void FenHelpCommand(int option, const std::string& command)
 
 bool FenCommand(const std::string& input, GameState& state)
 {
-    return state.Setup(input);
+    if(input == "get")
+    {
+        std::cout << " > " << FENParser::Serialize(state).value();
+        return true;
+    }
+    else
+        return state.Setup(input);
 }
 
 void ClearHelpCommand(int, const std::string& command)
 {        
     std::string helpText("Resets the Game Board");
-    std::cout << AddLineDivider(command, helpText);  
+    std::cout << AddLineDivider(command, helpText); 
 }
 
 bool ClearCommand(const std::string& input, GameState& state)
@@ -193,6 +199,7 @@ bool DivideDepthCommand(const std::string& input, GameState& state)
 		totalCount += it->second;
 		std::cout << std::string(&it->first.str[0], 4) << " " << it->second << std::endl;
 	}
+	totalCount += divisionResult.size();
 	std::cout << "total count: " << totalCount << std::endl;
 	std::cout << "nodes: " << divisionResult.size() << std::endl;
 	return true;

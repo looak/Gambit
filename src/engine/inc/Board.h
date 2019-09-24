@@ -118,6 +118,8 @@ public:
 
 	byte GetValue(byte file, byte rank) const;
 	byte GetValue(byte sqr) const;
+	byte GetCastlingState() const;
+	byte GetEnPassantState() const;
 	Bitboard GetBitboard() const { return m_bitboard; }
 	const Material* GetMaterial(SET set) const { return &m_material[set]; }
 	const std::vector<const Piece*> GetPieces(SET set) const { return m_material[set].GetMaterial(); };

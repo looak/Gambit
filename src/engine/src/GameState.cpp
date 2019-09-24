@@ -10,9 +10,9 @@ GameState::GameState(Board& aBoard) :
 }
 
 bool 
-GameState::Setup(const char* fen, int length)
+GameState::Setup(const std::string& fen)
 {
-	return FENParser::Deserialize(fen, length, m_currentBoard, this);
+	return FENParser::Deserialize(fen.c_str(), fen.size(), m_currentBoard, this);
 }
 
 bool 

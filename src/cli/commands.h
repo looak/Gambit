@@ -28,34 +28,34 @@
 using namespace GambitEngine;
 
 typedef std::variant<Board, GameState> GameStateBoard;
-typedef std::map<std::string, std::pair<std::function<bool(std::string, GameState&)>, std::function<void(int,const std::string)>>> CommandsMap;
+typedef std::map<std::string, std::pair<std::function<bool(const std::string&, GameState&)>, std::function<void(int,const std::string&)>>> CommandsMap;
 
-bool FenCommand(std::string input, GameState& state);
-void FenHelpCommand(int option, const std::string command);
+bool FenCommand(const std::string& input, GameState& state);
+void FenHelpCommand(int option, const std::string& command);
 
-bool ClearCommand(std::string input, GameState& state);
-void ClearHelpCommand(int option, const std::string command);
+bool ClearCommand(const std::string& input, GameState& state);
+void ClearHelpCommand(int option, const std::string& command);
 
-bool HelpCommand(std::string input, GameState& state);
-void HelpHelpCommand(int option, const std::string command);
+bool HelpCommand(const std::string& input, GameState& state);
+void HelpHelpCommand(int option, const std::string& command);
 
-bool PrintCommand(std::string input, GameState& state);
-void PrintHelpCommand(int option, const std::string command);
+bool PrintCommand(const std::string& input, GameState& state);
+void PrintHelpCommand(int option, const std::string& command);
 
-bool MoveCommand(std::string input, GameState& state);
-void MoveHelpCommand(int option, const std::string command);
+bool MoveCommand(const std::string& input, GameState& state);
+void MoveHelpCommand(int option, const std::string& command);
 
-bool AvailableMovesCommand(std::string input, GameState& state);
-void AvailableMovesHelpCommand(int option, const std::string command);
+bool AvailableMovesCommand(const std::string& input, GameState& state);
+void AvailableMovesHelpCommand(int option, const std::string& command);
 
-bool DivideDepthCommand(std::string input, GameState& state);
-void DivideDepthCommandHelp(int option, const std::string command);
+bool DivideDepthCommand(const std::string& input, GameState& state);
+void DivideDepthCommandHelp(int option, const std::string& command);
 
-bool AboutCommand(std::string input, GameState& state);
-void AboutHelpCommand(int option, const std::string command);
+bool AboutCommand(const std::string& input, GameState& state);
+void AboutHelpCommand(int option, const std::string& command);
 
-bool ExitCommand(std::string input, GameState& state);
-void ExitHelpCommand(int option, const std::string command);
+bool ExitCommand(const std::string& input, GameState& state);
+void ExitHelpCommand(int option, const std::string& command);
 
 static CommandsMap aliases = {
     {"h", { HelpCommand, HelpHelpCommand } },    

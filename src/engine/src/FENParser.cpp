@@ -90,7 +90,7 @@ FENBoardIterator::operator++()
 bool
 FENBoardIterator::end()
 {
-	return m_curFile <= 0;
+	return m_curRank <= 0;
 }
 
 FENBoardWriter::FENBoardWriter(Board& board) :
@@ -151,7 +151,7 @@ FENBoardWriter::WriteCastlingState(char* states, int length)
 			m_board.m_castleState |= 0x08;
 			break;
 
-		case'-':
+		case '-':
 			m_board.m_castleState = 0x00;
 			break;
 
@@ -191,25 +191,93 @@ FENBoardWriter::WriteEnPassant(byte file, byte rank)
 	return true;
 }
 
-FENBoardReader::FENBoardReader(const Board& board) :
-	m_board(board)
+BoardReader::BoardReader(const GameState& state) :
+	m_state(state)
 {}
 
 bool
-FENBoardReader::end()
+BoardReader::end()
 {
 	return m_itr.end();
 }
 
 std::optional<char>
-FENBoardReader::Read()
+BoardReader::Read()
 {
 	std::optional<char> ret;
-	byte value = m_board.GetValue(m_itr.file(), m_itr.rank());
+	byte value = m_state.getBoard().GetValue(m_itr.file(), m_itr.rank());
 	if (value > 0)
-		ret = value;
+		ret = PieceDef::printable(value);
 	++m_itr;
 	return ret;
+}
+
+std::optional<char> 
+BoardReader::ReadToPlay() const
+{
+	return std::optional<char>(PieceDef::printable(m_state.getActiveSet()));
+}
+
+std::optional<std::string> 
+BoardReader::ReadCastlingState() const
+{
+	std::optional<std::string> ret;
+	byte state = m_state.getBoard().GetCastlingState();
+	std::stringstream output;
+	
+	if (state & 1)
+		output << 'K';
+	if (state & 2)
+		output << 'Q';
+	if (state & 4)
+		output << 'k';
+	if (state & 8)
+		output << 'q';
+
+	ret = output.str();
+	return ret;
+}
+
+std::optional<std::string> 
+BoardReader::ReadEnPassant() const
+{
+	std::optional<std::string> ret;
+	byte state = m_state.getBoard().GetEnPassantState();
+	if(state > 0) {
+		std::stringstream output;
+		byte file = state % 8;
+		byte rank = state / 8;
+		output << (file + 'a');
+		output << (rank + '1');
+		ret = output.str();
+	}
+	else {
+		ret = "-";
+	}
+
+	return ret;
+}
+
+std::optional<std::string>
+BoardReader::ReadInt(int value) const
+{
+	std::optional<std::string> ret;
+	std::stringstream output;
+	output << value;
+	ret = output.str();
+	return ret;
+}
+
+std::optional<std::string>
+BoardReader::ReadPly() const
+{
+	return ReadInt(m_state.getPly());
+}
+
+std::optional<std::string>
+BoardReader::ReadCounter() const
+{
+	return ReadInt(m_state.getMoveCounter());
 }
 
 FENParser::FENParser()
@@ -220,33 +288,64 @@ std::optional<std::string>
 FENParser::Serialize(const GameState& gameState)
 {
 	std::optional<std::string> returnValue;
-	FENBoardReader reader(gameState.getBoard());
+	BoardReader reader(gameState);
 	std::stringstream outputFEN;
 
-	while (!reader.end()) {
-		u32 rowCounter = 0;
-		
+	u32 rowCounter = 0;
+	do
+	{
 		byte rank = reader.rank();
 		auto result = reader.Read();
 		byte newRank = reader.rank();
 
 		if (result.has_value()) {
+			if (rowCounter > 0)
+				outputFEN << rowCounter;
 			outputFEN << result.value();
 			rowCounter = 0;
+			if (rank != newRank && reader.rank() != 0) 
+				outputFEN << '/';
+			continue;
 		}
 
+		rowCounter++;
 		if (rank != newRank) {
 			if (rowCounter > 0)
 				outputFEN << rowCounter;
 			outputFEN << '/';
+			rowCounter = 0;
+			continue;
 		}
 
-		rowCounter++;
-	}
+	} while (!reader.end());
 
+	// add white space;
+	outputFEN << ' ';
+
+	auto colorToPlay = reader.ReadToPlay();
+	if (colorToPlay.has_value())
+		outputFEN << colorToPlay.value() << ' ';
+	
+	auto castling = reader.ReadCastlingState();
+	if (castling.has_value())
+		outputFEN << castling.value() << ' ';
+
+	auto enPassant = reader.ReadEnPassant();
+	if (enPassant.has_value())
+		outputFEN << enPassant.value() << ' ';
+
+	auto ply = reader.ReadPly();
+	if (ply.has_value())
+		outputFEN << ply.value() << ' ';
+	
+	auto counter = reader.ReadCounter();
+	if (counter.has_value())
+		outputFEN << counter.value();
+
+
+	outputFEN << '\0';
 	if (outputFEN.str().size() > 0)
 		returnValue = outputFEN.str();
-
 	return returnValue;
 }
 
@@ -365,16 +464,16 @@ bool FENParser::Deserialize(const char* fen, unsigned int length, Board& outputB
 		}
 	}
 
-	index++;
+	index+=2;
 	// now on ply moves or half moves.
 	if (state != nullptr)
 	{		
 		char a = fen[index];
-		state->m_plyCounter = a - 'a';
+		state->m_plyCounter = a - '0';
 		index += 2;
 		
 		a = fen[index];
-		state->m_moveCounter = a - 'a';
+		state->m_moveCounter = a - '0';
 	}
 
 	return true;

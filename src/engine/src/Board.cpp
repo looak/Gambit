@@ -409,6 +409,18 @@ Board::GetValue(byte sqr) const
 	return  m_board[bIndx];
 }
 
+byte
+Board::GetCastlingState() const
+{
+	return m_castleState;
+}
+
+byte
+Board::GetEnPassantState() const
+{
+	return m_enPassantTargetSqr64;
+}
+
 bool Board::UnmakeMove()
 {
 	const Move* mv = m_lastNode->getMove();

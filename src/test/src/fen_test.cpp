@@ -147,7 +147,6 @@ TEST_F(FenFixture, EnPassant_Black)
 	EXPECT_EQ(var, board.GetValue('f', 5));
 }
 
-
 TEST_F(FenFixture, serialize_board_successful)
 {
 	std::string expectedFEN{ "8/8/8/4Pp2/8/8/8/R3K2R" };
@@ -167,7 +166,27 @@ TEST_F(FenFixture, serialize_board_successful)
 	for (u32 i = 0; i < expectedFEN.size(); ++i) {
 		EXPECT_EQ(result[i], expectedFEN[i]);
 	}
+}
 
+TEST_F(FenFixture, serialize_board_start_position_successful)
+{
+	std::string expectedFEN{ "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" };
+
+	char inputFen[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	uint8_t length = sizeof(inputFen);
+
+	// setup board
+	GambitEngine::Board board;
+	GambitEngine::GameState state(board);
+	GambitEngine::FEN::InputFen(inputFen, length, state);
+
+	// serialize back.
+	auto result = GambitEngine::FEN::OutputFEN(state);
+
+	EXPECT_TRUE(result.size() > 0);
+	for (u32 i = 0; i < length; ++i) {
+		EXPECT_EQ(result[i], expectedFEN[i]);
+	}
 }
 ////////////////////////////////////////////////////////////////
 

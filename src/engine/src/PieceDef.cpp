@@ -1,4 +1,5 @@
 #include "PieceDef.h"
+#include <sstream>
 ////////////////////////////////////////////////////////////////
 
 using namespace GambitEngine;
@@ -96,6 +97,55 @@ byte PieceDef::converter(PIECE toConvert)
 		default:
 			return PAWN;
 	}
+}
+
+byte PieceDef::printable(byte toConvert)
+{
+	byte piece = toConvert & 7;	
+	switch (piece)
+	{
+	case PAWN:
+		piece = 'p';
+		break;
+	case KNIGHT:
+		piece = 'n';
+		break;
+	case BISHOP:
+		piece = 'b';
+		break;
+	case ROOK:
+		piece = 'r';
+		break;
+	case QUEEN:
+		piece = 'q';
+		break;
+	case KING:
+		piece = 'k';
+		break;
+	}
+
+	if ((toConvert & 128) == 0)
+	{
+		piece = (byte)toupper(piece);
+	}
+
+	return piece;
+}
+
+
+byte PieceDef::printable(SET toConvert)
+{
+	byte result = 0x0;
+	switch (toConvert)
+	{
+	case WHITE:
+		result = 'w';
+		break;
+	case BLACK:
+		result = 'b';
+		break;
+	}
+	return result;
 }
 
 ////////////////////////////////////////////////////////////////

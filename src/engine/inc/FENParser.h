@@ -79,19 +79,25 @@ private:
 	Board& m_board;
 };
 
-class FENBoardReader
+class BoardReader
 {
 public:
-	FENBoardReader(const Board& board);
+	BoardReader(const GameState& state);
 
 	byte rank() const { return m_itr.rank(); }
 
 	std::optional<char> Read();
+	std::optional<char> ReadToPlay() const;
+	std::optional<std::string> ReadCastlingState() const;
+	std::optional<std::string> ReadEnPassant() const;
+	std::optional<std::string> ReadPly() const;
+	std::optional<std::string> ReadCounter() const;
 
 	bool end();
 
 private:
-	const Board& m_board;
+	std::optional<std::string> ReadInt(int value) const;
+	const GameState& m_state;
 	FENBoardIterator m_itr;
 };
 

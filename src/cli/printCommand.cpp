@@ -5,38 +5,6 @@
 
 using namespace GambitEngine;
 
-byte convert(byte toConvert)
-{
-	byte piece = toConvert & 7;	
-	switch (piece)
-	{
-	case PAWN:
-		piece = 'p';
-		break;
-	case KNIGHT:
-		piece = 'n';
-		break;
-	case BISHOP:
-		piece = 'b';
-		break;
-	case ROOK:
-		piece = 'r';
-		break;
-	case QUEEN:
-		piece = 'q';
-		break;
-	case KING:
-		piece = 'k';
-		break;
-	}
-
-	if ((toConvert & 128) == 0)
-	{
-		piece = (byte)toupper(piece);
-	}
-
-	return piece;
-}
 
 void writeBitboard(const u64 board)
 {
@@ -88,7 +56,7 @@ void Board(const GambitEngine::Board* board, const std::string input)
         for (byte file = 'a'; file <= 'h'; file++)
         {
             auto tmp = board->GetValue(file, rank);
-            auto val = convert(tmp);
+            auto val = PieceDef::printable(tmp);
             std::cout << '[' << val << ']';
         }
         std::cout << std::endl;

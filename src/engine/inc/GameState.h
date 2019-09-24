@@ -13,14 +13,16 @@ public:
 	GameState(Board&);
 	~GameState() = default;
 
-	bool Setup(const char* fen, int length);
+	bool Setup(const std::string& fen);
 
 	Board& getBoard() { return m_currentBoard; }
 	const Board& getBoard() const { return m_currentBoard; }
 	bool MakeMove(byte sFile, byte sRank, byte tFile, byte tRank, byte promotion = 0x00);
 	
 	/* Set to move */
-	SET getActiveSet() { return m_activeSet; }
+	SET getActiveSet() const { return m_activeSet; }
+	int getPly() const { return m_plyCounter; }
+	int getMoveCounter() const { return m_moveCounter; }
 
 private: 
 	Board& m_currentBoard;

@@ -9,7 +9,7 @@
 #include "../engine/src/AlgebraicNotation.cpp"
 
 
-bool MoveCommand(std::string input, GameState& state)
+bool MoveCommand(const std::string& input, GameState& state)
 {
     if(input.size() == 0)
         MoveHelpCommand(1, "move");
@@ -22,7 +22,7 @@ bool MoveCommand(std::string input, GameState& state)
     return false;
 }
 
-void MoveHelpCommand(int option, const std::string command)
+void MoveHelpCommand(int option, const std::string& command)
 {
     std::ostringstream ssCommand;
     ssCommand << command << ":<AN>";
@@ -42,7 +42,7 @@ void MoveHelpCommand(int option, const std::string command)
 }
 
 bool 
-AvailableMovesCommand(std::string input, GameState& state)
+AvailableMovesCommand(const std::string& input, GameState& state)
 {
     MoveGenerator movGen;
     u32 count = 0;
@@ -56,13 +56,13 @@ AvailableMovesCommand(std::string input, GameState& state)
 }
 
 void 
-AvailableMovesHelpCommand(int, const std::string command)
+AvailableMovesHelpCommand(int, const std::string& command)
 {        
     std::string helpText("Outputs available move for current ply");
     std::cout << AddLineDivider(command, helpText);    
 }
 
-bool PrintCommand(std::string input, GameState& state)
+bool PrintCommand(const std::string& input, GameState& state)
 {		
     std::vector<std::string> tokens;
     std::string token;
@@ -91,7 +91,7 @@ bool PrintCommand(std::string input, GameState& state)
     return true;
 }
 
-void PrintHelpCommand(int option, const std::string command)
+void PrintHelpCommand(int option, const std::string& command)
 {
     if(option == 0)
     {
@@ -106,7 +106,7 @@ void PrintHelpCommand(int option, const std::string command)
     }
 }
 
-void FenHelpCommand(int option, const std::string command)
+void FenHelpCommand(int option, const std::string& command)
 {
     std::ostringstream ssCommand;
     ssCommand << command << ":<FEN>";
@@ -124,24 +124,24 @@ void FenHelpCommand(int option, const std::string command)
     }
 }
 
-bool FenCommand(std::string input, GameState& state)
+bool FenCommand(const std::string& input, GameState& state)
 {
-    return state.Setup(input.c_str(), input.length());         
+    return state.Setup(input);
 }
 
-void ClearHelpCommand(int, const std::string command)
+void ClearHelpCommand(int, const std::string& command)
 {        
     std::string helpText("Resets the Game Board");
     std::cout << AddLineDivider(command, helpText);  
 }
 
-bool ClearCommand(std::string input, GameState& state)
+bool ClearCommand(const std::string& input, GameState& state)
 {
     state.getBoard().ResetBoard();
     return true;
 }
 
-void HelpHelpCommand(int, const std::string command)
+void HelpHelpCommand(int, const std::string& command)
 {    
     std::ostringstream ssCommand;
     ssCommand << command << ":<command> or help";
@@ -151,7 +151,7 @@ void HelpHelpCommand(int, const std::string command)
     std::cout << AddLineDivider(ssCommand.str(), helpText);
 }
 
-bool HelpCommand(std::string input, GameState& state)
+bool HelpCommand(const std::string& input, GameState& state)
 {
     if(input.empty() == false)
     {        
@@ -180,7 +180,7 @@ bool HelpCommand(std::string input, GameState& state)
     return true;
 }
 
-bool DivideDepthCommand(std::string input, GameState& state)
+bool DivideDepthCommand(const std::string& input, GameState& state)
 {
 	GambitEngine::MoveGenerator movGen;
 
@@ -198,13 +198,13 @@ bool DivideDepthCommand(std::string input, GameState& state)
 	return true;
 }
 
-void DivideDepthCommandHelp(int option, const std::string command)
+void DivideDepthCommandHelp(int option, const std::string& command)
 {
 	std::string helpText(":<Depth> Divide position with given depth");
 	std::cout << AddLineDivider(command, helpText);
 }
 
-bool AboutCommand(std::string, GameState&)
+bool AboutCommand(const std::string&, GameState&)
 {
     std::cout << " Gambit CLI Open Source Chess Engine 2017-2019" << std::endl    
 			  << " Version: " << getVersion() << std::endl
@@ -213,18 +213,18 @@ bool AboutCommand(std::string, GameState&)
 
     return true;
 }
-void AboutHelpCommand(int, const std::string command)
+void AboutHelpCommand(int, const std::string& command)
 {
     std::string helpText("About Gambit");
     std::cout << AddLineDivider(command, helpText);
 }
 
-bool ExitCommand(std::string, GameState&)
+bool ExitCommand(const std::string&, GameState&)
 {
     std::exit(0);
     return true;
 }
-void ExitHelpCommand(int, const std::string command)
+void ExitHelpCommand(int, const std::string& command)
 {
     std::string helpText("Shutsdown Gambit");
     std::cout << AddLineDivider(command, helpText);

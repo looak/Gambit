@@ -36,6 +36,9 @@ public:
 
 	static byte				converter(PIECE toConvert);
 	static PIECE			converter(byte toConvert);
+	static byte 			printable(byte toConvert);
+	static byte 			printable(SET toConvert);
+
 
 private:
 	static signed short m_moveCount[NR_OF_PIECES];

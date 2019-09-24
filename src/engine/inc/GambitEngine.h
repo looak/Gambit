@@ -27,6 +27,9 @@ namespace GambitEngine
 		* if false board will be empty. */
 		static bool InputFen(char* fen, uint8_t length, Board& outputBoard);
 
+		static bool InputFen(char* fen, uint8_t length, GameState& state);
+
+
 		/*
 		* serializes current given state into FEN string */
 		static std::string FEN::OutputFEN(const GameState& state);

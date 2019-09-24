@@ -5,10 +5,10 @@
 #include <stdexcept>
 
 static const std::string whitespace = " > ............................. ";
-static const int lineLength = 28;
+static const size_t lineLength = 28;
 static std::string AddLineDivider(std::string command, std::string helpText)
 {
-    int lengthLeft = lineLength - command.length();
+    size_t lengthLeft = lineLength - command.length();
     if(lengthLeft < 0)
         throw new std::range_error("AddLineDevider is too short!");
     

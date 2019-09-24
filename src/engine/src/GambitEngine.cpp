@@ -11,6 +11,17 @@ namespace GambitEngine
 		return true;
 	}
 
+	bool FEN::InputFen(char* fen, uint8_t length, GameState& state)
+	{
+		// if we fail to parse fen, reset board.
+		if (!FENParser::Deserialize(fen, length, state.getBoard(), &state))
+		{
+			state.getBoard().ResetBoard();
+			return false;
+		}
+		return true;
+	}
+
 	bool FEN::InputFen(char* fen, uint8_t length, Board& outputBoard)
 	{	
 		// if we fail to parse fen, reset board.

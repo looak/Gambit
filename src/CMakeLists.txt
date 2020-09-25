@@ -14,18 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Versioning
-set(ver_major 0)
-set(ver_minor 1)
-set(ver_patch 0)
-set(ver_env "\"dev\"")
-
-project(Gambit VERSION ${ver_major}.${ver_minor}.${ver_patch})
-message("version: ${ver_major}.${ver_minor}.${ver_patch}-${ver_env}")
-add_definitions(-DVER_MAJOR=${ver_major})
-add_definitions(-DVER_MINOR=${ver_minor})
-add_definitions(-DVER_PATCH=${ver_patch})
-add_definitions(-DVER_ENV=${ver_env})
+# Options
+option(BUILD_TESTS "Enable tests build" ON)
+option(BUILD_CLI "Enable CLI build" ON)
 
 # Exporting Compile commands to .json file that I can't find?
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -35,35 +26,47 @@ set(CODE_COVERAGE OFF CACHE BOOL "Code Coverage")
 option(CODE_COVERAGE "Runs analysis on unit test, checking coverage" OFF)
 
 # set(CMAKE_BUILD_TYPE Release)
-IF(CMAKE_BUILD_TYPE MATCHES Debug)
+if(CMAKE_BUILD_TYPE MATCHES Debug)
   message("Debug build.")
   add_definitions(-DDEBUG)
-ELSEIF(CMAKE_BUILD_TYPE MATCHES Release)
+elseif(CMAKE_BUILD_TYPE MATCHES Release)
   message("Release build.")
   add_definitions(-DRELEASE)
-ELSE()
+else()
   message("Some other build type.")
-ENDIF()
+endif()
 
+# compile options
 if(MSVC)
   set(CMAKE_CXX_FLAGS_MSVC "/std:c++17 /W3 /w14640" )
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CMAKE_CXX_FLAGS_MSVC} /MT")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_MSVC} /MDd")
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Werror -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wno-long-long -Wunused-variable -Wpedantic")
-  if (CODE_COVERAGE)
+elseif (CODE_COVERAGE)
     message("Code Coverage Enabled")
     set(CMAKE_CXX_FLAGS "--coverage ${CMAKE_CXX_FLAGS}" )
 endif()
 
-endif()
-
 set(CMAKE_CXX_STANDARD 17)
 
+# output directories
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# install directories
+option(INSTALL_APP "Enable installation of app" OFF)
+set(CMAKE_INSTALL_BINDIR "bin" CACHE STRING "User executables (bin)")
+set(CMAKE_INSTALL_LIBDIR "lib${LIB_SUFFIX}" CACHE STRING "Object code libraries (lib)")
+set(CMAKE_INSTALL_INCLUDEDIR "include" CACHE STRING "C header files (include)")
+mark_as_advanced(CMAKE_INSTALL_BINDIR CMAKE_INSTALL_LIBDIR CMAKE_INSTALL_INCLUDEDIR)  
+
+
 add_subdirectory(engine)
-add_subdirectory(cli)
-add_subdirectory(test)
+if(BUILD_CLI)
+    add_subdirectory(cli)
+endif()
+if(BUILD_TESTS)
+    add_subdirectory(test)
+endif()

@@ -15,6 +15,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required(VERSION 3.2)
+
+# Versioning
+set(ver_major 0)
+set(ver_minor 1)
+set(ver_patch 0)
+set(ver_env "\"dev\"")
+
+project(Gambit VERSION ${ver_major}.${ver_minor}.${ver_patch})
+message("version: ${ver_major}.${ver_minor}.${ver_patch}-${ver_env}")
+add_definitions(-DVER_MAJOR=${ver_major})
+add_definitions(-DVER_MINOR=${ver_minor})
+add_definitions(-DVER_PATCH=${ver_patch})
+add_definitions(-DVER_ENV=${ver_env})
+
 set(CMAKE_CONFIGURATION_TYPES Release Debug)
 
 set(CMAKE_CXX_STANDARD 17)

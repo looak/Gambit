@@ -31,4 +31,7 @@ set(GambitCLI_SCR
 include_directories(../engine/inc/)
 add_executable(${PROJECT_NAME} ${GambitCLI_SCR})
 target_link_libraries(${PROJECT_NAME} GambitEngine)
-install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
+if(INSTALL_APP)
+    install(TARGETS ${PROJECT_NAME} DESTINATION CMAKE_INSTALL_BINDIR)
+endif()

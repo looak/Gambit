@@ -156,7 +156,7 @@ MoveGenerator::getMovesDivision(SET set, Board* board, int depth)
 }
 
 void 
-MoveGenerator::CountMoves(const std::vector<Move> moves, MoveGenerator::Counter& out) const
+MoveGenerator::CountMoves(const std::vector<Move>& moves, MoveGenerator::Counter& out) const
 {
 	for (size_t i = 0; i < moves.size(); i++)
 	{			
@@ -178,21 +178,21 @@ MoveGenerator::CountMoves(const std::vector<Move> moves, MoveGenerator::Counter&
 }
 
 int 
-MoveGenerator::countPromotions(const std::vector<Move> moves) const
+MoveGenerator::countPromotions(const std::vector<Move>& moves) const
 {
 	Counter count;
 	CountMoves(moves, count);
 	return count.Promotions;
 }
 int 
-MoveGenerator::countCaptures(const std::vector<Move> moves) const
+MoveGenerator::countCaptures(const std::vector<Move>& moves) const
 {
 	Counter count;
 	CountMoves(moves, count);
 	return count.Captures;
 }
 int 
-MoveGenerator::countCastles(const std::vector<Move> moves) const
+MoveGenerator::countCastles(const std::vector<Move>& moves) const
 {
 	Counter count;
 	CountMoves(moves, count);
@@ -200,7 +200,7 @@ MoveGenerator::countCastles(const std::vector<Move> moves) const
 }
 
 int 
-MoveGenerator::countChecks(const std::vector<Move> moves) const
+MoveGenerator::countChecks(const std::vector<Move>& moves) const
 {
 	Counter count;
 	CountMoves(moves, count);

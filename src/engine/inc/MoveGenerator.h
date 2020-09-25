@@ -46,12 +46,12 @@ public:
 	DivisionResult getMovesDivision(SET set, Board* board, int depth);
 
 
-	int countPromotions(const std::vector<Move> moves) const;
-	int countCaptures(const std::vector<Move> moves) const;
-	int countCastles(const std::vector<Move> moves) const;
-	int countChecks(const std::vector<Move> moves) const;
+	int countPromotions(const std::vector<Move>& moves) const;
+	int countCaptures(const std::vector<Move>& moves) const;
+	int countCastles(const std::vector<Move>& moves) const;
+	int countChecks(const std::vector<Move>& moves) const;
 
-	void CountMoves(const std::vector<Move> moves, Counter& out) const;
+	void CountMoves(const std::vector<Move>& moves, Counter& out) const;
 
 private:
 	int InnerDivision(SET set, Board* board, int depth);

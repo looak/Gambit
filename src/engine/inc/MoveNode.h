@@ -1,6 +1,7 @@
 #pragma once
 #include "typedef.h"
 #include "Material.h"
+#include <string>
 
 namespace GambitEngine
 {

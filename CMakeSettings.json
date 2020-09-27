@@ -9,7 +9,7 @@
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
+      "ctestCommandArgs": "--gtest_filter=*Rook_Pinned_ButNot_TwoPieces*",
       "variables": []
     },
     {

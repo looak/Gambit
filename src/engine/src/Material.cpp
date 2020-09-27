@@ -1,6 +1,7 @@
 #include "Material.h"
 #include <ctype.h>
 #include <algorithm>
+#include <Log.h>
 
 using namespace GambitEngine;
 
@@ -104,7 +105,10 @@ GambitEngine::Material::RemovePiece(const Piece* piece)
 	}
 
 	if (!foundPiece)
+	{
+		LOG_ERROR("Failed to remove piece!");
 		return false;
+	}
 
 	m_materialGrid[piece->Type].erase(m_materialGrid[piece->Type].begin() + ind);
 	
@@ -154,7 +158,10 @@ Material::AddPiece(Piece piece)
 	}
 
 	if (itr == m_material.end())
+	{
+		LOG_ERROR("Failed to add new Piece!");
 		return false;
+	}
 
 	itr->Captured = false;
 	itr->Square8x8 = piece.Square8x8;
@@ -185,7 +192,10 @@ Material::CapturePiece(PIECE pType, byte tSqr)
 	}
 
 	if (!foundPiece)
+	{
+		LOG_ERROR("Failed to capture Piece!");
 		return false;
+	}
 
 	m_board[tSqr]->Captured = true;
 
@@ -216,7 +226,10 @@ Material::MakeMove(byte sSqr, PIECE pType, byte tSqr, byte tSqr120)
 {
 	auto pP = GetPiece(pType, sSqr);
 	if (pP == nullptr)
+	{
+		LOG_ERROR("Failed move piece!");
 		return false;
+	}
 
 	m_board[tSqr] = pP;
 	m_board[sSqr] = nullptr;
@@ -240,22 +253,23 @@ bool GambitEngine::Material::PromotePiece(PIECE pType, byte tSqr)
 bool GambitEngine::Material::ChangeTypeOfPiece(PIECE sType, PIECE tType, byte sqr)
 {
 	std::vector<Piece*>::iterator itr = m_materialGrid[sType].begin();
-	u32 index = 0;
 	while (itr != m_materialGrid[sType].end())
 	{
-		if (m_materialGrid[sType].at(index)->Square8x8 == sqr)
+		if ((*itr)->Square8x8 == sqr)
 			break;
 
 		itr++;	
-		index++;
 	}
 
 	if (itr == m_materialGrid[sType].end())
 		return false;
 
-	(*itr)->Type = tType;
+	Piece* pPiece = (*itr);
 	m_materialGrid[sType].erase(itr);
+	
+	pPiece->Type = tType;
 	m_materialGrid[tType].push_back(m_board[sqr]);
 
+	FATAL_ASSERT(m_board[sqr] == pPiece, "board and piece aren't the same pointers!");
 	return true;
 }

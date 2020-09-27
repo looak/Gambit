@@ -207,8 +207,11 @@ bool DivideDepthCommand(const std::string& input, GameState& state)
 
 void DivideDepthCommandHelp(int option, const std::string& command)
 {
-	std::string helpText(":<Depth> Divide position with given depth");
-	std::cout << AddLineDivider(command, helpText);
+    std::ostringstream ssCommand;
+    ssCommand << command << ":<depth>";
+
+	std::string helpText("Divide position with given depth");
+	std::cout << AddLineDivider(ssCommand.str(), helpText);
 }
 
 bool AboutCommand(const std::string&, GameState&)

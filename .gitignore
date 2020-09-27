@@ -4,6 +4,7 @@
 # Compiled Paths
 intermediate/
 output/
+out/
 build/
 .vs/
 .vscode/

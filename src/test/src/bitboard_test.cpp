@@ -277,6 +277,31 @@ namespace GambitTest
 		u64 avaMoves = board.AvailableMoves(BLACK, KING, 59, 0, 0, prom);
 		EXPECT_EQ(expectedAvaMv, avaMoves);
 	}
+
+    TEST_F(BitboardFixture, Rook_Pinned_ButNot_TwoPieces)
+    {
+        GambitEngine::Bitboard board;
+        board.PlacePiece(BLACK, ROOK, 'd', 4);
+        board.PlacePiece(BLACK, ROOK, 'd', 3);
+        board.PlacePiece(BLACK, KING, 'd', 8);
+
+        board.PlacePiece(WHITE, ROOK, 'd', 1);
+
+        u64 expectedAvaMv = ~universe;
+        expectedAvaMv |= INT64_C(1) << INT64_C(16);
+        expectedAvaMv |= INT64_C(1) << INT64_C(17);
+        expectedAvaMv |= INT64_C(1) << INT64_C(18);
+        expectedAvaMv |= INT64_C(1) << INT64_C(20);
+        expectedAvaMv |= INT64_C(1) << INT64_C(21);
+        expectedAvaMv |= INT64_C(1) << INT64_C(22);
+        expectedAvaMv |= INT64_C(1) << INT64_C(23);
+        expectedAvaMv |= INT64_C(1) << INT64_C(11);
+        expectedAvaMv |= INT64_C(1) << INT64_C(3);
+
+        byte prom = 0;
+        u64 avaMoves = board.AvailableMoves(BLACK, KING, 19, 0, 0, prom);
+        EXPECT_EQ(expectedAvaMv, avaMoves);
+    }
 ////////////////////////////////////////////////////////////////
 
 }

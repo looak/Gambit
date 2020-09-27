@@ -620,6 +620,18 @@ TEST_F(PerftFixture, PositionBishopRookKing_DepthFive)
 	EXPECT_EQ(1000647, count);*/
 }
 
+TEST_F(PerftFixture, PositionBishopRookKingPartTwo_DepthOne)
+{
+	GambitEngine::Board board;
+	char inputFen[] = "5k2/5r2/5b2/8/8/8/5R2/4BK2 w - -";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+
+	auto division = GenerateMovesDivide(board, WHITE, 1, 1);
+	for (std::map<Move, int>::iterator it = division.begin(); it != division.end(); ++it)
+	{
+		std::cerr << "[          ] " << std::string(&it->first.str[0], 4) << " " << it->second << std::endl;
+	}
+}
 
 ////////////////////////////////////////////////////////////////
 }

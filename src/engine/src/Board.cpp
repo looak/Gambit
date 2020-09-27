@@ -307,6 +307,19 @@ Board::CapturePiece(SET set, PIECE pType, byte tSqr, byte& state)
 	m_board[m_boardLookup[tSqr]] = 0x00;
 	m_material[set].CapturePiece(pType, tSqr);
 	m_bitboard.CapturePiece(set, pType, tSqr);
+
+	if (pType == ROOK) // we need to modify castling
+	{
+		if (tSqr == 63) // black king side
+			m_castleState ^= 4;
+		else if(tSqr  == 56)
+			m_castleState ^= 8;
+		else if (tSqr == 7)
+			m_castleState ^= 1;
+		else if (tSqr == 0)
+			m_castleState ^= 2;
+	}
+
 	return true;
 }
 
@@ -355,13 +368,14 @@ Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 	if ((targetPiece & 0x7) != 0x0)
 		isCapture = true;
 
+	// store previous castling state
+	state |= m_castleState;
+
 	EnPassant(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr, capturedPiece, enPassantState);
 
 	if (isCapture)
 		CapturePiece((SET)!(int)pieceSet, (PIECE)targetPiece, tSqr, capturedPiece);
-
-	// store previous castling state
-	state |= m_castleState;
+		
 	bool castled = Castling(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);
 
 	m_bitboard.MakeMove(sSqr, (SET)pieceSet, (PIECE)pieceByte, tSqr);

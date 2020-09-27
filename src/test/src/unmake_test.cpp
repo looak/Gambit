@@ -124,6 +124,33 @@ TEST_F(UnmakeFixture, Castling_ReCastle)
 	EXPECT_EQ(0x0, board.GetValue('a', 1));
 }
 
+TEST_F(UnmakeFixture, Castling_RookCapture_ReCastle)
+{
+	board.SetCastlingRights(15); // all available
+
+	EXPECT_TRUE(board.PlacePiece(WHITE, KING, 'e', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'a', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'h', 1));
+	EXPECT_TRUE(board.PlacePiece(BLACK, KNIGHT, 'f', 2));
+
+	MakeMove("f2h1");
+	EXPECT_EQ(0x82, board.GetValue('h', 1));
+
+	EXPECT_TRUE(board.UnmakeMove());
+	EXPECT_EQ(ROOK, board.GetValue('h', 1));
+	EXPECT_EQ(KING, board.GetValue('e', 1));
+	
+	EXPECT_TRUE(board.MakeMove('e', 1, 'g', 1));
+	EXPECT_EQ(ROOK, board.GetValue('f', 1));
+	EXPECT_EQ(KING, board.GetValue('g', 1));
+
+	EXPECT_TRUE(board.UnmakeMove());
+	EXPECT_TRUE(board.MakeMove('e', 1, 'g', 1));
+	EXPECT_EQ(ROOK, board.GetValue('f', 1));
+	EXPECT_EQ(KING, board.GetValue('g', 1));
+
+}
+
 TEST_F(UnmakeFixture, Promotion)
 {
 	std::string mvStr = "e7e8q";

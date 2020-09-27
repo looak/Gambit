@@ -30,6 +30,6 @@ namespace GambitEngine
 
 		/*
 		* serializes current given state into FEN string */
-		static std::string FEN::OutputFEN(const GameState& state);
+		static std::string OutputFEN(const GameState& state);
 	};
 }

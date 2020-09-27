@@ -301,6 +301,19 @@ TEST_F(BoardFixture, Castling_White_KingMoved)
 	EXPECT_FALSE(board.MakeMove('e', 1, 'g', 1));
 }
 
+TEST_F(BoardFixture, Castling_White_KingMoved_Diagonal)
+{
+	GambitEngine::Board board;
+	board.SetCastlingRights(15); // all available
+
+	EXPECT_TRUE(board.PlacePiece(WHITE, KING, 'e', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'a', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'h', 1));
+
+	board.MakeMove('e', 1, 'd', 2);
+		
+	EXPECT_FALSE(board.MakeMove('d', 2, 'g', 1));
+}
 
 TEST_F(BoardFixture, Castling_White_AlreadyCastled)
 {
@@ -327,7 +340,68 @@ TEST_F(BoardFixture, Castling_Black_AlreadyCastled)
 
 	EXPECT_TRUE(board.MakeMove('e', 8, 'g', 8)); // castle
 
-	EXPECT_FALSE(board.MakeMove('8', 8, 'c', 8));  // expect not to be able to castle again
+	EXPECT_FALSE(board.MakeMove('e', 8, 'c', 8));  // expect not to be able to castle again
+}
+
+TEST_F(BoardFixture, Castling_White_RookCaptured)
+{
+	GambitEngine::Board board;
+	board.SetCastlingRights(15); // all available
+
+	EXPECT_TRUE(board.PlacePiece(WHITE, KING, 'e', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'a', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'h', 1));
+	EXPECT_TRUE(board.PlacePiece(BLACK, KNIGHT, 'f', 2));
+		
+	board.MakeMove('f', 2, 'h', 1);
+
+	EXPECT_FALSE(board.MakeMove('e', 1, 'g', 1));
+}
+
+TEST_F(BoardFixture, Castling_White_RookCaptured_QueenSide)
+{
+	GambitEngine::Board board;
+	board.SetCastlingRights(15); // all available
+
+	EXPECT_TRUE(board.PlacePiece(WHITE, KING, 'e', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'a', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'h', 1));
+	EXPECT_TRUE(board.PlacePiece(BLACK, KNIGHT, 'c', 2));
+
+	board.MakeMove('c', 2, 'a', 1);
+
+	EXPECT_FALSE(board.MakeMove('e', 1, 'c', 1));
+}
+
+
+TEST_F(BoardFixture, Castling_Black_RookCaptured)
+{
+	GambitEngine::Board board;
+	board.SetCastlingRights(15); // all available
+
+	EXPECT_TRUE(board.PlacePiece(BLACK, KING, 'e', 8));
+	EXPECT_TRUE(board.PlacePiece(BLACK, ROOK, 'a', 8));
+	EXPECT_TRUE(board.PlacePiece(BLACK, ROOK, 'h', 8));
+	EXPECT_TRUE(board.PlacePiece(WHITE, KNIGHT, 'f', 7));
+
+	board.MakeMove('f', 7, 'h', 8);
+
+	EXPECT_FALSE(board.MakeMove('e', 8, 'g', 8));
+}
+
+TEST_F(BoardFixture, Castling_Black_RookCaptured_QueenSide)
+{
+	GambitEngine::Board board;
+	board.SetCastlingRights(15); // all available
+
+	EXPECT_TRUE(board.PlacePiece(BLACK, KING, 'e', 8));
+	EXPECT_TRUE(board.PlacePiece(BLACK, ROOK, 'a', 8));
+	EXPECT_TRUE(board.PlacePiece(BLACK, ROOK, 'h', 8));
+	EXPECT_TRUE(board.PlacePiece(WHITE, KNIGHT, 'c', 7));
+
+	board.MakeMove('c', 7, 'a', 8);
+
+	EXPECT_FALSE(board.MakeMove('e', 8, 'c', 8));
 }
 
 TEST_F(BoardFixture, Checked_White)

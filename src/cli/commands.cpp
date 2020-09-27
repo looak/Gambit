@@ -199,7 +199,7 @@ bool DivideDepthCommand(const std::string& input, GameState& state)
 		totalCount += it->second;
 		std::cout << std::string(&it->first.str[0], 4) << " " << it->second << std::endl;
 	}
-	totalCount += divisionResult.size();
+	totalCount += (u32)divisionResult.size();
 	std::cout << "total count: " << totalCount << std::endl;
 	std::cout << "nodes: " << divisionResult.size() << std::endl;
 	return true;

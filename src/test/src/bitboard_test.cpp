@@ -299,7 +299,7 @@ namespace GambitTest
         expectedAvaMv |= INT64_C(1) << INT64_C(3);
 
         byte prom = 0;
-        u64 avaMoves = board.AvailableMoves(BLACK, KING, 19, 0, 0, prom);
+        u64 avaMoves = board.AvailableMoves(BLACK, ROOK, 19, 0, 0, prom);
         EXPECT_EQ(expectedAvaMv, avaMoves);
     }
 ////////////////////////////////////////////////////////////////

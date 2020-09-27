@@ -358,6 +358,7 @@ Bitboard::CalculatePotentialPinns(SET set)
 			{
 				byte curSqr = (byte)i;
 				u64 cachedAttack = 0;
+				byte pinnedCounter = 0;
 				direction = PieceDef::Attacks0x88(pieceIndx, a);
 				bool sliding = true;
 
@@ -378,13 +379,19 @@ Bitboard::CalculatePotentialPinns(SET set)
 					bool validSqr = !(sq0x88 & 0x88);
 					if (validSqr)
 					{
-						if (matCombOp & sqbb)
+						if (matCombOp & sqbb) // this is a bit confusing, but this is actually checking whether or not the pin is being blocked by same set pieces.
 						{
 							sliding = false;
 						}
-                        else if (matComb & sqbb)
+                        else if (matComb & sqbb) 
+						/* if we find a piece that is attacked we cache the square for later pin toggle 
+						though if we find two pieces in the same sliding direction we're not pinned */
                         {
+							pinnedCounter += 1; 
 							cachedAttack |= sqbb;
+
+							if (pinnedCounter > 1) // if we run into more then one piece before the king, we're by definition not pinned.
+								sliding = false;
 
                             if(GetPieceOnSquare(set, sq8x8) == KING)
                             {

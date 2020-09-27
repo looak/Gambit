@@ -371,8 +371,15 @@ Board::MakeLegalMove(byte sSqr, byte tSqr, byte promote)
 		return false;
 	}
 
-	if(castled)
+	if (castled)
+	{
+		if (pieceSet == 0)
+			m_castleState ^= 3;
+		else
+			m_castleState ^= 12;
+
 		state = 1 << 7;
+	}
 
 	// do move
 	m_board[tSqr120] = m_board[sSqr120];

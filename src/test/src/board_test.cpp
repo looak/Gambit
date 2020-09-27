@@ -301,6 +301,35 @@ TEST_F(BoardFixture, Castling_White_KingMoved)
 	EXPECT_FALSE(board.MakeMove('e', 1, 'g', 1));
 }
 
+
+TEST_F(BoardFixture, Castling_White_AlreadyCastled)
+{
+	GambitEngine::Board board;
+	board.SetCastlingRights(15); // all available
+
+	EXPECT_TRUE(board.PlacePiece(WHITE, KING, 'e', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'a', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'h', 1));
+
+	board.MakeMove('e', 1, 'c', 1); // castle
+
+	EXPECT_FALSE(board.MakeMove('c', 1, 'g', 1));  // expect not to be able to castle again
+}
+
+TEST_F(BoardFixture, Castling_Black_AlreadyCastled)
+{
+	GambitEngine::Board board;
+	board.SetCastlingRights(15); // all available
+
+	EXPECT_TRUE(board.PlacePiece(BLACK, KING, 'e', 8));
+	EXPECT_TRUE(board.PlacePiece(BLACK, ROOK, 'a', 8));
+	EXPECT_TRUE(board.PlacePiece(BLACK, ROOK, 'h', 8));
+
+	EXPECT_TRUE(board.MakeMove('e', 8, 'g', 8)); // castle
+
+	EXPECT_FALSE(board.MakeMove('8', 8, 'c', 8));  // expect not to be able to castle again
+}
+
 TEST_F(BoardFixture, Checked_White)
 {
 	GambitEngine::Board board;
@@ -355,7 +384,7 @@ TEST_F(BoardFixture, GuardedPiece_CheckMate)
 	board.SetCastlingRights(0);
 	
 	std::string fen = "k7/5b2/8/8/8/8/r6p/1K6 b - -";
-	FENParser::Deserialize(fen.c_str(), fen.length(), board, nullptr);
+	FENParser::Deserialize(fen.c_str(), (u32)fen.length(), board, nullptr);
 
 	EXPECT_FALSE(board.CheckMate(WHITE));
 

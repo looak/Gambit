@@ -213,6 +213,7 @@ TEST_F(PerftFixture, PositionTwo)
 	EXPECT_EQ(counter.Captures, 8);
     EXPECT_EQ(counter.Promotions, 0);
 	EXPECT_EQ(counter.Checks, 0);
+	EXPECT_EQ(counter.CheckMates, 0);
     EXPECT_EQ(counter.Castles, 2);
     EXPECT_EQ(counter.EnPassants, 0);
 }
@@ -226,20 +227,15 @@ TEST_F(PerftFixture, PositionTwo_DepthTwo)
 
 	u32 count = 0;
     counter = GenerateMoves(board, WHITE, 1, count);
-   // auto division = GenerateMovesDivide(board, WHITE, 1, 1);
 	EXPECT_EQ(2087, count);
 	EXPECT_EQ(counter.Captures, 359);
     EXPECT_EQ(counter.Promotions, 0);
 	EXPECT_EQ(counter.Checks, 3);
     EXPECT_EQ(counter.Castles, 93);
     EXPECT_EQ(counter.EnPassants, 1);
-/*
-    for(std::map<Move, int>::iterator it = division.begin(); it != division.end(); ++it)
-    {
-        std::cerr << "[          ] " << std::string(&it->first.str[0], 4) << " " << it->second << std::endl;
-    }*/
+	EXPECT_EQ(counter.CheckMates, 0);
 }
-/*
+
 TEST_F(PerftFixture, PositionTwo_DepthThree)
 {
 	GambitEngine::Board board;
@@ -257,7 +253,7 @@ TEST_F(PerftFixture, PositionTwo_DepthThree)
     EXPECT_EQ(counter.Castles, 3255);
     EXPECT_EQ(counter.EnPassants, 46);
 }
-*/
+
 /*
 Depth	Nodes		Captures	E.p.	Castles		Promotions		Checks		Checkmates
 1		14			1			0		0			0				2			0
@@ -470,7 +466,7 @@ TEST_F(PerftFixture, PositionFive_DepthTwo)
 	/* 1486 + 44 */
 	EXPECT_EQ(1530, count);
 }
-/*
+
 TEST_F(PerftFixture, PositionFive_DepthThree)
 {
 	GambitEngine::Board board;
@@ -482,7 +478,7 @@ TEST_F(PerftFixture, PositionFive_DepthThree)
 	
 	EXPECT_EQ(63909, count);
 }
-*/
+
 /*
 0	1
 1	46

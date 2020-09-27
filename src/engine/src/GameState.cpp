@@ -12,7 +12,7 @@ GameState::GameState(Board& aBoard) :
 bool 
 GameState::Setup(const std::string& fen)
 {
-	return FENParser::Deserialize(fen.c_str(), fen.size(), m_currentBoard, this);
+	return FENParser::Deserialize(fen.c_str(), (u32)fen.size(), m_currentBoard, this);
 }
 
 bool 

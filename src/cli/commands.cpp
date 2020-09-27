@@ -42,7 +42,7 @@ void MoveHelpCommand(int option, const std::string& command)
 }
 
 bool 
-AvailableMovesCommand(const std::string& input, GameState& state)
+AvailableMovesCommand(const std::string&, GameState& state)
 {
     MoveGenerator movGen;
     u32 count = 0;
@@ -141,7 +141,7 @@ void ClearHelpCommand(int, const std::string& command)
     std::cout << AddLineDivider(command, helpText); 
 }
 
-bool ClearCommand(const std::string& input, GameState& state)
+bool ClearCommand(const std::string&, GameState& state)
 {
     state.getBoard().ResetBoard();
     return true;
@@ -205,7 +205,7 @@ bool DivideDepthCommand(const std::string& input, GameState& state)
 	return true;
 }
 
-void DivideDepthCommandHelp(int option, const std::string& command)
+void DivideDepthCommandHelp(int, const std::string& command)
 {
     std::ostringstream ssCommand;
     ssCommand << command << ":<depth>";

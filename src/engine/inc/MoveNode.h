@@ -31,7 +31,7 @@ struct Move
 	byte flags = 0x00;
 	char str[5];
 
-	bool const operator == (const Move &rhs) const
+	bool operator == (const Move &rhs) const
 	{
         return fromSqr == rhs.fromSqr 
 			&& toSqr == rhs.toSqr
@@ -39,7 +39,7 @@ struct Move
 			&& flags == rhs.flags;
     }
 
-    bool const operator < (const Move &rhs) const
+    bool operator < (const Move &rhs) const
 	{
         return fromSqr < rhs.fromSqr || (fromSqr == rhs.fromSqr && toSqr < rhs.toSqr) || (fromSqr == rhs.fromSqr && toSqr == rhs.toSqr && promotion < rhs.promotion);
     }
@@ -98,12 +98,12 @@ public:
 	}
 
 	const Move* getMove() const		{ return &m_move; }
-	const SET getSet() 				{ return (SET)m_setByte; }
-	const PIECE getPiece() const	{ return (PIECE)m_pieceByte; }
+	SET getSet() const				{ return (SET)m_setByte; }
+	PIECE getPiece() const			{ return (PIECE)m_pieceByte; }
 	MoveNode* getParent() const 	{ return m_parent; }
-	const byte getState() const 	{ return m_state; }
-	const byte getEnPassantState() const { return m_enPassantState; }
-	const byte getCapturedPiece()  const { return m_capturedPiece; }
+	byte getState() const 			{ return m_state; }
+	byte getEnPassantState() const { return m_enPassantState; }
+	byte getCapturedPiece()  const { return m_capturedPiece; }
 };
 
 } // namespace GambitEngine

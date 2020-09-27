@@ -174,7 +174,7 @@ MoveGenerator::CountMoves(const std::vector<Move>& moves, MoveGenerator::Counter
 			out.CheckMates++;
 	}
 	
-	out.Moves = moves.size();
+	out.Moves = (int)moves.size();
 }
 
 int 

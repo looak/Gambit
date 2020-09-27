@@ -18,8 +18,16 @@ message(STATUS "Enabling testing")
 set(PROJECT_NAME GambitEngineTest)
 
 enable_testing()
-include(gtest.cmake)
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    set(GTEST_LIBRARY ${PROJECT_SOURCE_DIR}/src/test/lib/debug/gtestd.lib)
+    set(GTEST_MAIN_LIBRARY ${PROJECT_SOURCE_DIR}/src/test/lib/debug/gtest_maind.lib)
+elseif(CMAKE_BUILD_TYPE MATCHES Release)
+    set(GTEST_LIBRARY ${PROJECT_SOURCE_DIR}/src/test/lib/debug/gtestd.lib)
+    set(GTEST_MAIN_LIBRARY ${PROJECT_SOURCE_DIR}/src/test/lib/debug/gtest_maind.lib)
+endif()
+set(GTEST_INCLUDE_DIR lib/include)
 find_package(Threads)
+find_package(GTest)
 
 set(SOURCE_FILES
         main.cpp
@@ -35,15 +43,18 @@ set(SOURCE_FILES
 project(${PROJECT_NAME})
 
 include_directories(../engine/inc)
+include_directories(lib/include)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-set(LINK_LIBRARIES_TEST GambitEngine gtest ${CMAKE_THREAD_LIBS_INIT})
+set(LINK_LIBRARIES_TEST GambitEngine ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 if (CODE_COVERAGE)
     set(LINK_LIBRARIES_TEST ${LINK_LIBRARIES_TEST} --coverage)
 endif()
 
 target_link_libraries(${PROJECT_NAME} ${LINK_LIBRARIES_TEST})
+
+gtest_discover_tests(${PROJECT_NAME})
 
 if(INSTALL_APP)
     install(TARGETS ${PROJECT_NAME} DESTINATION CMAKE_INSTALL_BINDIR)

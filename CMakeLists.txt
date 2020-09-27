@@ -14,7 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.10)
+message("CMake Version: ${CMAKE_VERSION}")
 
 # Versioning
 set(ver_major 0)
@@ -23,7 +24,7 @@ set(ver_patch 0)
 set(ver_env "\"dev\"")
 
 project(Gambit VERSION ${ver_major}.${ver_minor}.${ver_patch})
-message("version: ${ver_major}.${ver_minor}.${ver_patch}-${ver_env}")
+message("Gambit Project Version: ${ver_major}.${ver_minor}.${ver_patch}-${ver_env}")
 add_definitions(-DVER_MAJOR=${ver_major})
 add_definitions(-DVER_MINOR=${ver_minor})
 add_definitions(-DVER_PATCH=${ver_patch})

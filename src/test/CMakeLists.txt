@@ -14,21 +14,36 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-message(STATUS "Enabling testing")
+message(STATUS "## Enabling testing")
 set(PROJECT_NAME GambitEngineTest)
 
 enable_testing()
 
-set(GTEST_LIBRARY ${PROJECT_SOURCE_DIR}/src/test/lib/release/gtest.lib)
-set(GTEST_MAIN_LIBRARY ${PROJECT_SOURCE_DIR}/src/test/lib/release/gtest_main.lib)
 
-set(GTEST_LIBRARY_DEBUG ${PROJECT_SOURCE_DIR}/src/test/lib/debug/gtestd.lib)
-set(GTEST_MAIN_LIBRARY_DEBUG ${PROJECT_SOURCE_DIR}/src/test/lib/debug/gtest_maind.lib)
+if(MSVC)
+  set(GTEST_LIBRARY ${PROJECT_SOURCE_DIR}/src/test/lib/release/gtest.lib)
+  set(GTEST_MAIN_LIBRARY ${PROJECT_SOURCE_DIR}/src/test/lib/release/gtest_main.lib)
+
+  set(GTEST_LIBRARY_DEBUG ${PROJECT_SOURCE_DIR}/src/test/lib/debug/gtestd.lib)
+  set(GTEST_MAIN_LIBRARY_DEBUG ${PROJECT_SOURCE_DIR}/src/test/lib/debug/gtest_maind.lib)
+elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+  include(gtest.cmake)
+  set(GTEST_LIBRARY "")
+  set(GTEST_MAIN_LIBRARY gtest)
+  set(GTEST_LIBRARY_DEBUG "")
+  set(GTEST_MAIN_LIBRARY_DEBUG gtest)
+  set(GTEST_BOTH_LIBRARIES ${GTEST_MAIN_LIBRARY} ${GTEST_LIBRARY})
+endif()
+
 set(GTEST_BOTH_LIBRARIES_DEBUG ${GTEST_LIBRARY_DEBUG} ${GTEST_MAIN_LIBRARY_DEBUG})
+
 
 set(GTEST_INCLUDE_DIR lib/include)
 find_package(Threads)
-find_package(GTest)
+
+if(MSVC)
+  find_package(GTest)
+endif()
 
 set(SOURCE_FILES
         main.cpp
@@ -44,7 +59,7 @@ set(SOURCE_FILES
 project(${PROJECT_NAME})
 
 include_directories(../engine/inc)
-include_directories(lib/include)
+include_directories(${GTEST_INCLUDE_DIR})
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
@@ -60,7 +75,9 @@ endif()
 target_link_libraries(${PROJECT_NAME} optimized ${LINK_LIBRARIES_TEST})
 target_link_libraries(${PROJECT_NAME} debug ${LINK_LIBRARIES_TEST_DEBUG})
 
-gtest_discover_tests(${PROJECT_NAME})
+if(MSVC)
+  gtest_discover_tests(${PROJECT_NAME})
+endif()
 
 if(INSTALL_APP)
     install(TARGETS ${PROJECT_NAME} DESTINATION CMAKE_INSTALL_BINDIR)

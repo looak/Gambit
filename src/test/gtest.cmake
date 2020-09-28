@@ -1,4 +1,5 @@
-set(GOOGLETEST_ROOT test/lib/googletest/googletest)
+message("## Building gTest Suite")
+set(GOOGLETEST_ROOT src/test/lib/googletest/googletest)
 
 include_directories(SYSTEM
     ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}

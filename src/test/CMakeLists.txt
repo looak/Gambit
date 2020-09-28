@@ -37,11 +37,10 @@ endif()
 
 set(GTEST_BOTH_LIBRARIES_DEBUG ${GTEST_LIBRARY_DEBUG} ${GTEST_MAIN_LIBRARY_DEBUG})
 
-
-set(GTEST_INCLUDE_DIR lib/include)
 find_package(Threads)
 
 if(MSVC)
+  set(GTEST_INCLUDE_DIR lib/include)
   find_package(GTest)
 endif()
 

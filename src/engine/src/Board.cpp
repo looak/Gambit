@@ -82,7 +82,7 @@ byte Board::GetBoard120Index(byte file, byte rank) const
 	byte corrRank = rank - 1;
 
 	// validate placement is inside the board.
-	if (corrFile < 0 || corrFile > 7 || corrRank < 0 || corrRank > 7)
+	if (corrFile > 7 || corrRank > 7)
 		return (byte)-1;
 
 	byte index = corrFile + (corrRank << 3);
@@ -95,7 +95,7 @@ byte Board::GetBoard64Index(byte file, byte rank) const
 	byte corrRank = rank - 1;
 
 	// validate placement is inside the board.
-	if (corrFile < 0 || corrFile > 7 || corrRank < 0 || corrRank > 7)
+	if (corrFile > 7 || corrRank > 7)
 		return (byte)-1;
 
 	byte index = corrFile + (corrRank << 3);

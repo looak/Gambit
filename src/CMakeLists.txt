@@ -42,7 +42,7 @@ if(MSVC)
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CMAKE_CXX_FLAGS_MSVC} /MT")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_MSVC} /MTd")
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Werror -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wno-long-long -Wunused-variable -Wpedantic")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Werror -Wextra -Wshadow -Wnon-virtual-dtor -Wno-long-long -Wunused-variable -Wpedantic") # -Wall
 elseif (CODE_COVERAGE)
     message("Code Coverage Enabled")
     set(CMAKE_CXX_FLAGS "--coverage ${CMAKE_CXX_FLAGS}" )

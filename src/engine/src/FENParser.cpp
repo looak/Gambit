@@ -167,7 +167,7 @@ FENBoardWriter::WriteCastlingState(char* states, int length)
 bool 
 FENBoardWriter::WriteEnPassant(byte file, byte rank)
 {
-	if (file < 0 || file > 7 || rank < 0 || rank > 7)
+	if (file > 7 || rank > 7) // file < 0 || rank < 0 don't need to check these since unsigned char can't be below 0
 	{
 		std::ostringstream strStream;
 		strStream << "File(" << file + 'a' << ") and/or rank(" << rank + '0' << ") are out of range.";

@@ -19,7 +19,7 @@ before_script:
 
 script:
   - make
-  - bin/GambitEngineTest --gtest_filter=*-PerftFixture*
+  - bin/GambitEngineTest
 
 after_success:
   - coveralls --root . --gcov-options '\-lp' -E ".*include.*" -E ".*googletest.*"

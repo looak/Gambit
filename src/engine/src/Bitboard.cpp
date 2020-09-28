@@ -214,7 +214,7 @@ Bitboard::AvailableMovesSimple(SET set, PIECE piece, byte square, byte mvMod, by
 	u64 matCombOp = MaterialCombined((SET)opSet);
 	u64 matComb = MaterialCombined(set);
 
-	if(piece == PAWN)
+	if(piece == PAWN && enPassant > 0)
 	{
 		// add en passant sqr to op's material.
 		u64 enPass = UINT64_C(1) << enPassant;

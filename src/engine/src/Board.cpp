@@ -311,13 +311,25 @@ Board::CapturePiece(SET set, PIECE pType, byte tSqr, byte& state)
 	if (pType == ROOK) // we need to modify castling
 	{
 		if (tSqr == 63) // black king side
+		{
+			m_castleState |= 4;
 			m_castleState ^= 4;
-		else if(tSqr  == 56)
+		}
+		else if (tSqr == 56)
+		{
+			m_castleState |= 8;
 			m_castleState ^= 8;
+		}
 		else if (tSqr == 7)
+		{
+			m_castleState |= 1;
 			m_castleState ^= 1;
+		}
 		else if (tSqr == 0)
+		{
+			m_castleState |= 2;
 			m_castleState ^= 2;
+		}
 	}
 
 	return true;

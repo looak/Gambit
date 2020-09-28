@@ -243,15 +243,35 @@ TEST_F(PerftFixture, PositionTwo_DepthThree)
 	char inputFen[] = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
 	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
 
+
+	// 4	    4085603	    757163	    1929	128013	    15172	    25523	    43
 	u32 count = 0;
     counter = GenerateMoves(board, WHITE, 2, count);
 	EXPECT_EQ(99949, count);
 	EXPECT_EQ(counter.Captures, 17461);
-    EXPECT_EQ(counter.Promotions, 0);
-	EXPECT_EQ(counter.Checks, 996);	
+	EXPECT_EQ(counter.Promotions, 0);
+	EXPECT_EQ(counter.Checks, 996);
 	EXPECT_EQ(counter.CheckMates, 1);
-    EXPECT_EQ(counter.Castles, 3255);
-    EXPECT_EQ(counter.EnPassants, 46);
+	EXPECT_EQ(counter.Castles, 3255);
+	EXPECT_EQ(counter.EnPassants, 46);
+}
+
+TEST_F(PerftFixture, PositionTwo_DepthFour)
+{
+	GambitEngine::Board board;
+	MoveGenerator::Counter counter;
+	char inputFen[] = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+
+	u32 count = 0;
+	counter = GenerateMoves(board, WHITE, 3, count);
+	EXPECT_EQ(99949 + 4085603, count);
+	EXPECT_EQ(counter.Captures, 17461 + 757163);
+	EXPECT_EQ(counter.Promotions, 15172);
+	EXPECT_EQ(counter.Checks, 996 + 25523);
+	EXPECT_EQ(counter.CheckMates, 1 + 43);
+	EXPECT_EQ(counter.Castles, 3255 + 128013);
+	EXPECT_EQ(counter.EnPassants, 46 + 1929);
 }
 
 /*
@@ -363,40 +383,6 @@ TEST_F(PerftFixture, Position_Four)
 	EXPECT_EQ(counter.Castles, 6);
 	EXPECT_EQ(counter.Captures, 87);
 }
-/*
-TEST_F(PerftFixture, Position_Four_Test)
-{
-	GambitEngine::Board board;
-	char inputFen[] = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
-    GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
-
-    u32 count = 0;
-    GambitEngine::MoveGenerator movGen;
-    auto mvs = movGen.getMoves(WHITE, &board, count);
-    EXPECT_EQ(count, 6);
-	count = 0;
-
-	MoveGenerator::Counter counter;
-    for (unsigned int i = 0; i < mvs.size(); i ++)
-    {
-        auto move = mvs[i];
-        board.MakeMove(move.fromSqr, move.toSqr, move.promotion);
-        auto tmpMvs = movGen.getMoves(BLACK, &board, count);
-		movGen.CountMoves(tmpMvs, counter);
-        board.UnmakeMove();
-    }
-    EXPECT_EQ(count, 264);
-	EXPECT_EQ(counter.Promotions, 48);
-	EXPECT_EQ(counter.Checks, 10);
-	EXPECT_EQ(counter.Castles, 6);
-	EXPECT_EQ(counter.Captures, 87);
-
-	board.MakeMove(5,13);
-	count = 0;
-	GenerateMoves(board, BLACK, 1, count);
-
-	std::cout << count;	
-}*/
 
 TEST_F(PerftFixture, Position_Four_DepthThree)
 {
@@ -408,11 +394,30 @@ TEST_F(PerftFixture, Position_Four_DepthThree)
 	u32 count = 0;
 	counter = GenerateMoves(board, WHITE, 2, count);
 	EXPECT_EQ(counter.Captures, 1108);
+	EXPECT_EQ(counter.EnPassants, 4);
 	EXPECT_EQ(counter.Castles, 6);
 	EXPECT_EQ(counter.Promotions, 168);
 	EXPECT_EQ(counter.Checks, 48);
 	EXPECT_EQ(counter.CheckMates, 22);
 	EXPECT_EQ(9737, count);
+}
+
+TEST_F(PerftFixture, Position_Four_DepthFour)
+{
+	GambitEngine::Board board;
+	char inputFen[] = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+
+	MoveGenerator::Counter counter;
+	u32 count = 0;
+	counter = GenerateMoves(board, WHITE, 3, count);
+	EXPECT_EQ(counter.Captures, 1108+131393);
+	EXPECT_EQ(counter.EnPassants, 4);
+	EXPECT_EQ(counter.Castles, 6+7795);
+	EXPECT_EQ(counter.Promotions, 168+60032);
+	EXPECT_EQ(counter.Checks, 48+15492);
+	EXPECT_EQ(counter.CheckMates, 22+5);
+	EXPECT_EQ(9737+422333, count);
 }
 
 
@@ -478,7 +483,19 @@ TEST_F(PerftFixture, PositionFive_DepthThree)
 	
 	EXPECT_EQ(63909, count);
 }
+/* takes too long ~7000ms
+TEST_F(PerftFixture, PositionFive_DepthFour)
+{
+	GambitEngine::Board board;
+	char inputFen[] = "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
 
+	u32 count = 0;
+	GenerateMoves(board, WHITE, 3, count);
+
+	EXPECT_EQ(2167396, count);
+}
+*/
 /*
 0	1
 1	46
@@ -554,6 +571,17 @@ TEST_F(PerftFixture, PositionFifteen_DepthThree)
 	u32 count = 0;
 	GenerateMoves(board, WHITE, 2, count);
 	EXPECT_EQ(10003, count);
+}
+
+TEST_F(PerftFixture, PositionFifteen_DepthFour)
+{
+	GambitEngine::Board board;
+	char inputFen[] = "n1n5/PPPk4/8/8/8/8/4Kppp/5N1N b - - 0 1";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+
+	u32 count = 0;
+	GenerateMoves(board, WHITE, 3, count);
+	EXPECT_EQ(192841, count);
 }
 
 TEST_F(PerftFixture, PositionBishopRookKing_DepthFive)

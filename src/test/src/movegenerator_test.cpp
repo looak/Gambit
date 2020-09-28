@@ -61,6 +61,18 @@ TEST_F(MoveGeneratorFixture, Promotion)
     EXPECT_EQ(movGen.countCaptures(mvs), 4);
 }
 
+TEST_F(MoveGeneratorFixture, PromotionCapture)
+{
+	char inputFen[] = "4k3/8/8/8/8/8/1p6/2R3K1 b - - 1 2";
+	GambitEngine::FEN::InputFen(inputFen, sizeof(inputFen), board);
+	
+	count = 0;
+	auto mvs = movGen.getMoves(BLACK, &board, count, true);
+	EXPECT_EQ(count, 13);
+	EXPECT_EQ(movGen.countPromotions(mvs), 8);
+	EXPECT_EQ(movGen.countCaptures(mvs), 4);
+}
+
 TEST_F(MoveGeneratorFixture, MovePawnIntoChess)
 {
     char inputFen[] = "8/8/8/8/K4p1k/8/6P1/8 w - -";

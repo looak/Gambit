@@ -358,6 +358,22 @@ TEST_F(BoardFixture, Castling_White_RookCaptured)
 	EXPECT_FALSE(board.MakeMove('e', 1, 'g', 1));
 }
 
+TEST_F(BoardFixture, Castling_White_KingMovedRookCaptured)
+{
+	GambitEngine::Board board;
+	board.SetCastlingRights(15); // all available
+
+	EXPECT_TRUE(board.PlacePiece(WHITE, KING, 'e', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'a', 1));
+	EXPECT_TRUE(board.PlacePiece(WHITE, ROOK, 'h', 1));
+	EXPECT_TRUE(board.PlacePiece(BLACK, KNIGHT, 'f', 2));
+
+	board.MakeMove('e', 1, 'd', 2);
+	board.MakeMove('f', 2, 'h', 1);
+
+	EXPECT_FALSE(board.MakeMove('d', 2, 'g', 1));
+}
+
 TEST_F(BoardFixture, Castling_White_RookCaptured_QueenSide)
 {
 	GambitEngine::Board board;
@@ -466,6 +482,17 @@ TEST_F(BoardFixture, GuardedPiece_CheckMate)
 	EXPECT_TRUE(board.CheckMate(WHITE));
 }
 
+TEST_F(BoardFixture, GuardedPiece_CheckMate)
+{
+	GambitEngine::Board board;
+	board.SetCastlingRights(0);
+
+	std::string fen = "k7/2K5/1NN5/8/8/8/8/8 b - -0 1";
+	FENParser::Deserialize(fen.c_str(), (u32)fen.length(), board, nullptr);
+
+	EXPECT_TRUE(board.CheckMate(WHITE));
+}
+
 TEST_F(BoardFixture, CapturePromote)
 {
 	GambitEngine::Board board;
@@ -475,7 +502,31 @@ TEST_F(BoardFixture, CapturePromote)
 	EXPECT_TRUE(board.MakeMove('e',7,'f',8,'q'));
 	EXPECT_EQ(0x0, board.GetValue('e', 7));
 	EXPECT_EQ(0x05, board.GetValue('f', 8));
+}
 
+TEST_F(BoardFixture, CapturePromote_Black)
+{
+	GambitEngine::Board board;
+		
+	board.PlacePiece(BLACK, PAWN, 'b', 2);
+	board.PlacePiece(WHITE, ROOK, 'c', 1);
+
+	EXPECT_TRUE(board.MakeMove('b', 2, 'c', 1, 'q'));
+	EXPECT_EQ(0x0, board.GetValue('b', 2));
+	EXPECT_EQ(0x85, board.GetValue('c', 1));
+}
+
+TEST_F(BoardFixture, CapturePromote_Black_Fail)
+{
+	GambitEngine::Board board;
+
+	board.PlacePiece(BLACK, PAWN, 'b', 2);
+	board.PlacePiece(WHITE, ROOK, 'c', 1);
+
+	EXPECT_FALSE(board.MakeMove('b', 2, 'a', 1, 'q'));
+	EXPECT_EQ(0x81, board.GetValue('b', 2));
+	EXPECT_EQ(0x0, board.GetValue('a', 1));
+	EXPECT_EQ(0x04, board.GetValue('c', 1));
 }
 
 TEST_F(BoardFixture, LegalBoard)

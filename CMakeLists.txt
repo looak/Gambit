@@ -21,7 +21,7 @@ message("CMake Version: ${CMAKE_VERSION}")
 set(ver_major 0)
 set(ver_minor 1)
 set(ver_patch 0)
-set(ver_env "\"dev\"")
+set(ver_env "dev")
 
 project(Gambit VERSION ${ver_major}.${ver_minor}.${ver_patch})
 message("Gambit Project Version: ${ver_major}.${ver_minor}.${ver_patch}-${ver_env}")

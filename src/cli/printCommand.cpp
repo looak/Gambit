@@ -62,7 +62,17 @@ void Board(const GambitEngine::Board* board, const std::string input)
         std::cout << std::endl;
     }
     std::cout << std::endl;
-    std::cout << " >     A  B  C  D  E  F  G  H";
+    std::cout << " >     A  B  C  D  E  F  G  H" << std::endl;
+    std::cout << " > castling: ";
+    byte state = board->GetCastlingState();
+    if (state & 1)
+        std::cout << 'K';
+    if (state & 2)
+        std::cout << 'Q';
+    if (state & 4)
+        std::cout << 'k';
+    if (state & 8)
+        std::cout << 'q';       
 }
 
 void Attack(const GambitEngine::Board* board, const std::string input)
